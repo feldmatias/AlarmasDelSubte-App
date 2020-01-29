@@ -6,6 +6,7 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-unused-vars": ["warn", {"argsIgnorePattern": "^_"}],
     "@typescript-eslint/semi": ["error"],
-    "@typescript-eslint/explicit-member-accessibility": ["error"]
+    "@typescript-eslint/explicit-member-accessibility": ["error"],
+    'prettier/prettier': 0,
   }
 };
