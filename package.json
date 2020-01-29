@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "pretest": "tslint --fix --project tsconfig.json",
+    "pretest": "eslint --fix --max-warnings 0 src/**/*.tsx tests/**/*.tsx",
     "test": "jest"
   },
   "dependencies": {
