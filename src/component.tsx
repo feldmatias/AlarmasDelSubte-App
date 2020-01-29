@@ -9,13 +9,16 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 
-//import ApolloClient from 'apollo-boost';
+import ApolloClient from 'apollo-boost';
+import fetch from 'isomorphic-fetch';
+
 
 export default class HelloWorldApp extends Component {
 
-   /* private _client = new ApolloClient({
+    private _client = new ApolloClient({
         uri: 'https://48p1r2roz4.sse.codesandbox.io',
-    });*/
+        fetch: fetch,
+    });
 
     public render() {
         return (
