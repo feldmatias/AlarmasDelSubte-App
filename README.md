@@ -1,5 +1,8 @@
 # Alarmas Del Subte - App
 
+[![Build Status](https://travis-ci.org/feldmatias/AlarmasDelSubte-App.svg?branch=master)](https://travis-ci.org/feldmatias/AlarmasDelSubte-App)
+[![Coverage Status](https://coveralls.io/repos/github/feldmatias/AlarmasDelSubte-App/badge.svg?branch=master)](https://coveralls.io/github/feldmatias/AlarmasDelSubte-App?branch=master)
+
 ### Backend
 https://github.com/feldmatias/AlarmasDelSubte
 
