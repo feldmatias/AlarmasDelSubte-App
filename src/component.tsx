@@ -8,7 +8,15 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+
+//import ApolloClient from 'apollo-boost';
+
 export default class HelloWorldApp extends Component {
+
+   /* private _client = new ApolloClient({
+        uri: 'https://48p1r2roz4.sse.codesandbox.io',
+    });*/
+
     public render() {
         return (
             <>
