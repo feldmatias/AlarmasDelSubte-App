@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'reflect-metadata';
 import React from 'react';
 import HelloWorldApp from './component';
 import {createStackNavigator} from 'react-navigation-stack';
