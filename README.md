@@ -10,6 +10,7 @@ https://github.com/feldmatias/AlarmasDelSubte
 Install node.js and npm, then run `npm install`
 
 ### Build
+- Run android: `npm run android`
 - Run tests: `npm test`
 - Run linter: `npm run pretest`
 
