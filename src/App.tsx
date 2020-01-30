@@ -1,22 +1,18 @@
 import 'react-native-gesture-handler';
 import 'reflect-metadata';
 import React from 'react';
-import HelloWorldApp from './component';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import {DetailsScreen} from './component2';
+import LoginScreen from "./auth/login/LoginScreen";
 
 const AppNavigator = createStackNavigator({
-    Home: {
-        screen: HelloWorldApp,
-    },
-    details: DetailsScreen,
+    Login: LoginScreen
 });
 
 const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
     public render() {
-        return <AppContainer />;
+        return <AppContainer/>;
     }
 }
