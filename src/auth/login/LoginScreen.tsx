@@ -1,6 +1,7 @@
-import React, {Component} from "react";
-import {Button, StyleSheet, Text, TextInput, View} from "react-native";
-import {Colors} from "react-native/Libraries/NewAppScreen";
+import React, {Component} from 'react';
+import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import {Colors} from "../../styles/Colors";
 
 interface Props {
 
@@ -11,16 +12,27 @@ interface State {
     password: string
 }
 
+const strings = {
+    title: 'Alarmas del Subte',
+    username: 'Usuario',
+    password: 'Contraseña',
+    login: 'Ingresar',
+};
+
 export default class LoginScreen extends Component<Props, State> {
 
+    public static navigationOptions: StackNavigationOptions = {
+        title: strings.title,
+    };
+
     public state: State = {
-        username: "",
-        password: ""
+        username: '',
+        password: '',
     };
 
     private login(): void {
-
-    };
+        console.log('log in');
+    }
 
     private isLoginEnabled(): boolean {
         if (!this.state.username || !this.state.password) {
@@ -38,7 +50,7 @@ export default class LoginScreen extends Component<Props, State> {
                            placeholder={strings.username}
                            style={styles.input}
                            onChangeText={username => {
-                               this.setState({username})
+                               this.setState({username});
                            }}/>
 
                 <TextInput testID="password"
@@ -46,42 +58,38 @@ export default class LoginScreen extends Component<Props, State> {
                            secureTextEntry={true}
                            style={styles.input}
                            onChangeText={password => {
-                               this.setState({password})
+                               this.setState({password});
                            }}/>
 
                 <Button testID="login"
                         title={strings.login}
+                        color={Colors.primary}
                         disabled={!this.isLoginEnabled()}
                         onPress={this.login}/>
+
             </View>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.white,
-        height: "100%",
-        width: "100%",
-        alignItems: "center"
+        height: '100%',
+        width: '100%',
+        alignItems: 'center',
     },
     input: {
-        width: "75%",
+        width: '75%',
         marginBottom: 15,
-        borderColor: "gray",
+        borderColor: 'gray',
         borderWidth: 1,
-        paddingHorizontal: 17
+        paddingHorizontal: 17,
+        borderRadius: 10,
     },
     title: {
         fontSize: 35,
         marginTop: 100,
-        marginBottom: 40
-    }
+        marginBottom: 40,
+    },
 });
-
-const strings = {
-    title: "Alarmas del Subte",
-    username: "Usuario",
-    password: "Contraseña",
-    login: "Ingresar"
-};
