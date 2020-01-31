@@ -1,13 +1,11 @@
-import {Container, Service} from 'typedi';
+import {inject, injectable} from 'inversify';
 import {gql} from 'apollo-boost';
 import {GraphQLService} from '../graphql/GraphQLService';
-import {GRAPHQL_DI} from '../graphql/GraphQLClient';
 
-@Service()
+@injectable()
 export class AuthRepository {
 
-    public constructor(private graphql: GraphQLService) {
-    }
+    @inject(GraphQLService) private graphql!: GraphQLService;
 
     private readonly LOGIN = 'login';
 
@@ -20,7 +18,8 @@ export class AuthRepository {
     `;
 
     public async login(username: string, password: string) {
-        await new GraphQLService(Container.get(GRAPHQL_DI)).query(this.LOGIN_QUERY, {username, password});
+        await this.graphql.query(this.LOGIN_QUERY, {username, password});
     }
 
 }
+

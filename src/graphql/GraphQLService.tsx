@@ -1,11 +1,11 @@
-import {Inject, Service} from 'typedi';
+
+import { injectable, inject } from 'inversify';
 import {GRAPHQL_DI, GraphQLClient, GraphQLQuery} from './GraphQLClient';
 
-@Service()
+@injectable()
 export class GraphQLService {
 
-    public constructor(@Inject(GRAPHQL_DI) private client: GraphQLClient) {
-    }
+    @inject(GRAPHQL_DI) private client!: GraphQLClient;
 
     public async query(query: GraphQLQuery, variables: any): Promise<void> {
         try {

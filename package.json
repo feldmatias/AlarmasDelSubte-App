@@ -18,6 +18,7 @@
     "apollo-boost": "^0.4.7",
     "es6-promise": "^4.2.8",
     "graphql": "^14.6.0",
+    "inversify": "^5.0.1",
     "isomorphic-fetch": "^2.2.1",
     "react": "16.9.0",
     "react-native": "0.61.5",
@@ -27,14 +28,13 @@
     "react-native-screens": "^2.0.0-alpha.32",
     "react-navigation": "^4.1.0",
     "react-navigation-stack": "^2.0.16",
-    "reflect-metadata": "^0.1.13",
-    "typedi": "^0.8.0"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
-    "@types/jest": "^24.0.24",
+    "@types/jest": "^24.9.1",
     "@types/node": "^13.5.2",
     "@types/react-native": "^0.60.25",
     "@types/react-test-renderer": "16.9.1",

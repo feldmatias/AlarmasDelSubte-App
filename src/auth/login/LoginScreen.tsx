@@ -3,7 +3,7 @@ import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {Colors} from '../../styles/Colors';
 import {AuthRepository} from '../AuthRepository';
-import {Container} from 'typedi';
+import container from '../../di/Container';
 
 interface Props {
 
@@ -32,7 +32,7 @@ export class LoginScreen extends Component<Props, State> {
         password: '',
     };
 
-    private authRepository = Container.get(AuthRepository);
+    private authRepository = container.get<AuthRepository>(AuthRepository);
 
     private login = async () => {
         await this.authRepository.login(this.state.username, this.state.password);
