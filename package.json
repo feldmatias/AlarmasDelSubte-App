@@ -70,6 +70,8 @@
       "tsx",
       "js"
     ],
-    "testRegex": "/tests/.*.(ts|tsx|js)$"
+    "testRegex": "/tests/.*.(ts|tsx|js)$",
+    "setupFilesAfterEnv": ["./tests/setup.tsx"],
+    "modulePathIgnorePatterns": ["./tests/setup.tsx"]
   }
 }

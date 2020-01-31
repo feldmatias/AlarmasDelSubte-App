@@ -8,5 +8,8 @@ module.exports = {
     "@typescript-eslint/semi": ["error"],
     "@typescript-eslint/explicit-member-accessibility": ["error"],
     'prettier/prettier': 0,
-  }
+  },
+  env: {
+    jest: true
+  },
 };
