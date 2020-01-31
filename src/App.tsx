@@ -3,9 +3,9 @@ import 'reflect-metadata';
 import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import LoginScreen from './auth/login/LoginScreen';
-import {Routes} from "./screens/Routes";
-import {Colors} from "./styles/Colors";
+import {Routes} from './screens/Routes';
+import {Colors} from './styles/Colors';
+import {LoginScreen} from './auth/login/LoginScreen';
 
 const AppNavigator = createStackNavigator({
     Login: LoginScreen,
@@ -16,7 +16,7 @@ const AppNavigator = createStackNavigator({
             backgroundColor: Colors.primary,
         },
         headerTintColor: Colors.white,
-    }
+    },
 });
 
 const AppContainer = createAppContainer(AppNavigator);

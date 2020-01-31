@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import {Colors} from "../../styles/Colors";
+import {Colors} from '../../styles/Colors';
+import {AuthRepository} from '../AuthRepository';
+import {Container} from 'typedi';
 
 interface Props {
 
@@ -19,7 +21,7 @@ const strings = {
     login: 'Ingresar',
 };
 
-export default class LoginScreen extends Component<Props, State> {
+export class LoginScreen extends Component<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: strings.title,
@@ -30,9 +32,11 @@ export default class LoginScreen extends Component<Props, State> {
         password: '',
     };
 
-    private login(): void {
-        console.log('log in');
-    }
+    private authRepository = Container.get(AuthRepository);
+
+    private login = async () => {
+        await this.authRepository.login(this.state.username, this.state.password);
+    };
 
     private isLoginEnabled(): boolean {
         if (!this.state.username || !this.state.password) {
