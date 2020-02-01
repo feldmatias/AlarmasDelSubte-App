@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {Colors} from '../../styles/Colors';
 import {AuthRepository} from '../AuthRepository';
 import container from '../../di/Container';
+import {Button} from 'react-native-elements';
 
 interface Props {
 
@@ -67,7 +68,8 @@ export class LoginScreen extends Component<Props, State> {
 
                 <Button testID="login"
                         title={strings.login}
-                        color={Colors.primary}
+                        buttonStyle={styles.button}
+                        titleStyle={styles.buttonTitle}
                         disabled={!this.isLoginEnabled()}
                         onPress={this.login}/>
 
@@ -77,6 +79,11 @@ export class LoginScreen extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+    title: {
+        fontSize: 35,
+        marginTop: 100,
+        marginBottom: 40,
+    },
     container: {
         backgroundColor: Colors.white,
         height: '100%',
@@ -91,9 +98,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 17,
         borderRadius: 10,
     },
-    title: {
-        fontSize: 35,
-        marginTop: 100,
-        marginBottom: 40,
+    button: {
+        backgroundColor: Colors.primary,
+        paddingHorizontal: 37,
+        paddingVertical: 9,
+        marginTop: 12,
+    },
+    buttonTitle: {
+        fontSize: 20,
     },
 });
