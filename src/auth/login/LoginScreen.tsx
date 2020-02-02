@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {Colors} from '../../styles/Colors';
 import {AuthRepository} from '../AuthRepository';
@@ -47,7 +47,6 @@ export class LoginScreen extends Component<Props, State> {
         }
 
         this.setLoading(true);
-        this.setError('');
         const result = await this.authRepository.login(this.state.username, this.state.password);
         this.setLoading(false);
         this.analyzeLoginResult(result);
@@ -64,6 +63,10 @@ export class LoginScreen extends Component<Props, State> {
 
     private setLoading(loading: boolean): void {
         this.setState({loading});
+        if (loading) {
+            this.setError('');
+            Keyboard.dismiss();
+        }
     }
 
     private setError(error: string): void {
@@ -79,35 +82,38 @@ export class LoginScreen extends Component<Props, State> {
 
     public render() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{strings.title}</Text>
+            <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
+                <View style={styles.container}>
 
-                <Text style={styles.error}>{this.state.error}</Text>
+                    <Text style={styles.title}>{strings.title}</Text>
 
-                <TextInput testID="username"
-                           placeholder={strings.username}
-                           style={styles.input}
-                           onChangeText={username => {
-                               this.setState({username});
-                           }}/>
+                    <Text style={styles.error}>{this.state.error}</Text>
 
-                <TextInput testID="password"
-                           placeholder={strings.password}
-                           secureTextEntry={true}
-                           style={styles.input}
-                           onChangeText={password => {
-                               this.setState({password});
-                           }}/>
+                    <TextInput testID="username"
+                               placeholder={strings.username}
+                               style={styles.input}
+                               onChangeText={username => {
+                                   this.setState({username});
+                               }}/>
 
-                <Button testID="login"
-                        title={strings.login}
-                        buttonStyle={styles.button}
-                        titleStyle={styles.buttonTitle}
-                        loading={this.state.loading}
-                        disabled={!this.isLoginEnabled()}
-                        onPress={this.login}/>
+                    <TextInput testID="password"
+                               placeholder={strings.password}
+                               secureTextEntry={true}
+                               style={styles.input}
+                               onChangeText={password => {
+                                   this.setState({password});
+                               }}/>
 
-            </View>
+                    <Button testID="login"
+                            title={strings.login}
+                            buttonStyle={styles.button}
+                            titleStyle={styles.buttonTitle}
+                            loading={this.state.loading}
+                            disabled={!this.isLoginEnabled()}
+                            onPress={this.login}/>
+
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -118,10 +124,12 @@ const styles = StyleSheet.create({
         marginTop: 100,
         marginBottom: 40,
     },
-    container: {
-        backgroundColor: Colors.white,
+    scroll: {
         height: '100%',
         width: '100%',
+        backgroundColor: Colors.white,
+    },
+    container: {
         alignItems: 'center',
     },
     input: {
