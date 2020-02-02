@@ -19,7 +19,7 @@ class MockGraphQLClient {
         DiContainer.rebind<GraphQLClient>(GRAPHQL_DI).toConstantValue(this.realApollo);
     }
 
-    public mockSuccess(request: GraphQLOperation, data: any) {
+    public mockSuccess<T>(request: GraphQLOperation, data: T) {
         this.requestHandler = jest.fn().mockResolvedValue({data: data});
         this.apolloMock.setRequestHandler(request, this.requestHandler);
     }
@@ -42,6 +42,10 @@ class MockGraphQLClient {
 
     public assertCalled(times: number): void {
         expect(this.requestHandler).toBeCalledTimes(times);
+    }
+
+    public assertCalledWith<T>(params: T): void {
+        expect(this.requestHandler).toBeCalledWith(params);
     }
 }
 

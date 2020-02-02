@@ -154,4 +154,21 @@ describe('Login Screen', () => {
 
     });
 
+    describe('Login', () => {
+
+        it('should login with correct input', async () => {
+            const username = 'my username';
+            const password = 'my password';
+            MockGraphQLClient.mockLoading(loginMutation);
+
+            writeUsername(username);
+            writePassword(password);
+
+            login();
+
+            MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+    });
+
 });
