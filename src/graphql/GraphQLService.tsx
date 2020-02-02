@@ -1,23 +1,33 @@
-
-import { injectable, inject } from 'inversify';
-import {GRAPHQL_DI, GraphQLClient, GraphQLQuery} from './GraphQLClient';
+import {inject, injectable} from 'inversify';
+import {GRAPHQL_DI, GraphQLClient} from './GraphQLClient';
+import {Result} from '../utils/Result';
+import {plainToClass} from 'class-transformer';
+import {GraphQLMutation} from './GraphQLMutation';
 
 @injectable()
 export class GraphQLService {
 
     @inject(GRAPHQL_DI) private client!: GraphQLClient;
 
-    public async query(query: GraphQLQuery, variables: any): Promise<void> {
+    private static readonly DEFAULT_ERROR = 'Ocurrió un error. Intenta más tarde.';
+
+    public async mutation<T>(mutation: GraphQLMutation, returnType: new() => T): Promise<Result<T>> {
         try {
-            const result = await this.client.mutate({mutation: query, variables: variables, errorPolicy: 'all'});
-            console.log('success');
-            console.log(result);
-            console.log(result.data.login);
-            // {"data": {"login": {"__typename": "User", "token": "EdAVhGZFqwCvWDX29pYT2h"}}}
-            // {"data": {"login": null}, "errors": [{"message": "El usuario o la contraseña son incorrectos"}]}
-        } catch (error) {
-            console.log('error');
-            console.log(error.message);
+            const result = await this.client.mutate({
+                mutation: mutation.getMutation(),
+                variables: mutation.getVariables(),
+                errorPolicy: 'all',
+            });
+
+            if (result.errors && result.errors.length > 0) {
+                return Result.Error(result.errors[0].message);
+            }
+
+            const data = plainToClass(returnType, result.data[mutation.getName()]);
+            return Result.Success(data);
+
+        } catch {
+            return Result.Error(GraphQLService.DEFAULT_ERROR);
         }
     }
 }

@@ -1,24 +1,17 @@
 import {inject, injectable} from 'inversify';
-import {gql} from 'apollo-boost';
 import {GraphQLService} from '../graphql/GraphQLService';
+import {Result} from '../utils/Result';
+import {AuthToken} from './AuthToken';
+import {LoginMutation} from './login/LoginMutation';
 
 @injectable()
 export class AuthRepository {
 
     @inject(GraphQLService) private graphql!: GraphQLService;
 
-    private readonly LOGIN = 'login';
-
-    private readonly LOGIN_QUERY = gql`
-        mutation ($username: String!, $password: String!) {
-            login(userInput: {username: $username, password: $password}) {
-                token
-            }
-        }
-    `;
-
-    public async login(username: string, password: string) {
-        await this.graphql.query(this.LOGIN_QUERY, {username, password});
+    public async login(username: string, password: string): Promise<Result<AuthToken>> {
+        const mutation = new LoginMutation(username, password);
+        return await this.graphql.mutation(mutation, AuthToken);
     }
 
 }

@@ -10,5 +10,5 @@ const client = new ApolloClient({
 
 export const GRAPHQL_DI = 'GRAPHQL_DI';
 export type GraphQLClient = typeof client;
-export type GraphQLQuery = DocumentNode;
+export type GraphQLOperation = DocumentNode;
 export const GraphQLClientInstance = client;

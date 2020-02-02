@@ -5,6 +5,8 @@ import {Colors} from '../../styles/Colors';
 import {AuthRepository} from '../AuthRepository';
 import container from '../../di/Container';
 import {Button} from 'react-native-elements';
+import {Result} from '../../utils/Result';
+import {AuthToken} from '../AuthToken';
 
 interface Props {
 
@@ -12,7 +14,9 @@ interface Props {
 
 interface State {
     username: string,
-    password: string
+    password: string,
+    loading: boolean,
+    error: string
 }
 
 const strings = {
@@ -31,13 +35,40 @@ export class LoginScreen extends Component<Props, State> {
     public state: State = {
         username: '',
         password: '',
+        loading: false,
+        error: '',
     };
 
     private authRepository = container.get<AuthRepository>(AuthRepository);
 
     private login = async () => {
-        await this.authRepository.login(this.state.username, this.state.password);
+        if (this.state.loading) {
+            return;
+        }
+
+        this.setLoading(true);
+        this.setError('');
+        const result = await this.authRepository.login(this.state.username, this.state.password);
+        this.setLoading(false);
+        this.analyzeLoginResult(result);
     };
+
+    private analyzeLoginResult(result: Result<AuthToken>) {
+        if (!result.isSuccessful()) {
+            this.setError(result.getError());
+            return;
+        }
+
+        this.setError('success'); //TODO: remove this
+    }
+
+    private setLoading(loading: boolean): void {
+        this.setState({loading});
+    }
+
+    private setError(error: string): void {
+        this.setState({error});
+    }
 
     private isLoginEnabled(): boolean {
         if (!this.state.username || !this.state.password) {
@@ -50,6 +81,8 @@ export class LoginScreen extends Component<Props, State> {
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>{strings.title}</Text>
+
+                <Text style={styles.error}>{this.state.error}</Text>
 
                 <TextInput testID="username"
                            placeholder={strings.username}
@@ -70,6 +103,7 @@ export class LoginScreen extends Component<Props, State> {
                         title={strings.login}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
+                        loading={this.state.loading}
                         disabled={!this.isLoginEnabled()}
                         onPress={this.login}/>
 
@@ -106,5 +140,10 @@ const styles = StyleSheet.create({
     },
     buttonTitle: {
         fontSize: 20,
+    },
+    error: {
+        color: Colors.error,
+        fontSize: 17,
+        marginBottom: 17,
     },
 });
