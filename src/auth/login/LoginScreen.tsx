@@ -3,7 +3,7 @@ import {Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-nat
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {Colors} from '../../styles/Colors';
 import {AuthRepository} from '../AuthRepository';
-import container from '../../di/Container';
+import DiContainer from '../../di/Container';
 import {Button} from 'react-native-elements';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
@@ -39,7 +39,7 @@ export class LoginScreen extends Component<Props, State> {
         error: '',
     };
 
-    private authRepository = container.get<AuthRepository>(AuthRepository);
+    private authRepository = DiContainer.get<AuthRepository>(AuthRepository);
 
     private login = async () => {
         if (this.state.loading) {
@@ -82,7 +82,7 @@ export class LoginScreen extends Component<Props, State> {
 
     public render() {
         return (
-            <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
+            <ScrollView keyboardShouldPersistTaps="handled" style={styles.scroll}>
                 <View style={styles.container}>
 
                     <Text style={styles.title}>{strings.title}</Text>
