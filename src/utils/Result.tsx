@@ -20,9 +20,9 @@ export class Result<T> {
         return this.data !== undefined;
     }
 
-    public getData(): T {
+    /*public getData(): T {
         return this.data as T;
-    }
+    }*/
 
     public getError(): string {
         return this.error as string;

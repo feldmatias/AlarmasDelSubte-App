@@ -58,7 +58,7 @@ export class LoginScreen extends Component<Props, State> {
             return;
         }
 
-        this.setError('success'); //TODO: remove this
+        //TODO: handle success
     }
 
     private setLoading(loading: boolean): void {
@@ -85,9 +85,14 @@ export class LoginScreen extends Component<Props, State> {
             <ScrollView keyboardShouldPersistTaps="handled" style={styles.scroll}>
                 <View style={styles.container}>
 
-                    <Text style={styles.title}>{strings.title}</Text>
+                    <Text style={styles.title}>
+                        {strings.title}
+                    </Text>
 
-                    <Text style={styles.error}>{this.state.error}</Text>
+                    {this.state.error.length > 0 &&
+                    <Text testID="error" style={styles.error}>
+                        {this.state.error}
+                    </Text>}
 
                     <TextInput testID="username"
                                placeholder={strings.username}

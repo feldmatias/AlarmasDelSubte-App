@@ -9,7 +9,7 @@ export class GraphQLService {
 
     @inject(GRAPHQL_DI) private client!: GraphQLClient;
 
-    private static readonly DEFAULT_ERROR = 'Ocurrió un error. Intenta más tarde.';
+    public static readonly DEFAULT_ERROR = 'Ocurrió un error. Intenta más tarde.';
 
     public async mutation<T>(mutation: GraphQLMutation, returnType: new() => T): Promise<Result<T>> {
         try {
