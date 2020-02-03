@@ -94,7 +94,7 @@ export class LoginScreenView extends Component<Props, State> {
                             titleStyle={styles.buttonTitle}
                             loading={this.props.loading}
                             disabled={!this.isLoginEnabled()}
-                            onPress={this.login.bind(this)}/>
+                            onPress={this.login}/>
 
                 </View>
             </ScrollView>
