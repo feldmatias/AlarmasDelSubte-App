@@ -1,21 +1,29 @@
 import 'react-native';
-import MockGraphQLClient from '../graphql/MockGraphQLClient';
+import MockGraphQLClient from '../../graphql/MockGraphQLClient';
 import {fireEvent, render, RenderAPI} from 'react-native-testing-library';
-import {LoginScreen} from '../../src/auth/login/LoginScreen';
+import {LoginScreen} from '../../../src/auth/login/LoginScreen';
 import React from 'react';
-import {GraphQLService} from '../../src/graphql/GraphQLService';
-import {GraphQLOperation} from '../../src/graphql/GraphQLClient';
-import {LoginMutation} from '../../src/auth/login/LoginMutation';
+import {GraphQLService} from '../../../src/graphql/GraphQLService';
+import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
+import {LoginMutation} from '../../../src/auth/login/LoginMutation';
+import {MockNavigation} from '../../utils/MockNavigation';
+import {Routes} from '../../../src/screens/Routes';
 
 describe('Login Screen', () => {
 
     let renderApi: RenderAPI;
     let loginMutation: GraphQLOperation;
+    let navigation: MockNavigation;
+
+    function renderScreen() : void {
+        navigation = new MockNavigation();
+        renderApi = render(<LoginScreen navigation={navigation.instance()}/>);
+    }
 
     beforeEach(() => {
         MockGraphQLClient.mock();
-        renderApi = render(<LoginScreen/>);
         loginMutation = new LoginMutation('', '').getMutation();
+        renderScreen();
     });
 
     afterEach(() => {
@@ -36,13 +44,13 @@ describe('Login Screen', () => {
 
     describe('Validations', () => {
 
-        function assertLoginButtonEnabled(enabled: boolean): void{
+        function assertLoginButtonEnabled(enabled: boolean): void {
             const loginButton = renderApi.getByTestId('login');
             expect(loginButton.props.disabled).toBe(!enabled);
         }
 
         it('login should be disabled when no username and no password', () => {
-           assertLoginButtonEnabled(false);
+            assertLoginButtonEnabled(false);
         });
 
         it('login should be disabled when username but no password', () => {
@@ -67,7 +75,7 @@ describe('Login Screen', () => {
 
     describe('Loading', () => {
 
-        function assertIsLoading(loading: boolean): void{
+        function assertIsLoading(loading: boolean): void {
             const loginButton = renderApi.getByTestId('login');
             expect(loginButton.props.loading).toBe(loading);
         }
@@ -110,11 +118,11 @@ describe('Login Screen', () => {
 
     describe('Errors', () => {
 
-        function assertErrorShown(error: string): void{
+        function assertErrorShown(error: string): void {
             expect(renderApi.getByText(error)).toBeDefined();
         }
 
-        function assertErrorNotShown(): void{
+        function assertErrorNotShown(): void {
             expect(renderApi.queryByTestId('error')).toBeNull();
         }
 
@@ -150,6 +158,19 @@ describe('Login Screen', () => {
             await login();
 
             assertErrorNotShown();
+        });
+
+    });
+
+    describe('Sign Up', () => {
+
+        function signUp(): void {
+            fireEvent.press(renderApi.getByTestId('signUp'));
+        }
+
+        it('should navigate to sign up screen when click sign up', async () => {
+            signUp();
+            navigation.assertNavigatedTo(Routes.SignUp);
         });
 
     });

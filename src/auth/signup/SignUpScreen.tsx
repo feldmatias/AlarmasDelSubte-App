@@ -1,14 +1,15 @@
 import React from 'react';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import {AuthRepository} from '../AuthRepository';
+import {SignUpScreenView} from './SignUpScreenView';
 import DiContainer from '../../di/Container';
+import {AuthRepository} from '../AuthRepository';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
-import {LoginScreenView} from './LoginScreenView';
-import {Routes} from '../../screens/Routes';
+import {PasswordValidator} from './PasswordValidator';
 import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
 
 interface Props extends ScreenProps {
+
 }
 
 interface State extends ScreenState {
@@ -16,10 +17,10 @@ interface State extends ScreenState {
 }
 
 const strings = {
-    screenTitle: 'Alarmas del Subte',
+    screenTitle: 'Nueva Cuenta',
 };
 
-export class LoginScreen extends BaseScreen<Props, State> {
+export class SignUpScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: strings.screenTitle,
@@ -32,14 +33,24 @@ export class LoginScreen extends BaseScreen<Props, State> {
 
     private authRepository = DiContainer.get<AuthRepository>(AuthRepository);
 
-    private login = async (username: string, password: string): Promise<void> => {
+    private signUp = async (username: string, password: string): Promise<void> => {
+        if (!this.validatePassword(password)) {
+            return;
+        }
+
         this.setLoading(true);
-        const result = await this.authRepository.login(username, password);
+        const result = await this.authRepository.signUp(username, password);
         this.setLoading(false);
-        this.analyzeLoginResult(result);
+        this.analyzeSignUpResult(result);
     };
 
-    private analyzeLoginResult(result: Result<AuthToken>) {
+    private validatePassword(password: string) {
+        const validation = PasswordValidator.validate(password);
+        this.setError(validation.getError());
+        return validation.isSuccessful();
+    }
+
+    private analyzeSignUpResult(result: Result<AuthToken>) {
         if (!result.isSuccessful()) {
             this.setError(result.getError());
             return;
@@ -48,17 +59,11 @@ export class LoginScreen extends BaseScreen<Props, State> {
         //TODO: handle success
     }
 
-    private signUp = (): void => {
-        this.props.navigation.navigate(Routes.SignUp);
-    };
-
     public render() {
         return (
-            <LoginScreenView
-                loading={this.state.loading}
-                error={this.state.error}
-                login={this.login}
-                signUp={this.signUp}
+            <SignUpScreenView loading={this.state.loading}
+                              error={this.state.error}
+                              signUp={this.signUp}
             />
         );
     }

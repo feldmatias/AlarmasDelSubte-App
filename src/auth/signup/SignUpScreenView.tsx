@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
 import {Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import {Button} from 'react-native-elements';
 import {screenStyles} from '../../styles/ScreenStyles';
-import {inputStyles} from '../../styles/InputStyles';
-import {buttonStyles} from '../../styles/ButtonStyles';
-import {SignUpLink} from './components/SignUpLink';
 import {ErrorMessage} from '../../components/ErrorMessage';
+import {inputStyles} from '../../styles/InputStyles';
+import {Button} from 'react-native-elements';
+import {buttonStyles} from '../../styles/ButtonStyles';
+import {Colors} from '../../styles/Colors';
 
 interface Props {
-    loading: boolean
     error: string
-    login: (username: string, password: string) => Promise<void>
-    signUp: () => void
+    loading: boolean
+    signUp: (username: string, password: string) => Promise<void>
 }
 
 interface State {
@@ -20,13 +19,13 @@ interface State {
 }
 
 const strings = {
-    title: 'Alarmas del Subte',
+    message: 'Crea una cuenta para poder empezar a crear alarmas del subte y recibir notificaciones!',
     username: 'Usuario',
     password: 'Contraseña',
-    login: 'Ingresar',
+    signUp: 'Crear cuenta',
 };
 
-export class LoginScreenView extends Component<Props, State> {
+export class SignUpScreenView extends Component<Props, State> {
 
     public state: State = {
         username: '',
@@ -41,20 +40,20 @@ export class LoginScreenView extends Component<Props, State> {
         this.setState({password});
     }
 
-    private isLoginEnabled(): boolean {
+    private isSignUpEnabled(): boolean {
         if (!this.state.username || !this.state.password) {
             return false;
         }
         return true;
     }
 
-    private login = async (): Promise<void> => {
+    private signUp = async (): Promise<void> => {
         if (this.props.loading) {
             return;
         }
 
         Keyboard.dismiss();
-        await this.props.login(this.state.username, this.state.password);
+        await this.props.signUp(this.state.username, this.state.password);
     };
 
     public render() {
@@ -62,8 +61,8 @@ export class LoginScreenView extends Component<Props, State> {
             <ScrollView keyboardShouldPersistTaps="handled" style={screenStyles.scroll}>
                 <View style={screenStyles.container}>
 
-                    <Text style={styles.title}>
-                        {strings.title}
+                    <Text style={styles.message}>
+                        {strings.message}
                     </Text>
 
                     <ErrorMessage error={this.props.error} style={styles.error}/>
@@ -83,15 +82,13 @@ export class LoginScreenView extends Component<Props, State> {
                                    this.setPassword(password);
                                }}/>
 
-                    <Button testID="login"
-                            title={strings.login}
+                    <Button testID="signUp"
+                            title={strings.signUp}
                             buttonStyle={[buttonStyles.button, styles.button]}
                             titleStyle={buttonStyles.title}
                             loading={this.props.loading}
-                            disabled={!this.isLoginEnabled()}
-                            onPress={this.login}/>
-
-                    <SignUpLink signUp={this.props.signUp}/>
+                            disabled={!this.isSignUpEnabled()}
+                            onPress={this.signUp}/>
 
                 </View>
             </ScrollView>
@@ -100,10 +97,13 @@ export class LoginScreenView extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 35,
-        marginTop: 100,
+    message: {
+        fontSize: 20,
+        marginTop: 75,
         marginBottom: 40,
+        marginHorizontal: 25,
+        textAlign: 'center',
+        color: Colors.lightGrey,
     },
     input: {
         width: '75%',
