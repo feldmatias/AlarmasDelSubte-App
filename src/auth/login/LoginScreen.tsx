@@ -5,13 +5,15 @@ import DiContainer from '../../di/Container';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {LoginScreenView} from './LoginScreenView';
+import {NavigationStackProp} from 'react-navigation-stack';
+import {Routes} from '../../screens/Routes';
 
 interface Props {
-
+    navigation: NavigationStackProp
 }
 
 interface State {
-    loading: boolean,
+    loading: boolean
     error: string
 }
 
@@ -32,7 +34,7 @@ export class LoginScreen extends Component<Props, State> {
 
     private authRepository = DiContainer.get<AuthRepository>(AuthRepository);
 
-    private login = async (username: string, password: string) => {
+    private login = async (username: string, password: string): Promise<void> => {
         this.setLoading(true);
         const result = await this.authRepository.login(username, password);
         this.setLoading(false);
@@ -47,6 +49,10 @@ export class LoginScreen extends Component<Props, State> {
 
         //TODO: handle success
     }
+
+    private signUp = (): void => {
+        this.props.navigation.navigate(Routes.SignUp);
+    };
 
     private setLoading(loading: boolean): void {
         this.setState({loading});
@@ -65,6 +71,7 @@ export class LoginScreen extends Component<Props, State> {
                 loading={this.state.loading}
                 error={this.state.error}
                 login={this.login}
+                signUp={this.signUp}
             />
         );
     }

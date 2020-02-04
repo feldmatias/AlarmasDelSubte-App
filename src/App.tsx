@@ -6,9 +6,11 @@ import {createAppContainer} from 'react-navigation';
 import {Routes} from './screens/Routes';
 import {Colors} from './styles/Colors';
 import {LoginScreen} from './auth/login/LoginScreen';
+import {SignUpScreen} from './auth/signup/SignUpScreen';
 
 const AppNavigator = createStackNavigator({
     Login: LoginScreen,
+    SignUp: SignUpScreen,
 }, {
     initialRouteName: Routes.Login,
     defaultNavigationOptions: {

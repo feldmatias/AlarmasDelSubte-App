@@ -7,13 +7,14 @@ import {buttonStyles} from '../../styles/ButtonStyles';
 import {errorStyles} from '../../styles/ErrorStyles';
 
 interface Props {
-    loading: boolean,
+    loading: boolean
     error: string
     login: (username: string, password: string) => Promise<void>
+    signUp: () => void
 }
 
 interface State {
-    username: string,
+    username: string
     password: string
 }
 
@@ -22,6 +23,7 @@ const strings = {
     username: 'Usuario',
     password: 'Contraseña',
     login: 'Ingresar',
+    signUp: 'Registrarse',
 };
 
 export class LoginScreenView extends Component<Props, State> {
@@ -100,6 +102,10 @@ export class LoginScreenView extends Component<Props, State> {
                             disabled={!this.isLoginEnabled()}
                             onPress={this.login}/>
 
+                    <Text testID="signUp" style={styles.signUp} onPress={this.props.signUp}>
+                        {strings.signUp}
+                    </Text>
+
                 </View>
             </ScrollView>
         );
@@ -117,9 +123,12 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     button: {
-        marginTop: 12,
+        marginVertical: 12,
     },
     error: {
         marginBottom: 17,
+    },
+    signUp: {
+        marginTop: 15,
     },
 });
