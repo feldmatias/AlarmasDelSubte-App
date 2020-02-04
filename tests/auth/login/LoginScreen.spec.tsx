@@ -1,13 +1,13 @@
 import 'react-native';
-import MockGraphQLClient from '../graphql/MockGraphQLClient';
+import MockGraphQLClient from '../../graphql/MockGraphQLClient';
 import {fireEvent, render, RenderAPI} from 'react-native-testing-library';
-import {LoginScreen} from '../../src/auth/login/LoginScreen';
+import {LoginScreen} from '../../../src/auth/login/LoginScreen';
 import React from 'react';
-import {GraphQLService} from '../../src/graphql/GraphQLService';
-import {GraphQLOperation} from '../../src/graphql/GraphQLClient';
-import {LoginMutation} from '../../src/auth/login/LoginMutation';
-import {MockNavigation} from '../utils/MockNavigation';
-import {Routes} from '../../src/screens/Routes';
+import {GraphQLService} from '../../../src/graphql/GraphQLService';
+import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
+import {LoginMutation} from '../../../src/auth/login/LoginMutation';
+import {MockNavigation} from '../../utils/MockNavigation';
+import {Routes} from '../../../src/screens/Routes';
 
 describe('Login Screen', () => {
 
