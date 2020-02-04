@@ -14,6 +14,13 @@ Install node.js and npm, then run `npm install`
 - Run tests: `npm test`
 - Run linter: `npm run pretest`
 
+### Configuration
+Check `.env.example`
+
+- Generate a `.env` file for development
+
+- Generate a `.env.production` file for release
+
 ### Git hooks
 Copy all files in `/hooks` to `.git/hooks/`
 
