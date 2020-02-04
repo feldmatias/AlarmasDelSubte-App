@@ -17,7 +17,7 @@ interface State {
 }
 
 const strings = {
-    screenTitle: 'Nuevo Usuario',
+    screenTitle: 'Nueva Cuenta',
 };
 
 export class SignUpScreen extends Component<Props, State> {
