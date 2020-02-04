@@ -3,6 +3,5 @@ export const Colors = {
     error: '#ff0000',
     white: '#fff',
     gray: 'gray',
-
-
+    link: '#007bff',
 };

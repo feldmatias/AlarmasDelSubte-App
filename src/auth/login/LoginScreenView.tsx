@@ -4,7 +4,8 @@ import {Button} from 'react-native-elements';
 import {screenStyles} from '../../styles/ScreenStyles';
 import {inputStyles} from '../../styles/InputStyles';
 import {buttonStyles} from '../../styles/ButtonStyles';
-import {errorStyles} from '../../styles/ErrorStyles';
+import {SignUpLink} from './components/SignUpLink';
+import {ErrorMessage} from '../../components/ErrorMessage';
 
 interface Props {
     loading: boolean
@@ -23,7 +24,6 @@ const strings = {
     username: 'Usuario',
     password: 'Contraseña',
     login: 'Ingresar',
-    signUp: 'Registrarse',
 };
 
 export class LoginScreenView extends Component<Props, State> {
@@ -57,17 +57,6 @@ export class LoginScreenView extends Component<Props, State> {
         await this.props.login(this.state.username, this.state.password);
     };
 
-    private renderError() {
-        if (!this.props.error) {
-            return null;
-        }
-
-        return (
-            <Text testID="error" style={[errorStyles.error, styles.error]}>
-                {this.props.error}
-            </Text>);
-    }
-
     public render() {
         return (
             <ScrollView keyboardShouldPersistTaps="handled" style={screenStyles.scroll}>
@@ -77,7 +66,7 @@ export class LoginScreenView extends Component<Props, State> {
                         {strings.title}
                     </Text>
 
-                    {this.renderError()}
+                    <ErrorMessage error={this.props.error} style={styles.error}/>
 
                     <TextInput testID="username"
                                placeholder={strings.username}
@@ -102,9 +91,7 @@ export class LoginScreenView extends Component<Props, State> {
                             disabled={!this.isLoginEnabled()}
                             onPress={this.login}/>
 
-                    <Text testID="signUp" style={styles.signUp} onPress={this.props.signUp}>
-                        {strings.signUp}
-                    </Text>
+                    <SignUpLink signUp={this.props.signUp}/>
 
                 </View>
             </ScrollView>
@@ -123,12 +110,10 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     button: {
-        marginVertical: 12,
+        marginTop: 12,
+        marginBottom: 35,
     },
     error: {
         marginBottom: 17,
-    },
-    signUp: {
-        marginTop: 15,
     },
 });
