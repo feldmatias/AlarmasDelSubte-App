@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import {Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {Button} from 'react-native-elements';
-import {Colors} from '../../styles/Colors';
+import {screenStyles} from '../../styles/ScreenStyles';
+import {inputStyles} from '../../styles/InputStyles';
+import {buttonStyles} from '../../styles/ButtonStyles';
+import {errorStyles} from '../../styles/ErrorStyles';
 
 interface Props {
     loading: boolean,
@@ -57,15 +60,16 @@ export class LoginScreenView extends Component<Props, State> {
             return null;
         }
 
-        return (<Text testID="error" style={styles.error}>
-            {this.props.error}
-        </Text>);
+        return (
+            <Text testID="error" style={[errorStyles.error, styles.error]}>
+                {this.props.error}
+            </Text>);
     }
 
     public render() {
         return (
-            <ScrollView keyboardShouldPersistTaps="handled" style={styles.scroll}>
-                <View style={styles.container}>
+            <ScrollView keyboardShouldPersistTaps="handled" style={screenStyles.scroll}>
+                <View style={screenStyles.container}>
 
                     <Text style={styles.title}>
                         {strings.title}
@@ -75,7 +79,7 @@ export class LoginScreenView extends Component<Props, State> {
 
                     <TextInput testID="username"
                                placeholder={strings.username}
-                               style={styles.input}
+                               style={[inputStyles.text, styles.input]}
                                onChangeText={username => {
                                    this.setUsername(username);
                                }}/>
@@ -83,15 +87,15 @@ export class LoginScreenView extends Component<Props, State> {
                     <TextInput testID="password"
                                placeholder={strings.password}
                                secureTextEntry={true}
-                               style={styles.input}
+                               style={[inputStyles.text, styles.input]}
                                onChangeText={password => {
                                    this.setPassword(password);
                                }}/>
 
                     <Button testID="login"
                             title={strings.login}
-                            buttonStyle={styles.button}
-                            titleStyle={styles.buttonTitle}
+                            buttonStyle={[buttonStyles.button, styles.button]}
+                            titleStyle={buttonStyles.title}
                             loading={this.props.loading}
                             disabled={!this.isLoginEnabled()}
                             onPress={this.login}/>
@@ -108,34 +112,14 @@ const styles = StyleSheet.create({
         marginTop: 100,
         marginBottom: 40,
     },
-    scroll: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: Colors.white,
-    },
-    container: {
-        alignItems: 'center',
-    },
     input: {
         width: '75%',
         marginBottom: 15,
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: 17,
-        borderRadius: 10,
     },
     button: {
-        backgroundColor: Colors.primary,
-        paddingHorizontal: 37,
-        paddingVertical: 9,
         marginTop: 12,
     },
-    buttonTitle: {
-        fontSize: 20,
-    },
     error: {
-        color: Colors.error,
-        fontSize: 17,
         marginBottom: 17,
     },
 });
