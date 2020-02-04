@@ -1,27 +1,25 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {AuthRepository} from '../AuthRepository';
 import DiContainer from '../../di/Container';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {LoginScreenView} from './LoginScreenView';
-import {NavigationStackProp} from 'react-navigation-stack';
 import {Routes} from '../../screens/Routes';
+import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
 
-interface Props {
-    navigation: NavigationStackProp
+interface Props extends ScreenProps {
 }
 
-interface State {
-    loading: boolean
-    error: string
+interface State extends ScreenState {
+
 }
 
 const strings = {
     screenTitle: 'Alarmas del Subte',
 };
 
-export class LoginScreen extends Component<Props, State> {
+export class LoginScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: strings.screenTitle,
@@ -53,17 +51,6 @@ export class LoginScreen extends Component<Props, State> {
     private signUp = (): void => {
         this.props.navigation.navigate(Routes.SignUp);
     };
-
-    private setLoading(loading: boolean): void {
-        this.setState({loading});
-        if (loading) {
-            this.setError('');
-        }
-    }
-
-    private setError(error: string): void {
-        this.setState({error});
-    }
 
     public render() {
         return (

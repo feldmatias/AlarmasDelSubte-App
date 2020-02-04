@@ -15,11 +15,15 @@ describe('Login Screen', () => {
     let loginMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
-    beforeEach(() => {
-        MockGraphQLClient.mock();
+    function renderScreen() : void {
         navigation = new MockNavigation();
         renderApi = render(<LoginScreen navigation={navigation.instance()}/>);
+    }
+
+    beforeEach(() => {
+        MockGraphQLClient.mock();
         loginMutation = new LoginMutation('', '').getMutation();
+        renderScreen();
     });
 
     afterEach(() => {

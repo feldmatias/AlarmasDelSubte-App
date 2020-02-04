@@ -7,16 +7,23 @@ import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {SignUpMutation} from '../../../src/auth/signup/SignUpMutation';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {PasswordValidator} from '../../../src/auth/signup/PasswordValidator';
+import {MockNavigation} from '../../utils/MockNavigation';
 
 describe('SignUp Screen', () => {
 
     let renderApi: RenderAPI;
     let signUpMutation: GraphQLOperation;
+    let navigation: MockNavigation;
+
+    function renderScreen(): void {
+        navigation = new MockNavigation();
+        renderApi = render(<SignUpScreen navigation={navigation.instance()}/>);
+    }
 
     beforeEach(() => {
         MockGraphQLClient.mock();
-        renderApi = render(<SignUpScreen/>);
         signUpMutation = new SignUpMutation('', '').getMutation();
+        renderScreen();
     });
 
     afterEach(() => {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {SignUpScreenView} from './SignUpScreenView';
 import DiContainer from '../../di/Container';
@@ -6,21 +6,21 @@ import {AuthRepository} from '../AuthRepository';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {PasswordValidator} from './PasswordValidator';
+import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
 
-interface Props {
+interface Props extends ScreenProps {
 
 }
 
-interface State {
-    loading: boolean
-    error: string
+interface State extends ScreenState {
+
 }
 
 const strings = {
     screenTitle: 'Nueva Cuenta',
 };
 
-export class SignUpScreen extends Component<Props, State> {
+export class SignUpScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: strings.screenTitle,
@@ -57,17 +57,6 @@ export class SignUpScreen extends Component<Props, State> {
         }
 
         //TODO: handle success
-    }
-
-    private setLoading(loading: boolean): void {
-        this.setState({loading});
-        if (loading) {
-            this.setError('');
-        }
-    }
-
-    private setError(error: string): void {
-        this.setState({error});
     }
 
     public render() {
