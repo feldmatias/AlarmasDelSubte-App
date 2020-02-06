@@ -49,6 +49,12 @@ describe('SignUp Screen', () => {
         await fireEvent.press(renderApi.getByTestId('signUp'));
     }
 
+    async function signUpWithCredentials(): Promise<void> {
+        writeUsername();
+        writePassword();
+        await signUp();
+    }
+
     function signUpResponse(token = 'token') {
         return {
             registerUser:
@@ -97,10 +103,7 @@ describe('SignUp Screen', () => {
         it('when signup then should be loading', async () => {
             MockGraphQLClient.mockLoading(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            signUp();
+            signUpWithCredentials();
 
             assertIsLoading(true);
         });
@@ -108,10 +111,7 @@ describe('SignUp Screen', () => {
         it('when signup response then should not be loading', async () => {
             MockGraphQLClient.mockNetworkError(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertIsLoading(false);
         });
@@ -119,10 +119,7 @@ describe('SignUp Screen', () => {
         it('when loading then should not signup twice', async () => {
             MockGraphQLClient.mockLoading(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            signUp();
+            signUpWithCredentials();
             signUp();
 
             assertIsLoading(true);
@@ -143,10 +140,7 @@ describe('SignUp Screen', () => {
         it('when network error then show error', async () => {
             MockGraphQLClient.mockNetworkError(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertErrorShown(GraphQLService.DEFAULT_ERROR);
         });
@@ -155,10 +149,7 @@ describe('SignUp Screen', () => {
             const error = 'some error';
             MockGraphQLClient.mockError(signUpMutation, error);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertErrorShown(error);
         });
@@ -166,10 +157,7 @@ describe('SignUp Screen', () => {
         it('when api success then hide error', async () => {
             MockGraphQLClient.mockSuccess(signUpMutation, {registerUser: {token: 'token'}});
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertErrorNotShown();
         });
@@ -214,10 +202,7 @@ describe('SignUp Screen', () => {
         it('should navigate to subways list when successful signup', async () => {
             MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             navigation.assertNavigatedToMain(Routes.SubwaysList);
         });
@@ -231,10 +216,7 @@ describe('SignUp Screen', () => {
             token.token = 'auth token';
             MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse(token.token));
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             MockStorage.assertSaved(AuthStorage.AUTH_TOKEN_KEY, token);
         });
@@ -242,10 +224,7 @@ describe('SignUp Screen', () => {
         it('should not save auth token when error signup', async () => {
             MockGraphQLClient.mockError(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
         });

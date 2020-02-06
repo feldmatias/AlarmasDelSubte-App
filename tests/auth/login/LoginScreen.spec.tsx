@@ -48,6 +48,12 @@ describe('Login Screen', () => {
         await fireEvent.press(renderApi.getByTestId('login'));
     }
 
+    async function loginWithCredentials(): Promise<void> {
+        writeUsername();
+        writePassword();
+        await login();
+    }
+
     function loginResponse(token = 'token') {
         return {
             login:
@@ -96,10 +102,7 @@ describe('Login Screen', () => {
         it('when login then should be loading', async () => {
             MockGraphQLClient.mockLoading(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            login();
+            loginWithCredentials();
 
             assertIsLoading(true);
         });
@@ -107,10 +110,7 @@ describe('Login Screen', () => {
         it('when login response then should not be loading', async () => {
             MockGraphQLClient.mockNetworkError(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertIsLoading(false);
         });
@@ -118,10 +118,7 @@ describe('Login Screen', () => {
         it('when loading then should not login twice', async () => {
             MockGraphQLClient.mockLoading(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            login();
+            loginWithCredentials();
             login();
 
             assertIsLoading(true);
@@ -142,10 +139,7 @@ describe('Login Screen', () => {
         it('when network error then show error', async () => {
             MockGraphQLClient.mockNetworkError(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertErrorShown(GraphQLService.DEFAULT_ERROR);
         });
@@ -154,10 +148,7 @@ describe('Login Screen', () => {
             const error = 'some error';
             MockGraphQLClient.mockError(loginMutation, error);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertErrorShown(error);
         });
@@ -165,10 +156,7 @@ describe('Login Screen', () => {
         it('when api success then hide error', async () => {
             MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertErrorNotShown();
         });
@@ -206,10 +194,7 @@ describe('Login Screen', () => {
         it('should navigate to subways list when successful login', async () => {
             MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             navigation.assertNavigatedToMain(Routes.SubwaysList);
         });
@@ -233,10 +218,7 @@ describe('Login Screen', () => {
             token.token = 'auth token';
             MockGraphQLClient.mockSuccess(loginMutation, loginResponse(token.token));
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             MockStorage.assertSaved(AuthStorage.AUTH_TOKEN_KEY, token);
         });
@@ -244,10 +226,7 @@ describe('Login Screen', () => {
         it('should not save auth token when error login', async () => {
             MockGraphQLClient.mockError(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
         });
