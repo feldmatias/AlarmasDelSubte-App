@@ -1,6 +1,6 @@
 import 'react-native';
 import MockGraphQLClient from '../../graphql/MockGraphQLClient';
-import {fireEvent, render, RenderAPI} from 'react-native-testing-library';
+import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import React from 'react';
 import {SignUpScreen} from '../../../src/auth/signup/SignUpScreen';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
@@ -12,6 +12,7 @@ import {AuthToken} from '../../../src/auth/AuthToken';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
 import {Routes} from '../../../src/screens/Routes';
+import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 
 describe('SignUp Screen', () => {
 
@@ -19,16 +20,16 @@ describe('SignUp Screen', () => {
     let signUpMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
-    function renderScreen(): void {
+    async function renderScreen(): Promise<void> {
         navigation = new MockNavigation();
-        renderApi = render(<SignUpScreen navigation={navigation.instance()}/>);
+        renderApi = await ScreenTestUtils.render(<SignUpScreen navigation={navigation.instance()}/>);
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mock();
         signUpMutation = new SignUpMutation('', '').getMutation();
-        renderScreen();
+        await renderScreen();
     });
 
     afterEach(() => {

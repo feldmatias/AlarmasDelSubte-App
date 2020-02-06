@@ -31,5 +31,9 @@ export class AuthRepository {
         }
         return result;
     }
+
+    public async isLoggedIn(): Promise<boolean> {
+        return await this.storage.hasToken();
+    }
 }
 

@@ -1,6 +1,6 @@
 import 'react-native';
 import MockGraphQLClient from '../../graphql/MockGraphQLClient';
-import {fireEvent, render, RenderAPI} from 'react-native-testing-library';
+import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import {LoginScreen} from '../../../src/auth/login/LoginScreen';
 import React from 'react';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
@@ -11,6 +11,7 @@ import {Routes} from '../../../src/screens/Routes';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
 import {AuthToken} from '../../../src/auth/AuthToken';
+import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 
 describe('Login Screen', () => {
 
@@ -18,16 +19,16 @@ describe('Login Screen', () => {
     let loginMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
-    function renderScreen(): void {
+    async function renderScreen(): Promise<void> {
         navigation = new MockNavigation();
-        renderApi = render(<LoginScreen navigation={navigation.instance()}/>);
+        renderApi = await ScreenTestUtils.render(<LoginScreen navigation={navigation.instance()}/>);
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mock();
         loginMutation = new LoginMutation('', '').getMutation();
-        renderScreen();
+        await renderScreen();
     });
 
     afterEach(() => {
@@ -209,6 +210,16 @@ describe('Login Screen', () => {
             writePassword();
 
             await login();
+
+            navigation.assertNavigatedToMain(Routes.SubwaysList);
+        });
+
+        it('should navigate to subways list if already logged in', async () => {
+            const token = new AuthToken();
+            token.token = 'existing auth token';
+            MockStorage.mockSavedValue(AuthStorage.AUTH_TOKEN_KEY, token);
+
+            await renderScreen(); //Render to trigger componentDidMountEvent
 
             navigation.assertNavigatedToMain(Routes.SubwaysList);
         });

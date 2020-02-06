@@ -1,4 +1,4 @@
-import {instance, mock, verify, anyString} from 'ts-mockito';
+import {anyString, instance, mock, verify, when} from 'ts-mockito';
 import {STORAGE_DI, StorageClient} from '../../src/storage/StorageClient';
 import DiContainer from '../../src/di/Container';
 
@@ -15,6 +15,10 @@ class MockStorage {
 
     public reset(): void {
         DiContainer.rebind<StorageClient>(STORAGE_DI).toConstantValue(this.realStorage);
+    }
+
+    public mockSavedValue<T>(key: string, value: T): void {
+        when(this.storageMock.get(key)).thenResolve(JSON.stringify(value));
     }
 
     public assertSaved<T>(key: string, value: T): void {
