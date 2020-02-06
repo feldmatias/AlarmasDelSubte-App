@@ -7,10 +7,11 @@ import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {SignUpMutation} from '../../../src/auth/signup/SignUpMutation';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {PasswordValidator} from '../../../src/auth/signup/PasswordValidator';
-import {MockNavigation} from '../../utils/MockNavigation';
+import {MockNavigation} from '../../screens/MockNavigation';
 import {AuthToken} from '../../../src/auth/AuthToken';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
+import {Routes} from '../../../src/screens/Routes';
 
 describe('SignUp Screen', () => {
 
@@ -207,6 +208,17 @@ describe('SignUp Screen', () => {
             signUp();
 
             MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+        it('should navigate to subways list when successful signup', async () => {
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
+
+            writeUsername();
+            writePassword();
+
+            await signUp();
+
+            navigation.assertNavigatedToMain(Routes.SubwaysList);
         });
 
     });

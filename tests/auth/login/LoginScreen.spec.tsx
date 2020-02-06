@@ -6,7 +6,7 @@ import React from 'react';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {LoginMutation} from '../../../src/auth/login/LoginMutation';
-import {MockNavigation} from '../../utils/MockNavigation';
+import {MockNavigation} from '../../screens/MockNavigation';
 import {Routes} from '../../../src/screens/Routes';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
@@ -200,6 +200,17 @@ describe('Login Screen', () => {
             login();
 
             MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+        it('should navigate to subways list when successful login', async () => {
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
+
+            writeUsername();
+            writePassword();
+
+            await login();
+
+            navigation.assertNavigatedToMain(Routes.SubwaysList);
         });
 
     });
