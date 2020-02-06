@@ -1,13 +1,17 @@
 import 'react-native';
 import MockGraphQLClient from '../../graphql/MockGraphQLClient';
-import {fireEvent, render, RenderAPI} from 'react-native-testing-library';
+import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import {LoginScreen} from '../../../src/auth/login/LoginScreen';
 import React from 'react';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {LoginMutation} from '../../../src/auth/login/LoginMutation';
-import {MockNavigation} from '../../utils/MockNavigation';
+import {MockNavigation} from '../../screens/MockNavigation';
 import {Routes} from '../../../src/screens/Routes';
+import MockStorage from '../../storage/MockStorage';
+import {AuthStorage} from '../../../src/auth/AuthStorage';
+import {AuthToken} from '../../../src/auth/AuthToken';
+import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 
 describe('Login Screen', () => {
 
@@ -15,19 +19,21 @@ describe('Login Screen', () => {
     let loginMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
-    function renderScreen() : void {
+    async function renderScreen(): Promise<void> {
         navigation = new MockNavigation();
-        renderApi = render(<LoginScreen navigation={navigation.instance()}/>);
+        renderApi = await ScreenTestUtils.render(<LoginScreen navigation={navigation.instance()}/>);
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         MockGraphQLClient.mock();
+        MockStorage.mock();
         loginMutation = new LoginMutation('', '').getMutation();
-        renderScreen();
+        await renderScreen();
     });
 
     afterEach(() => {
         MockGraphQLClient.reset();
+        MockStorage.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -40,6 +46,19 @@ describe('Login Screen', () => {
 
     async function login(): Promise<void> {
         await fireEvent.press(renderApi.getByTestId('login'));
+    }
+
+    async function loginWithCredentials(): Promise<void> {
+        writeUsername();
+        writePassword();
+        await login();
+    }
+
+    function loginResponse(token = 'token') {
+        return {
+            login:
+                {token: token},
+        };
     }
 
     describe('Validations', () => {
@@ -83,10 +102,7 @@ describe('Login Screen', () => {
         it('when login then should be loading', async () => {
             MockGraphQLClient.mockLoading(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            login();
+            loginWithCredentials();
 
             assertIsLoading(true);
         });
@@ -94,10 +110,7 @@ describe('Login Screen', () => {
         it('when login response then should not be loading', async () => {
             MockGraphQLClient.mockNetworkError(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertIsLoading(false);
         });
@@ -105,10 +118,7 @@ describe('Login Screen', () => {
         it('when loading then should not login twice', async () => {
             MockGraphQLClient.mockLoading(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            login();
+            loginWithCredentials();
             login();
 
             assertIsLoading(true);
@@ -129,10 +139,7 @@ describe('Login Screen', () => {
         it('when network error then show error', async () => {
             MockGraphQLClient.mockNetworkError(loginMutation);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertErrorShown(GraphQLService.DEFAULT_ERROR);
         });
@@ -141,21 +148,15 @@ describe('Login Screen', () => {
             const error = 'some error';
             MockGraphQLClient.mockError(loginMutation, error);
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertErrorShown(error);
         });
 
         it('when api success then hide error', async () => {
-            MockGraphQLClient.mockSuccess(loginMutation, {login: {token: 'token'}});
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
 
-            writeUsername();
-            writePassword();
-
-            await login();
+            await loginWithCredentials();
 
             assertErrorNotShown();
         });
@@ -188,6 +189,46 @@ describe('Login Screen', () => {
             login();
 
             MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+        it('should navigate to subways list when successful login', async () => {
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
+
+            await loginWithCredentials();
+
+            navigation.assertNavigatedToMain(Routes.SubwaysList);
+        });
+
+        it('should navigate to subways list if already logged in', async () => {
+            const token = new AuthToken();
+            token.token = 'existing auth token';
+            MockStorage.mockSavedValue(AuthStorage.AUTH_TOKEN_KEY, token);
+
+            await renderScreen(); //Render to trigger componentDidMountEvent
+
+            navigation.assertNavigatedToMain(Routes.SubwaysList);
+        });
+
+    });
+
+    describe('Auth Token', () => {
+
+        it('should save auth token when successful login', async () => {
+            const token = new AuthToken();
+            token.token = 'auth token';
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse(token.token));
+
+            await loginWithCredentials();
+
+            MockStorage.assertSaved(AuthStorage.AUTH_TOKEN_KEY, token);
+        });
+
+        it('should not save auth token when error login', async () => {
+            MockGraphQLClient.mockError(loginMutation);
+
+            await loginWithCredentials();
+
+            MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
         });
 
     });

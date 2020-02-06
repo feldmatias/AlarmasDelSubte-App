@@ -7,10 +7,12 @@ import {Routes} from './screens/Routes';
 import {Colors} from './styles/Colors';
 import {LoginScreen} from './auth/login/LoginScreen';
 import {SignUpScreen} from './auth/signup/SignUpScreen';
+import {SubwaysListScreen} from './subways/SubwaysListScreen';
 
 const AppNavigator = createStackNavigator({
     Login: LoginScreen,
     SignUp: SignUpScreen,
+    SubwaysList: SubwaysListScreen,
 }, {
     initialRouteName: Routes.Login,
     defaultNavigationOptions: {

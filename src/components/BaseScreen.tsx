@@ -1,5 +1,6 @@
 import {NavigationStackProp} from 'react-navigation-stack';
 import {Component} from 'react';
+import {Navigation} from '../screens/Navigation';
 
 export interface ScreenProps {
     navigation: NavigationStackProp
@@ -21,5 +22,9 @@ export abstract class BaseScreen<Props extends ScreenProps, State extends Screen
 
     protected setError(error: string): void {
         this.setState({error});
+    }
+
+    protected navigation(): Navigation {
+        return new Navigation(this.props.navigation);
     }
 }

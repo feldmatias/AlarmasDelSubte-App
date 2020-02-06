@@ -1,13 +1,18 @@
 import 'react-native';
 import MockGraphQLClient from '../../graphql/MockGraphQLClient';
-import {fireEvent, render, RenderAPI} from 'react-native-testing-library';
+import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import React from 'react';
 import {SignUpScreen} from '../../../src/auth/signup/SignUpScreen';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {SignUpMutation} from '../../../src/auth/signup/SignUpMutation';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {PasswordValidator} from '../../../src/auth/signup/PasswordValidator';
-import {MockNavigation} from '../../utils/MockNavigation';
+import {MockNavigation} from '../../screens/MockNavigation';
+import {AuthToken} from '../../../src/auth/AuthToken';
+import MockStorage from '../../storage/MockStorage';
+import {AuthStorage} from '../../../src/auth/AuthStorage';
+import {Routes} from '../../../src/screens/Routes';
+import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 
 describe('SignUp Screen', () => {
 
@@ -15,19 +20,21 @@ describe('SignUp Screen', () => {
     let signUpMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
-    function renderScreen(): void {
+    async function renderScreen(): Promise<void> {
         navigation = new MockNavigation();
-        renderApi = render(<SignUpScreen navigation={navigation.instance()}/>);
+        renderApi = await ScreenTestUtils.render(<SignUpScreen navigation={navigation.instance()}/>);
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         MockGraphQLClient.mock();
+        MockStorage.mock();
         signUpMutation = new SignUpMutation('', '').getMutation();
-        renderScreen();
+        await renderScreen();
     });
 
     afterEach(() => {
         MockGraphQLClient.reset();
+        MockStorage.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -40,6 +47,19 @@ describe('SignUp Screen', () => {
 
     async function signUp(): Promise<void> {
         await fireEvent.press(renderApi.getByTestId('signUp'));
+    }
+
+    async function signUpWithCredentials(): Promise<void> {
+        writeUsername();
+        writePassword();
+        await signUp();
+    }
+
+    function signUpResponse(token = 'token') {
+        return {
+            registerUser:
+                {token: token},
+        };
     }
 
     describe('Validations', () => {
@@ -83,10 +103,7 @@ describe('SignUp Screen', () => {
         it('when signup then should be loading', async () => {
             MockGraphQLClient.mockLoading(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            signUp();
+            signUpWithCredentials();
 
             assertIsLoading(true);
         });
@@ -94,10 +111,7 @@ describe('SignUp Screen', () => {
         it('when signup response then should not be loading', async () => {
             MockGraphQLClient.mockNetworkError(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertIsLoading(false);
         });
@@ -105,10 +119,7 @@ describe('SignUp Screen', () => {
         it('when loading then should not signup twice', async () => {
             MockGraphQLClient.mockLoading(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            signUp();
+            signUpWithCredentials();
             signUp();
 
             assertIsLoading(true);
@@ -129,10 +140,7 @@ describe('SignUp Screen', () => {
         it('when network error then show error', async () => {
             MockGraphQLClient.mockNetworkError(signUpMutation);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertErrorShown(GraphQLService.DEFAULT_ERROR);
         });
@@ -141,10 +149,7 @@ describe('SignUp Screen', () => {
             const error = 'some error';
             MockGraphQLClient.mockError(signUpMutation, error);
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertErrorShown(error);
         });
@@ -152,10 +157,7 @@ describe('SignUp Screen', () => {
         it('when api success then hide error', async () => {
             MockGraphQLClient.mockSuccess(signUpMutation, {registerUser: {token: 'token'}});
 
-            writeUsername();
-            writePassword();
-
-            await signUp();
+            await signUpWithCredentials();
 
             assertErrorNotShown();
         });
@@ -170,7 +172,7 @@ describe('SignUp Screen', () => {
         });
 
         it('when signup with password 6 characters length then hide error', async () => {
-            MockGraphQLClient.mockSuccess(signUpMutation, {registerUser: {token: 'token'}});
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
 
             writeUsername();
             writePassword('123456');
@@ -195,6 +197,36 @@ describe('SignUp Screen', () => {
             signUp();
 
             MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+        it('should navigate to subways list when successful signup', async () => {
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
+
+            await signUpWithCredentials();
+
+            navigation.assertNavigatedToMain(Routes.SubwaysList);
+        });
+
+    });
+
+    describe('Auth Token', () => {
+
+        it('should save auth token when successful signup', async () => {
+            const token = new AuthToken();
+            token.token = 'auth token';
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse(token.token));
+
+            await signUpWithCredentials();
+
+            MockStorage.assertSaved(AuthStorage.AUTH_TOKEN_KEY, token);
+        });
+
+        it('should not save auth token when error signup', async () => {
+            MockGraphQLClient.mockError(signUpMutation);
+
+            await signUpWithCredentials();
+
+            MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
         });
 
     });

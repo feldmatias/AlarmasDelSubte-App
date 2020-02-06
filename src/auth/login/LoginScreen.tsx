@@ -45,12 +45,19 @@ export class LoginScreen extends BaseScreen<Props, State> {
             return;
         }
 
-        //TODO: handle success
+        this.navigation().navigateToMainScreen(Routes.SubwaysList);
     }
 
     private signUp = (): void => {
-        this.props.navigation.navigate(Routes.SignUp);
+        this.navigation().navigate(Routes.SignUp);
     };
+
+    public async componentDidMount(): Promise<void> {
+        const isLoggedIn = await this.authRepository.isLoggedIn();
+        if (isLoggedIn) {
+            this.navigation().navigateToMainScreen(Routes.SubwaysList);
+        }
+    }
 
     public render() {
         return (

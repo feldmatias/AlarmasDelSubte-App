@@ -29,7 +29,7 @@ class MockGraphQLClient {
         this.apolloMock.setRequestHandler(request, this.requestHandler);
     }
 
-    public mockError(request: GraphQLOperation, error: string): void {
+    public mockError(request: GraphQLOperation, error = 'error'): void {
         this.requestHandler = jest.fn().mockResolvedValue({errors: [{message: error}]});
         this.apolloMock.setRequestHandler(request, this.requestHandler);
     }
