@@ -8,6 +8,9 @@ import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {LoginMutation} from '../../../src/auth/login/LoginMutation';
 import {MockNavigation} from '../../utils/MockNavigation';
 import {Routes} from '../../../src/screens/Routes';
+import MockStorage from '../../storage/MockStorage';
+import {AuthStorage} from '../../../src/auth/AuthStorage';
+import {AuthToken} from '../../../src/auth/AuthToken';
 
 describe('Login Screen', () => {
 
@@ -15,19 +18,21 @@ describe('Login Screen', () => {
     let loginMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
-    function renderScreen() : void {
+    function renderScreen(): void {
         navigation = new MockNavigation();
         renderApi = render(<LoginScreen navigation={navigation.instance()}/>);
     }
 
     beforeEach(() => {
         MockGraphQLClient.mock();
+        MockStorage.mock();
         loginMutation = new LoginMutation('', '').getMutation();
         renderScreen();
     });
 
     afterEach(() => {
         MockGraphQLClient.reset();
+        MockStorage.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -40,6 +45,13 @@ describe('Login Screen', () => {
 
     async function login(): Promise<void> {
         await fireEvent.press(renderApi.getByTestId('login'));
+    }
+
+    function loginResponse(token = 'token') {
+        return {
+            login:
+                {token: token},
+        };
     }
 
     describe('Validations', () => {
@@ -150,7 +162,7 @@ describe('Login Screen', () => {
         });
 
         it('when api success then hide error', async () => {
-            MockGraphQLClient.mockSuccess(loginMutation, {login: {token: 'token'}});
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
 
             writeUsername();
             writePassword();
@@ -188,6 +200,34 @@ describe('Login Screen', () => {
             login();
 
             MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+    });
+
+    describe('Auth Token', () => {
+
+        it('should save auth token when successful login', async () => {
+            const token = new AuthToken();
+            token.token = 'auth token';
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse(token.token));
+
+            writeUsername();
+            writePassword();
+
+            await login();
+
+            MockStorage.assertSaved(AuthStorage.AUTH_TOKEN_KEY, token);
+        });
+
+        it('should not save auth token when error login', async () => {
+            MockGraphQLClient.mockError(loginMutation);
+
+            writeUsername();
+            writePassword();
+
+            await login();
+
+            MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
         });
 
     });

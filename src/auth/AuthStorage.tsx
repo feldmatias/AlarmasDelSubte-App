@@ -13,11 +13,11 @@ export class AuthStorage {
         await this.storage.save(AuthStorage.AUTH_TOKEN_KEY, token);
     }
 
-    public async getToken(): Promise<AuthToken | null> {
+    /*public async getToken(): Promise<AuthToken | null> {
         return await this.storage.get(AuthStorage.AUTH_TOKEN_KEY, AuthToken);
     }
 
     public async hasToken(): Promise<boolean> {
         return await this.getToken() !== null;
-    }
+    }*/
 }

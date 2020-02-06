@@ -8,6 +8,9 @@ import {SignUpMutation} from '../../../src/auth/signup/SignUpMutation';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {PasswordValidator} from '../../../src/auth/signup/PasswordValidator';
 import {MockNavigation} from '../../utils/MockNavigation';
+import {AuthToken} from '../../../src/auth/AuthToken';
+import MockStorage from '../../storage/MockStorage';
+import {AuthStorage} from '../../../src/auth/AuthStorage';
 
 describe('SignUp Screen', () => {
 
@@ -22,12 +25,14 @@ describe('SignUp Screen', () => {
 
     beforeEach(() => {
         MockGraphQLClient.mock();
+        MockStorage.mock();
         signUpMutation = new SignUpMutation('', '').getMutation();
         renderScreen();
     });
 
     afterEach(() => {
         MockGraphQLClient.reset();
+        MockStorage.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -40,6 +45,13 @@ describe('SignUp Screen', () => {
 
     async function signUp(): Promise<void> {
         await fireEvent.press(renderApi.getByTestId('signUp'));
+    }
+
+    function signUpResponse(token = 'token') {
+        return {
+            registerUser:
+                {token: token},
+        };
     }
 
     describe('Validations', () => {
@@ -170,7 +182,7 @@ describe('SignUp Screen', () => {
         });
 
         it('when signup with password 6 characters length then hide error', async () => {
-            MockGraphQLClient.mockSuccess(signUpMutation, {registerUser: {token: 'token'}});
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
 
             writeUsername();
             writePassword('123456');
@@ -195,6 +207,34 @@ describe('SignUp Screen', () => {
             signUp();
 
             MockGraphQLClient.assertCalledWith({username, password});
+        });
+
+    });
+
+    describe('Auth Token', () => {
+
+        it('should save auth token when successful signup', async () => {
+            const token = new AuthToken();
+            token.token = 'auth token';
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse(token.token));
+
+            writeUsername();
+            writePassword();
+
+            await signUp();
+
+            MockStorage.assertSaved(AuthStorage.AUTH_TOKEN_KEY, token);
+        });
+
+        it('should not save auth token when error signup', async () => {
+            MockGraphQLClient.mockError(signUpMutation);
+
+            writeUsername();
+            writePassword();
+
+            await signUp();
+
+            MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
         });
 
     });

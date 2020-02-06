@@ -1,6 +1,5 @@
 import {inject, injectable} from 'inversify';
 import {STORAGE_DI, StorageClient} from './StorageClient';
-import {plainToClass} from 'class-transformer';
 
 @injectable()
 export class Storage {
@@ -12,12 +11,12 @@ export class Storage {
         await this.storage.set(key, jsonValue);
     }
 
-    public async get<T>(key: string, returnType: new() => T): Promise<T | null> {
+    /*public async get<T>(key: string, returnType: new() => T): Promise<T | null> {
         const value = await this.storage.get(key);
         if (!value) {
             return null;
         }
 
-        return plainToClass(returnType, value);
-    }
+        return plainToClass(returnType, JSON.parse(value)git);
+    }*/
 }
