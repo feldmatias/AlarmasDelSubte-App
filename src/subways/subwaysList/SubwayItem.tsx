@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {Subway} from './model/Subway';
+import {Subway} from '../model/Subway';
 
 interface Props {
     subway: Subway

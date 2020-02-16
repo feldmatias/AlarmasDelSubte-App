@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FlatList, ListRenderItem, SafeAreaView} from 'react-native';
-import {screenStyles} from '../styles/ScreenStyles';
-import {Subway} from './model/Subway';
+import {screenStyles} from '../../styles/ScreenStyles';
+import {Subway} from '../model/Subway';
 import {SubwayItem} from './SubwayItem';
 
 interface Props {
