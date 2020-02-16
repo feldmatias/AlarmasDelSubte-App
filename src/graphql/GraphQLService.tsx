@@ -19,14 +19,17 @@ export class GraphQLService {
 
     public async mutation<T>(mutation: GraphQLMutation, returnType: ClassType<T>): Promise<Result<T>> {
         try {
+           // const headers = await this.getHeaders();
             const result = await this.client.mutate({
                 mutation: mutation.getMutation(),
                 variables: mutation.getVariables(),
                 errorPolicy: 'all',
+                context: {},
             });
 
-            if (this.hasError(result)) {
-                return this.getError(result);
+            const error = this.getError(result);
+            if (error) {
+                return error;
             }
 
             const data = plainToClass(returnType, result.data[mutation.getName()]);
@@ -44,11 +47,12 @@ export class GraphQLService {
                 variables: query.getVariables(),
                 errorPolicy: 'all',
                 fetchPolicy: 'network-only',
-                context: {headers: await this.getHeaders()},
+                context: await this.getHeaders(),
             });
 
-            if (this.hasError(result)) {
-                return this.getError(result);
+            const error = this.getError(result);
+            if (error) {
+                return error;
             }
 
             const data = plainToClass(returnType, result.data[query.getName()] as Object[]);
@@ -59,15 +63,10 @@ export class GraphQLService {
         }
     }
 
-    private hasError<T>(result: ExecutionResult<T>): boolean {
-        return !!(result.errors && result.errors.length > 0);
-    }
-
-    private getError<T>(result: ExecutionResult<T>): Result<T> {
-        if (!result.errors) {
-            return this.getDefaultError();
+    private getError<T>(result: ExecutionResult<T>): Result<T> | undefined {
+        if (result.errors && result.errors.length > 0) {
+            return Result.Error(result.errors[0].message);
         }
-        return Result.Error(result.errors[0].message);
     }
 
     private getDefaultError<T>(): Result<T> {
@@ -81,7 +80,9 @@ export class GraphQLService {
         }
 
         return {
-            Authorization: authToken.token,
+            headers: {
+                Authorization: authToken.token,
+            },
         };
     }
 }

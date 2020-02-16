@@ -1,19 +1,28 @@
-import {anyString, instance, mock, verify, when} from 'ts-mockito';
+import {anyString, instance, mock, reset, verify, when} from 'ts-mockito';
 import {STORAGE_DI, StorageClient} from '../../src/storage/StorageClient';
 import DiContainer from '../../src/di/Container';
+import {AuthToken} from '../../src/auth/AuthToken';
+import {AuthStorage} from '../../src/auth/AuthStorage';
 
 class MockStorage {
 
-    private storageMock!: StorageClient;
+    private storageMock = mock<StorageClient>();
     private realStorage!: StorageClient;
 
     public mock(): void {
-        this.storageMock = mock<StorageClient>();
         this.realStorage = DiContainer.get<StorageClient>(STORAGE_DI);
         DiContainer.rebind<StorageClient>(STORAGE_DI).toConstantValue(instance(this.storageMock));
     }
 
+    public mockWithAuthorizationToken(): void {
+        this.mock();
+        const token = new AuthToken();
+        token.token = 'authorization token';
+        this.mockSavedValue(AuthStorage.AUTH_TOKEN_KEY, token);
+    }
+
     public reset(): void {
+        reset(this.storageMock);
         DiContainer.rebind<StorageClient>(STORAGE_DI).toConstantValue(this.realStorage);
     }
 

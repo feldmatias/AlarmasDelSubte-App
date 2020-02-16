@@ -22,10 +22,11 @@ export class SubwayItem extends Component<Props, State> {
 
     public render() {
         return (
-            <View style={styles.container}>
+            <View style={styles.container} testID="subwayItem">
                 <View style={styles.itemContainer}>
 
                     <Image
+                        testID="subwayIcon"
                         source={{uri: this.props.subway.icon}}
                         style={styles.icon}
                     />
