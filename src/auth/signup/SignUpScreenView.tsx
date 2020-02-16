@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {screenStyles} from '../../styles/ScreenStyles';
 import {ErrorMessage} from '../../components/ErrorMessage';
 import {inputStyles} from '../../styles/InputStyles';
-import {Button} from 'react-native-elements';
-import {buttonStyles} from '../../styles/ButtonStyles';
 import {Colors} from '../../styles/Colors';
+import {SubmitButton} from '../../components/SubmitButton';
 
 interface Props {
     error: string
@@ -48,11 +47,6 @@ export class SignUpScreenView extends Component<Props, State> {
     }
 
     private signUp = async (): Promise<void> => {
-        if (this.props.loading) {
-            return;
-        }
-
-        Keyboard.dismiss();
         await this.props.signUp(this.state.username, this.state.password);
     };
 
@@ -67,28 +61,29 @@ export class SignUpScreenView extends Component<Props, State> {
 
                     <ErrorMessage error={this.props.error} style={styles.error}/>
 
-                    <TextInput testID="username"
-                               placeholder={strings.username}
-                               style={[inputStyles.text, styles.input]}
-                               onChangeText={username => {
-                                   this.setUsername(username);
-                               }}/>
+                    <TextInput
+                        testID="username"
+                        placeholder={strings.username}
+                        style={[inputStyles.text, styles.input]}
+                        onChangeText={username => {
+                            this.setUsername(username);
+                        }}/>
 
-                    <TextInput testID="password"
-                               placeholder={strings.password}
-                               secureTextEntry={true}
-                               style={[inputStyles.text, styles.input]}
-                               onChangeText={password => {
-                                   this.setPassword(password);
-                               }}/>
+                    <TextInput
+                        testID="password"
+                        placeholder={strings.password}
+                        secureTextEntry={true}
+                        style={[inputStyles.text, styles.input]}
+                        onChangeText={password => {
+                            this.setPassword(password);
+                        }}/>
 
-                    <Button testID="signUp"
-                            title={strings.signUp}
-                            buttonStyle={[buttonStyles.button, styles.button]}
-                            titleStyle={buttonStyles.title}
-                            loading={this.props.loading}
-                            disabled={!this.isSignUpEnabled()}
-                            onPress={this.signUp}/>
+                    <SubmitButton
+                        title={strings.signUp}
+                        style={styles.button}
+                        loading={this.props.loading}
+                        enabled={this.isSignUpEnabled()}
+                        onSubmit={this.signUp}/>
 
                 </View>
             </ScrollView>

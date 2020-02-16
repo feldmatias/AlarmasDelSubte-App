@@ -45,7 +45,7 @@ describe('Login Screen', () => {
     }
 
     async function login(): Promise<void> {
-        await fireEvent.press(renderApi.getByTestId('login'));
+        await fireEvent.press(renderApi.getByTestId('submit'));
     }
 
     async function loginWithCredentials(): Promise<void> {
@@ -64,7 +64,7 @@ describe('Login Screen', () => {
     describe('Validations', () => {
 
         function assertLoginButtonEnabled(enabled: boolean): void {
-            const loginButton = renderApi.getByTestId('login');
+            const loginButton = renderApi.getByTestId('submit');
             expect(loginButton.props.disabled).toBe(!enabled);
         }
 
@@ -95,7 +95,7 @@ describe('Login Screen', () => {
     describe('Loading', () => {
 
         function assertIsLoading(loading: boolean): void {
-            const loginButton = renderApi.getByTestId('login');
+            const loginButton = renderApi.getByTestId('submit');
             expect(loginButton.props.loading).toBe(loading);
         }
 

@@ -46,7 +46,7 @@ describe('SignUp Screen', () => {
     }
 
     async function signUp(): Promise<void> {
-        await fireEvent.press(renderApi.getByTestId('signUp'));
+        await fireEvent.press(renderApi.getByTestId('submit'));
     }
 
     async function signUpWithCredentials(): Promise<void> {
@@ -65,7 +65,7 @@ describe('SignUp Screen', () => {
     describe('Validations', () => {
 
         function assertSignUpButtonEnabled(enabled: boolean): void {
-            const signUpButton = renderApi.getByTestId('signUp');
+            const signUpButton = renderApi.getByTestId('submit');
             expect(signUpButton.props.disabled).toBe(!enabled);
         }
 
@@ -96,7 +96,7 @@ describe('SignUp Screen', () => {
     describe('Loading', () => {
 
         function assertIsLoading(loading: boolean): void {
-            const signUpButton = renderApi.getByTestId('signUp');
+            const signUpButton = renderApi.getByTestId('submit');
             expect(signUpButton.props.loading).toBe(loading);
         }
 

@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import {Button} from 'react-native-elements';
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {screenStyles} from '../../styles/ScreenStyles';
 import {inputStyles} from '../../styles/InputStyles';
-import {buttonStyles} from '../../styles/ButtonStyles';
 import {SignUpLink} from './components/SignUpLink';
 import {ErrorMessage} from '../../components/ErrorMessage';
+import {SubmitButton} from '../../components/SubmitButton';
 
 interface Props {
     loading: boolean
@@ -49,11 +48,6 @@ export class LoginScreenView extends Component<Props, State> {
     }
 
     private login = async (): Promise<void> => {
-        if (this.props.loading) {
-            return;
-        }
-
-        Keyboard.dismiss();
         await this.props.login(this.state.username, this.state.password);
     };
 
@@ -68,28 +62,29 @@ export class LoginScreenView extends Component<Props, State> {
 
                     <ErrorMessage error={this.props.error} style={styles.error}/>
 
-                    <TextInput testID="username"
-                               placeholder={strings.username}
-                               style={[inputStyles.text, styles.input]}
-                               onChangeText={username => {
-                                   this.setUsername(username);
-                               }}/>
+                    <TextInput
+                        testID="username"
+                        placeholder={strings.username}
+                        style={[inputStyles.text, styles.input]}
+                        onChangeText={username => {
+                            this.setUsername(username);
+                        }}/>
 
-                    <TextInput testID="password"
-                               placeholder={strings.password}
-                               secureTextEntry={true}
-                               style={[inputStyles.text, styles.input]}
-                               onChangeText={password => {
-                                   this.setPassword(password);
-                               }}/>
+                    <TextInput
+                        testID="password"
+                        placeholder={strings.password}
+                        secureTextEntry={true}
+                        style={[inputStyles.text, styles.input]}
+                        onChangeText={password => {
+                            this.setPassword(password);
+                        }}/>
 
-                    <Button testID="login"
-                            title={strings.login}
-                            buttonStyle={[buttonStyles.button, styles.button]}
-                            titleStyle={buttonStyles.title}
-                            loading={this.props.loading}
-                            disabled={!this.isLoginEnabled()}
-                            onPress={this.login}/>
+                    <SubmitButton
+                        title={strings.login}
+                        style={styles.button}
+                        loading={this.props.loading}
+                        enabled={this.isLoginEnabled()}
+                        onSubmit={this.login}/>
 
                     <SignUpLink signUp={this.props.signUp}/>
 
