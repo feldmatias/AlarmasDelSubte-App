@@ -3,8 +3,8 @@ import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/
 import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
 import {SubwaysListScreenView} from './SubwaysListScreenView';
 import {Subway} from '../model/Subway';
-import DiContainer from "../../di/Container";
-import {SubwaysRepository} from "../SubwaysRepository";
+import DiContainer from '../../di/Container';
+import {SubwaysRepository} from '../SubwaysRepository';
 
 interface Props extends ScreenProps {
 }
@@ -26,7 +26,7 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
     public state: State = {
         loading: false,
         error: '',
-        subways: []
+        subways: [],
     };
 
     private subwaysRepository = DiContainer.get<SubwaysRepository>(SubwaysRepository);

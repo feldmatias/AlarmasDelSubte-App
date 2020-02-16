@@ -3,10 +3,10 @@ import {GRAPHQL_DI, GraphQLClient} from './GraphQLClient';
 import {Result} from '../utils/Result';
 import {plainToClass} from 'class-transformer';
 import {GraphQLMutation} from './GraphQLMutation';
-import {GraphQLQuery} from "./GraphQLQuery";
-import {ClassType} from "class-transformer/ClassTransformer";
-import {ExecutionResult} from "graphql";
-import {AuthStorage} from "../auth/AuthStorage";
+import {GraphQLQuery} from './GraphQLQuery';
+import {ClassType} from 'class-transformer/ClassTransformer';
+import {ExecutionResult} from 'graphql';
+import {AuthStorage} from '../auth/AuthStorage';
 
 @injectable()
 export class GraphQLService {
@@ -39,13 +39,12 @@ export class GraphQLService {
 
     public async queryList<T>(query: GraphQLQuery, returnType: ClassType<T>): Promise<Result<T[]>> {
         try {
-            const headers = await this.getHeaders();
             const result = await this.client.query({
                 query: query.getQuery(),
                 variables: query.getVariables(),
                 errorPolicy: 'all',
                 fetchPolicy: 'network-only',
-                context: {headers: headers}
+                context: {headers: await this.getHeaders()},
             });
 
             if (this.hasError(result)) {
@@ -82,7 +81,7 @@ export class GraphQLService {
         }
 
         return {
-            Authorization: authToken.token
+            Authorization: authToken.token,
         };
     }
 }

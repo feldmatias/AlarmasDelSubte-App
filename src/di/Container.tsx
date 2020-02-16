@@ -6,7 +6,7 @@ import {GRAPHQL_DI, GraphQLClient, GraphQLClientInstance} from '../graphql/Graph
 import {STORAGE_DI, StorageClient, StorageInstance} from '../storage/StorageClient';
 import {Storage} from '../storage/Storage';
 import {AuthStorage} from '../auth/AuthStorage';
-import {SubwaysRepository} from "../subways/SubwaysRepository";
+import {SubwaysRepository} from '../subways/SubwaysRepository';
 
 const DiContainer = new Container();
 

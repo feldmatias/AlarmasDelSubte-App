@@ -1,8 +1,8 @@
 import {inject, injectable} from 'inversify';
 import {GraphQLService} from '../graphql/GraphQLService';
 import {Result} from '../utils/Result';
-import {Subway} from "./model/Subway";
-import {SubwaysListQuery} from "./subwaysList/SubwaysListQuery";
+import {Subway} from './model/Subway';
+import {SubwaysListQuery} from './subwaysList/SubwaysListQuery';
 
 @injectable()
 export class SubwaysRepository {
