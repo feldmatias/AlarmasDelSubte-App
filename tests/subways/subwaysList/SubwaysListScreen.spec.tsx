@@ -13,6 +13,7 @@ import {Subway} from '../../../src/subways/model/Subway';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {SubwayStatus} from '../../../src/subways/model/SubwayStatus';
 import {Colors} from '../../../src/styles/Colors';
+import moment, {Moment} from 'moment';
 
 describe('Subways List Screen', () => {
 
@@ -191,6 +192,48 @@ describe('Subways List Screen', () => {
             await renderScreen();
 
             expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
+        });
+
+    });
+
+    describe('Last update', () => {
+
+        function assertLastUpdateDate(date: Moment): void {
+            const expectedDate = date.format('DD/MM HH:mm');
+            expect(renderApi.getByText('Actualizado: ' + expectedDate)).toBeDefined();
+        }
+
+        it('should not show last update when 0 subways', async () => {
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([]));
+
+            await renderScreen();
+
+            expect(renderApi.queryByTestId('subwayLastUpdate')).toBeNull();
+        });
+
+        it('should show last update when 1 subway', async () => {
+            const lastUpdate = moment();
+            const subway = new SubwayFixture().withUpdatedAt(lastUpdate).get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await renderScreen();
+
+            assertLastUpdateDate(lastUpdate);
+        });
+
+        it('should show minimum last update when n subways', async () => {
+            const lastUpdate = moment();
+            const minimumUpdate = moment().subtract({hour: 1});
+
+            const subway1 = new SubwayFixture().withLine('1').withUpdatedAt(lastUpdate).get();
+            const minimumSubway = new SubwayFixture().withUpdatedAt(minimumUpdate).get();
+            const subway3 = new SubwayFixture().withLine('3').withUpdatedAt(lastUpdate).get();
+
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway1, minimumSubway, subway3]));
+
+            await renderScreen();
+
+            assertLastUpdateDate(minimumUpdate);
         });
 
     });

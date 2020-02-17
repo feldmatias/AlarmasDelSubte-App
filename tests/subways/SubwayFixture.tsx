@@ -1,5 +1,6 @@
 import {Subway} from '../../src/subways/model/Subway';
 import {SubwayStatus} from '../../src/subways/model/SubwayStatus';
+import {Moment} from 'moment';
 
 export class SubwayFixture {
 
@@ -31,6 +32,11 @@ export class SubwayFixture {
 
     public withStatusType(status: SubwayStatus): SubwayFixture {
         this.subway.statusType = status;
+        return this;
+    }
+
+    public withUpdatedAt(updatedAt: Moment): SubwayFixture {
+        this.subway.updatedAt = updatedAt.toDate();
         return this;
     }
 

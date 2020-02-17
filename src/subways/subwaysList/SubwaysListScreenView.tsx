@@ -5,6 +5,7 @@ import {Subway} from '../model/Subway';
 import {SubwayItem} from './SubwayItem';
 import {SubwaysListEmpty} from './components/SubwaysListEmpty';
 import {ListItemSeparator} from '../../components/ListItemSeparator';
+import {SubwaysListFooter} from './components/SubwaysListFooter';
 
 interface Props {
     subways: Subway[]
@@ -27,6 +28,12 @@ export class SubwaysListScreenView extends Component<Props, State> {
         );
     };
 
+    private renderFooterComponent = () => {
+        return (
+            <SubwaysListFooter subways={this.props.subways}/>
+        );
+    };
+
     public render() {
         return (
             <SafeAreaView style={screenStyles.container}>
@@ -38,6 +45,8 @@ export class SubwaysListScreenView extends Component<Props, State> {
                     keyExtractor={item => item.line}
                     ListEmptyComponent={this.renderEmptyListComponent}
                     ItemSeparatorComponent={ListItemSeparator}
+                    ListHeaderComponent={ListItemSeparator}
+                    ListFooterComponent={this.renderFooterComponent}
                 />
             </SafeAreaView>
         );
@@ -47,7 +56,7 @@ export class SubwaysListScreenView extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     list: {
-        paddingTop: 15,
+        paddingTop: 25,
     },
     listContentContainer: {
         flexGrow: 1,

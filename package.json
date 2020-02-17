@@ -25,6 +25,7 @@
     "graphql": "^14.6.0",
     "inversify": "^5.0.1",
     "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.24.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-elements": "^1.2.7",
