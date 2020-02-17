@@ -1,52 +1,74 @@
 import {GRAPHQL_DI, GraphQLClient, GraphQLOperation} from '../../src/graphql/GraphQLClient';
 import DiContainer from '../../src/di/Container';
-import {createMockClient} from 'mock-apollo-client';
-import {MockApolloClient, RequestHandler} from 'mock-apollo-client/dist/mockClient';
+import ApolloClient, {NetworkStatus} from 'apollo-client';
+import {NormalizedCacheObject} from 'apollo-cache-inmemory';
+import {anything, capture, instance, mock, objectContaining, reset, verify, when} from 'ts-mockito';
+import {ApolloQueryResult} from 'apollo-boost';
+import {GraphQLError} from 'graphql';
+import {ScreenTestUtils} from '../screens/ScreenTestUtils';
 
 class MockGraphQLClient {
 
-    private apolloMock!: MockApolloClient;
+    private apolloMock = mock<ApolloClient<NormalizedCacheObject>>();
     private realApollo!: GraphQLClient;
-    private requestHandler!: RequestHandler;
 
     public mock(): void {
-        this.apolloMock = createMockClient();
         this.realApollo = DiContainer.get<GraphQLClient>(GRAPHQL_DI);
-        DiContainer.rebind<GraphQLClient>(GRAPHQL_DI).toConstantValue(this.apolloMock);
+        DiContainer.rebind<GraphQLClient>(GRAPHQL_DI).toConstantValue(instance(this.apolloMock));
     }
 
     public reset(): void {
         DiContainer.rebind<GraphQLClient>(GRAPHQL_DI).toConstantValue(this.realApollo);
+        reset(this.apolloMock);
     }
 
     public mockSuccess<T>(request: GraphQLOperation, data: T) {
-        this.requestHandler = jest.fn().mockResolvedValue({data: data});
-        this.apolloMock.setRequestHandler(request, this.requestHandler);
-    }
+        const response = new ApolloQueryResponse(data);
 
-    public mockLoading(request: GraphQLOperation): void {
-        this.requestHandler = jest.fn();
-        this.apolloMock.setRequestHandler(request, this.requestHandler);
+        when(this.apolloMock.query(objectContaining({query: request}))).thenResolve(response);
+        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenResolve({data: data});
     }
 
     public mockError(request: GraphQLOperation, error = 'error'): void {
-        this.requestHandler = jest.fn().mockResolvedValue({errors: [{message: error}]});
-        this.apolloMock.setRequestHandler(request, this.requestHandler);
+        const response = new ApolloQueryResponse({}, error);
+
+        when(this.apolloMock.query(objectContaining({query: request}))).thenResolve(response);
+        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenResolve({errors: response.errors});
     }
 
     public mockNetworkError(request: GraphQLOperation): void {
-        this.apolloMock.setRequestHandler(
-            request,
-            () => Promise.reject(new Error('GraphQL Network Error')));
+        when(this.apolloMock.query(objectContaining({query: request}))).thenReject(new Error('GraphQL Network Error'));
+        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenReject(new Error('GraphQL Network Error'));
     }
 
-    public assertCalled(times: number): void {
-        expect(this.requestHandler).toBeCalledTimes(times);
+    public async assertMutationCalled(request: GraphQLOperation, times: number): Promise<void> {
+        await ScreenTestUtils.flushPromises();
+        verify(this.apolloMock.mutate(anything())).times(times);
     }
 
-    public assertCalledWith<T>(params: T): void {
-        expect(this.requestHandler).toBeCalledWith(params);
+    public async assertMutationCalledWith<T>(request: GraphQLOperation, params: T): Promise<void> {
+        await ScreenTestUtils.flushPromises();
+        const [options] = capture<any>(this.apolloMock.mutate).last();
+        expect(options.mutation).toBe(request);
+        expect(options.variables).toEqual(params);
     }
 }
 
 export default new MockGraphQLClient();
+
+class ApolloQueryResponse implements ApolloQueryResult<any> {
+    public data: any;
+    public errors?: ReadonlyArray<GraphQLError>;
+    public loading = false;
+    public networkStatus = NetworkStatus.ready;
+    public stale = false;
+
+    public constructor(data: any, error = '') {
+        this.data = data;
+        if (error) {
+            const errorResponse = mock<GraphQLError>();
+            when(errorResponse.message).thenReturn(error);
+            this.errors = [instance(errorResponse)];
+        }
+    }
+}

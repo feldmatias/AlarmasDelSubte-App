@@ -98,6 +98,17 @@ describe('Subways List Screen', () => {
             expect(subwayImage.props.source.uri).toBe(subwayIcon);
         });
 
+        it('should show subway status', async () => {
+            const subwayStatus = 'subway status';
+            const subway = new SubwayFixture().withStatus(subwayStatus).get();
+
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+            await renderScreen();
+
+            const subwayTitle = renderApi.getByText(subwayStatus);
+            expect(subwayTitle).toBeDefined();
+        });
+
     });
 
 });

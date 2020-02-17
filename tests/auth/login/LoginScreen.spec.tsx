@@ -100,8 +100,6 @@ describe('Login Screen', () => {
         }
 
         it('when login then should be loading', async () => {
-            MockGraphQLClient.mockLoading(loginMutation);
-
             loginWithCredentials();
 
             assertIsLoading(true);
@@ -116,13 +114,11 @@ describe('Login Screen', () => {
         });
 
         it('when loading then should not login twice', async () => {
-            MockGraphQLClient.mockLoading(loginMutation);
-
             loginWithCredentials();
             login();
 
             assertIsLoading(true);
-            MockGraphQLClient.assertCalled(1);
+            await MockGraphQLClient.assertMutationCalled(loginMutation, 1);
         });
     });
 
@@ -181,14 +177,13 @@ describe('Login Screen', () => {
         it('should login with correct input', async () => {
             const username = 'my username';
             const password = 'my password';
-            MockGraphQLClient.mockLoading(loginMutation);
 
             writeUsername(username);
             writePassword(password);
 
             login();
 
-            MockGraphQLClient.assertCalledWith({username, password});
+            await MockGraphQLClient.assertMutationCalledWith(loginMutation, {username, password});
         });
 
         it('should navigate to subways list when successful login', async () => {

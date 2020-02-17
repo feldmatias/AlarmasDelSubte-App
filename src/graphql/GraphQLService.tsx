@@ -19,12 +19,11 @@ export class GraphQLService {
 
     public async mutation<T>(mutation: GraphQLMutation, returnType: ClassType<T>): Promise<Result<T>> {
         try {
-           // const headers = await this.getHeaders();
             const result = await this.client.mutate({
                 mutation: mutation.getMutation(),
                 variables: mutation.getVariables(),
                 errorPolicy: 'all',
-                context: {},
+                context: await this.getHeaders(),
             });
 
             const error = this.getError(result);
@@ -75,13 +74,10 @@ export class GraphQLService {
 
     private async getHeaders(): Promise<any> {
         const authToken = await this.authStorage.getToken();
-        if (!authToken) {
-            return {};
-        }
 
         return {
             headers: {
-                Authorization: authToken.token,
+                Authorization: authToken ? authToken.token : '',
             },
         };
     }
