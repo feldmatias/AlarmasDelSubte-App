@@ -1,6 +1,6 @@
 import 'react-native';
 import MockGraphQLClient from '../../graphql/MockGraphQLClient';
-import {RenderAPI} from 'react-native-testing-library';
+import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import React from 'react';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {MockNavigation} from '../../screens/MockNavigation';
@@ -41,6 +41,10 @@ describe('Subways List Screen', () => {
         return {
             getSubways: subways,
         };
+    }
+
+    async function refreshSubways(): Promise<void> {
+        await fireEvent(renderApi.getByTestId('subwaysList'), 'onRefresh');
     }
 
     describe('Subways list', () => {
@@ -234,6 +238,113 @@ describe('Subways List Screen', () => {
             await renderScreen();
 
             assertLastUpdateDate(minimumUpdate);
+        });
+
+        it('should update last update if changed after refresh', async () => {
+            const oldUpdate = moment().subtract({hours: 5});
+            const newUpdate = moment();
+
+            const subway = new SubwayFixture().withUpdatedAt(oldUpdate).get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await renderScreen();
+
+            subway.updatedAt = newUpdate.toDate();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await refreshSubways();
+
+            assertLastUpdateDate(newUpdate);
+        });
+
+    });
+
+    describe('Pull to refresh', () => {
+
+        it('should show refreshing when refresh', async () => {
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([]));
+            await renderScreen();
+
+            MockGraphQLClient.mockLoading(subwaysQuery);
+
+            refreshSubways();
+
+            const list = renderApi.getByTestId('subwaysList');
+            expect(list.props.refreshing).toBeTruthy();
+        });
+
+        it('should hide refreshing when refresh finishes', async () => {
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([]));
+            await renderScreen();
+
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([]));
+
+            await refreshSubways();
+
+            const list = renderApi.getByTestId('subwaysList');
+            expect(list.props.refreshing).toBeFalsy();
+        });
+
+        it('should show subway if 0 subways and 1 after refresh', async () => {
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([]));
+            await renderScreen();
+
+            const subway = new SubwayFixture().get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await refreshSubways();
+
+            const items = renderApi.getAllByTestId('subwayItem');
+            expect(items.length).toBe(1);
+        });
+
+        it('should add subway if is new after refresh', async () => {
+            const subway = new SubwayFixture().get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+            await renderScreen();
+
+            const newLine = 'new';
+            const newSubway = new SubwayFixture().withLine(newLine).get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway, newSubway]));
+
+            await refreshSubways();
+
+            const item = renderApi.getByText(`Subte ${newLine}`);
+            expect(item).toBeDefined();
+        });
+
+        it('should remove subway if is removed after refresh', async () => {
+            const subway = new SubwayFixture().get();
+            const oldLine = 'old';
+            const oldSubway = new SubwayFixture().withLine(oldLine).get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([oldSubway, subway]));
+
+            await renderScreen();
+
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await refreshSubways();
+
+            const item = renderApi.queryByText(`Subte ${oldLine}`);
+            expect(item).toBeNull();
+        });
+
+        it('should update subway status if changed after refresh', async () => {
+            const oldStatus = 'old status for subway';
+            const newStatus = 'new status for subway';
+
+            const subway = new SubwayFixture().withStatus(oldStatus).get();
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await renderScreen();
+
+            subway.status = newStatus;
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+
+            await refreshSubways();
+
+            expect(renderApi.getByText(newStatus)).toBeDefined();
+            expect(renderApi.queryByText(oldStatus)).toBeNull();
         });
 
     });

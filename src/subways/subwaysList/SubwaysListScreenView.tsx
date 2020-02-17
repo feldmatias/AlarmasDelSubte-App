@@ -10,6 +10,8 @@ import {SubwaysListFooter} from './components/SubwaysListFooter';
 interface Props {
     subways: Subway[]
     error: string
+    refreshing: boolean
+    refresh: () => Promise<void>
 }
 
 interface State {
@@ -38,6 +40,7 @@ export class SubwaysListScreenView extends Component<Props, State> {
         return (
             <SafeAreaView style={screenStyles.container}>
                 <FlatList
+                    testID="subwaysList"
                     contentContainerStyle={styles.listContentContainer}
                     style={[screenStyles.scroll, styles.list]}
                     data={this.props.subways}
@@ -47,6 +50,8 @@ export class SubwaysListScreenView extends Component<Props, State> {
                     ItemSeparatorComponent={ListItemSeparator}
                     ListHeaderComponent={ListItemSeparator}
                     ListFooterComponent={this.renderFooterComponent}
+                    refreshing={this.props.refreshing}
+                    onRefresh={this.props.refresh}
                 />
             </SafeAreaView>
         );

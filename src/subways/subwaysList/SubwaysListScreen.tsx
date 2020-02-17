@@ -12,6 +12,7 @@ interface Props extends ScreenProps {
 
 interface State extends ScreenState {
     subways: Subway[]
+    refreshing: boolean
 }
 
 const strings = {
@@ -28,14 +29,14 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
         loading: false,
         error: '',
         subways: [],
+        refreshing: false,
     };
 
     private subwaysRepository = DiContainer.get<SubwaysRepository>(SubwaysRepository);
 
     public async getSubways(): Promise<void> {
-        this.setLoading(true);
         const subways = await this.subwaysRepository.getSubways();
-        this.setLoading(false);
+
         if (subways.isSuccessful()) {
             this.setSubways(subways.getData());
         } else {
@@ -49,7 +50,19 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
     }
 
     public async componentDidMount(): Promise<void> {
+        this.setLoading(true);
         await this.getSubways();
+        this.setLoading(false);
+    }
+
+    private refreshSubways = async (): Promise<void> => {
+        this.setRefreshing(true);
+        await this.getSubways();
+        this.setRefreshing(false);
+    };
+
+    private setRefreshing(refreshing: boolean): void {
+        this.setState({refreshing});
     }
 
     public render() {
@@ -63,6 +76,8 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
             <SubwaysListScreenView
                 subways={this.state.subways}
                 error={this.state.error}
+                refreshing={this.state.refreshing}
+                refresh={this.refreshSubways}
             />
         );
     }
