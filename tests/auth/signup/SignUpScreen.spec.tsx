@@ -123,7 +123,7 @@ describe('SignUp Screen', () => {
             signUp();
 
             assertIsLoading(true);
-            MockGraphQLClient.assertCalled(1);
+            await MockGraphQLClient.assertMutationCalled(signUpMutation, 1);
         });
     });
 
@@ -189,14 +189,15 @@ describe('SignUp Screen', () => {
         it('should signup with correct input', async () => {
             const username = 'my username';
             const password = 'my password';
-            MockGraphQLClient.mockLoading(signUpMutation);
 
             writeUsername(username);
             writePassword(password);
 
+            MockGraphQLClient.mockLoading(signUpMutation);
+
             signUp();
 
-            MockGraphQLClient.assertCalledWith({username, password});
+            await MockGraphQLClient.assertMutationCalledWith(signUpMutation, {username, password});
         });
 
         it('should navigate to subways list when successful signup', async () => {

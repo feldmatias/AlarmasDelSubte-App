@@ -10,4 +10,10 @@ export const screenStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
     },
+    centeredContainer: {
+        justifyContent: 'center',
+    },
+
 });
+
+export const screenContainerStyles = [screenStyles.scroll, screenStyles.container, screenStyles.centeredContainer];

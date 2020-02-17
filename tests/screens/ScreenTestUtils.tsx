@@ -9,7 +9,7 @@ export class ScreenTestUtils {
         return renderApi;
     }
 
-    private static flushPromises() {
+    public static flushPromises() {
         return new Promise(resolve => setImmediate(resolve));
     }
 

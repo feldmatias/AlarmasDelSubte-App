@@ -4,7 +4,7 @@ import {errorStyles} from '../styles/ErrorStyles';
 
 interface Props {
     error: string,
-    style: any
+    style?: any
 }
 
 interface State {
