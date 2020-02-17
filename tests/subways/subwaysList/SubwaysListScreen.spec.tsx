@@ -10,6 +10,7 @@ import {SubwaysListScreen} from '../../../src/subways/subwaysList/SubwaysListScr
 import {SubwaysListQuery} from '../../../src/subways/subwaysList/SubwaysListQuery';
 import {SubwayFixture} from '../SubwayFixture';
 import {Subway} from '../../../src/subways/model/Subway';
+import {GraphQLService} from '../../../src/graphql/GraphQLService';
 
 describe('Subways List Screen', () => {
 
@@ -123,6 +124,36 @@ describe('Subways List Screen', () => {
             MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([new SubwayFixture().get()]));
             await renderScreen();
             expect(renderApi.queryByTestId('loading')).toBeNull();
+        });
+
+    });
+
+    describe('Empty List', () => {
+
+        it('should show empty message when 0 subways', async () => {
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([]));
+
+            await renderScreen();
+
+            const message = 'No hay datos del subte en este momento';
+            expect(renderApi.getByText(message)).toBeDefined();
+        });
+
+        it('should show error when api fails', async () => {
+            const error = 'some api error';
+            MockGraphQLClient.mockError(subwaysQuery, error);
+
+            await renderScreen();
+
+            expect(renderApi.getByText(error)).toBeDefined();
+        });
+
+        it('should show error when network errpr', async () => {
+            MockGraphQLClient.mockNetworkError(subwaysQuery);
+
+            await renderScreen();
+
+            expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
         });
 
     });

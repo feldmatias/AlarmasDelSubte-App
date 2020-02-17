@@ -37,8 +37,15 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
         const subways = await this.subwaysRepository.getSubways();
         this.setLoading(false);
         if (subways.isSuccessful()) {
-            this.setState({subways: subways.getData()});
+            this.setSubways(subways.getData());
+        } else {
+            this.setError(subways.getError());
+            this.setSubways([]);
         }
+    }
+
+    private setSubways(subways: Subway[]): void {
+        this.setState({subways: subways});
     }
 
     public async componentDidMount(): Promise<void> {
@@ -53,7 +60,10 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
         }
 
         return (
-            <SubwaysListScreenView subways={this.state.subways}/>
+            <SubwaysListScreenView
+                subways={this.state.subways}
+                error={this.state.error}
+            />
         );
     }
 }

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import {BarIndicator} from 'react-native-indicators';
 import {Colors} from '../styles/Colors';
-import {screenStyles} from '../styles/ScreenStyles';
+import {screenContainerStyles} from '../styles/ScreenStyles';
 
 interface Props {
 
@@ -16,7 +16,7 @@ export class Loading extends Component<Props, State> {
 
     public render() {
         return (
-            <View testID="loading" style={[screenStyles.container, screenStyles.scroll]}>
+            <View testID="loading" style={screenContainerStyles}>
                 <BarIndicator color={Colors.primary} count={6}/>
             </View>
         );
