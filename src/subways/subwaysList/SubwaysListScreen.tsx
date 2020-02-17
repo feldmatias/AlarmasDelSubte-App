@@ -5,6 +5,7 @@ import {SubwaysListScreenView} from './SubwaysListScreenView';
 import {Subway} from '../model/Subway';
 import DiContainer from '../../di/Container';
 import {SubwaysRepository} from '../SubwaysRepository';
+import {Loading} from '../../components/Loading';
 
 interface Props extends ScreenProps {
 }
@@ -32,7 +33,9 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
     private subwaysRepository = DiContainer.get<SubwaysRepository>(SubwaysRepository);
 
     public async getSubways(): Promise<void> {
+        this.setLoading(true);
         const subways = await this.subwaysRepository.getSubways();
+        this.setLoading(false);
         if (subways.isSuccessful()) {
             this.setState({subways: subways.getData()});
         }
@@ -43,6 +46,12 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
     }
 
     public render() {
+        if (this.state.loading) {
+            return (
+                <Loading />
+            );
+        }
+
         return (
             <SubwaysListScreenView subways={this.state.subways}/>
         );

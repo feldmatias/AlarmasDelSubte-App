@@ -111,4 +111,20 @@ describe('Subways List Screen', () => {
 
     });
 
+    describe('Loading', () => {
+
+        it('should show loading when loading subways', async () => {
+            MockGraphQLClient.mockLoading(subwaysQuery);
+            await renderScreen();
+            expect(renderApi.getByTestId('loading')).toBeDefined();
+        });
+
+        it('should hide loading when subways arrive', async () => {
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([new SubwayFixture().get()]));
+            await renderScreen();
+            expect(renderApi.queryByTestId('loading')).toBeNull();
+        });
+
+    });
+
 });

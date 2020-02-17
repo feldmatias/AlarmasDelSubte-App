@@ -100,6 +100,8 @@ describe('Login Screen', () => {
         }
 
         it('when login then should be loading', async () => {
+            MockGraphQLClient.mockLoading(loginMutation);
+
             loginWithCredentials();
 
             assertIsLoading(true);
@@ -114,6 +116,8 @@ describe('Login Screen', () => {
         });
 
         it('when loading then should not login twice', async () => {
+            MockGraphQLClient.mockLoading(loginMutation);
+
             loginWithCredentials();
             login();
 
@@ -180,6 +184,8 @@ describe('Login Screen', () => {
 
             writeUsername(username);
             writePassword(password);
+
+            MockGraphQLClient.mockLoading(loginMutation);
 
             login();
 
