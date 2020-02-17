@@ -2,7 +2,7 @@ import {GRAPHQL_DI, GraphQLClient, GraphQLOperation} from '../../src/graphql/Gra
 import DiContainer from '../../src/di/Container';
 import ApolloClient, {NetworkStatus} from 'apollo-client';
 import {NormalizedCacheObject} from 'apollo-cache-inmemory';
-import {anything, capture, instance, mock, objectContaining, reset, verify, when} from 'ts-mockito';
+import {capture, instance, mock, objectContaining, reset, verify, when} from 'ts-mockito';
 import {ApolloQueryResult} from 'apollo-boost';
 import {GraphQLError} from 'graphql';
 import {ScreenTestUtils} from '../screens/ScreenTestUtils';
@@ -23,17 +23,17 @@ class MockGraphQLClient {
     }
 
     public mockSuccess<T>(request: GraphQLOperation, data: T) {
-        const response = new ApolloQueryResponse(data);
+        const response = new ApolloClientResponse(data);
 
         when(this.apolloMock.query(objectContaining({query: request}))).thenResolve(response);
-        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenResolve({data: data});
+        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenResolve(response);
     }
 
     public mockError(request: GraphQLOperation, error = 'error'): void {
-        const response = new ApolloQueryResponse({}, error);
+        const response = new ApolloClientResponse({}, error);
 
         when(this.apolloMock.query(objectContaining({query: request}))).thenResolve(response);
-        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenResolve({errors: response.errors});
+        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenResolve(response);
     }
 
     public mockNetworkError(request: GraphQLOperation): void {
@@ -43,7 +43,7 @@ class MockGraphQLClient {
 
     public async assertMutationCalled(request: GraphQLOperation, times: number): Promise<void> {
         await ScreenTestUtils.flushPromises();
-        verify(this.apolloMock.mutate(anything())).times(times);
+        verify(this.apolloMock.mutate(objectContaining({mutation: request}))).times(times);
     }
 
     public async assertMutationCalledWith<T>(request: GraphQLOperation, params: T): Promise<void> {
@@ -56,7 +56,7 @@ class MockGraphQLClient {
 
 export default new MockGraphQLClient();
 
-class ApolloQueryResponse implements ApolloQueryResult<any> {
+class ApolloClientResponse implements ApolloQueryResult<any> {
     public data: any;
     public errors?: ReadonlyArray<GraphQLError>;
     public loading = false;
