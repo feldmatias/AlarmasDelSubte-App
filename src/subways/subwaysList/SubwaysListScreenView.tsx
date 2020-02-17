@@ -4,6 +4,7 @@ import {screenStyles} from '../../styles/ScreenStyles';
 import {Subway} from '../model/Subway';
 import {SubwayItem} from './SubwayItem';
 import {SubwaysListEmpty} from './components/SubwaysListEmpty';
+import {ListItemSeparator} from '../../components/ListItemSeparator';
 
 interface Props {
     subways: Subway[]
@@ -31,11 +32,12 @@ export class SubwaysListScreenView extends Component<Props, State> {
             <SafeAreaView style={screenStyles.container}>
                 <FlatList
                     contentContainerStyle={styles.listContentContainer}
-                    style={screenStyles.scroll}
+                    style={[screenStyles.scroll, styles.list]}
                     data={this.props.subways}
                     renderItem={this.renderItem}
                     keyExtractor={item => item.line}
                     ListEmptyComponent={this.renderEmptyListComponent}
+                    ItemSeparatorComponent={ListItemSeparator}
                 />
             </SafeAreaView>
         );
@@ -44,6 +46,9 @@ export class SubwaysListScreenView extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+    list: {
+        paddingTop: 15,
+    },
     listContentContainer: {
         flexGrow: 1,
     },
