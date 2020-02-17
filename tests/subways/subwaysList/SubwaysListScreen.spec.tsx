@@ -11,6 +11,8 @@ import {SubwaysListQuery} from '../../../src/subways/subwaysList/SubwaysListQuer
 import {SubwayFixture} from '../SubwayFixture';
 import {Subway} from '../../../src/subways/model/Subway';
 import {GraphQLService} from '../../../src/graphql/GraphQLService';
+import {SubwayStatus} from '../../../src/subways/model/SubwayStatus';
+import {Colors} from '../../../src/styles/Colors';
 
 describe('Subways List Screen', () => {
 
@@ -108,6 +110,41 @@ describe('Subways List Screen', () => {
 
             const subwayTitle = renderApi.getByText(subwayStatus);
             expect(subwayTitle).toBeDefined();
+        });
+
+        describe('Subway status color', () => {
+
+            function assertStatusColor(color: string): void {
+                const subwayStatus = renderApi.getByTestId('subwayStatus');
+                expect(subwayStatus.props.style[0].color).toEqual(color);
+            }
+
+            it('should show subway status in green if it is normal', async () => {
+                const subway = new SubwayFixture().withStatusType(SubwayStatus.Normal).get();
+
+                MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+                await renderScreen();
+
+                assertStatusColor(Colors.green);
+            });
+
+            it('should show subway status in orange if it is limited', async () => {
+                const subway = new SubwayFixture().withStatusType(SubwayStatus.Limited).get();
+
+                MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+                await renderScreen();
+
+                assertStatusColor(Colors.orange);
+            });
+
+            it('should show subway status in red if it is closed', async () => {
+                const subway = new SubwayFixture().withStatusType(SubwayStatus.Closed).get();
+
+                MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
+                await renderScreen();
+
+                assertStatusColor(Colors.red);
+            });
         });
 
     });

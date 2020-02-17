@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Subway} from '../model/Subway';
+import {SubwayStatus} from '../model/SubwayStatus';
+import {Colors} from '../../styles/Colors';
 
 interface Props {
     subway: Subway
@@ -20,6 +22,17 @@ export class SubwayItem extends Component<Props, State> {
         return strings.subwayTitle + ' ' + this.props.subway.line;
     }
 
+    private getStatusColor(): string {
+        switch (this.props.subway.statusType){
+            case SubwayStatus.Normal:
+                return Colors.green;
+            case SubwayStatus.Limited:
+                return Colors.orange;
+            case SubwayStatus.Closed:
+                return Colors.red;
+        }
+    }
+
     public render() {
         return (
             <View style={styles.container} testID="subwayItem">
@@ -35,7 +48,7 @@ export class SubwayItem extends Component<Props, State> {
                         {this.subwayTitle()}
                     </Text>
 
-                    <Text style={styles.status}>
+                    <Text testID="subwayStatus" style={[{color: this.getStatusColor()}, styles.status]}>
                         {this.props.subway.status}
                     </Text>
 

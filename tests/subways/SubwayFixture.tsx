@@ -29,6 +29,11 @@ export class SubwayFixture {
         return this;
     }
 
+    public withStatusType(status: SubwayStatus): SubwayFixture {
+        this.subway.statusType = status;
+        return this;
+    }
+
     public get(): Subway {
         return this.subway;
     }
