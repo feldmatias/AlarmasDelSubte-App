@@ -3,7 +3,7 @@ import {FlatList, ListRenderItem, SafeAreaView, StyleSheet} from 'react-native';
 import {screenStyles} from '../../styles/ScreenStyles';
 import {Subway} from '../model/Subway';
 import {SubwayItem} from './SubwayItem';
-import {SubwaysListEmpty} from './components/SubwaysListEmpty';
+import {ListEmpty} from '../../components/ListEmpty';
 import {ListItemSeparator} from '../../components/ListItemSeparator';
 import {SubwaysListFooter} from './components/SubwaysListFooter';
 
@@ -18,6 +18,10 @@ interface State {
 
 }
 
+const strings = {
+    emptyMessage: 'No hay datos del subte en este momento',
+};
+
 export class SubwaysListScreenView extends Component<Props, State> {
 
     private renderItem: ListRenderItem<Subway> = ({item}) => (
@@ -26,7 +30,10 @@ export class SubwaysListScreenView extends Component<Props, State> {
 
     private renderEmptyListComponent = () => {
         return (
-            <SubwaysListEmpty error={this.props.error}/>
+            <ListEmpty
+                error={this.props.error}
+                emptyMessage={strings.emptyMessage}
+            />
         );
     };
 
