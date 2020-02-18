@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Alarm} from '../model/Alarm';
 import {AlarmItemSubways} from './components/AlarmItemSubways';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {DaysTranslator} from '../../utils/DaysTranslator';
 
 interface Props {
     alarm: Alarm
@@ -18,6 +19,12 @@ export class AlarmItem extends Component<Props, State> {
         return `${this.props.alarm.start}  -  ${this.props.alarm.end}`;
     }
 
+    private getDays(): string {
+        return this.props.alarm.days.map(day => {
+            return DaysTranslator.translate(day);
+        }).join(' | ');
+    }
+
     public render() {
         return (
             <View style={styles.container} testID="alarmItem">
@@ -27,6 +34,10 @@ export class AlarmItem extends Component<Props, State> {
                 </Text>
 
                 <AlarmItemSubways subways={this.props.alarm.subways}/>
+
+                <Text testID="alarmDays" style={styles.days}>
+                    {this.getDays()}
+                </Text>
 
                 <View style={styles.timeRangeContainer}>
 
@@ -54,6 +65,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textDecorationLine: 'underline',
         marginBottom: 10,
+    },
+    days: {
+        fontSize: 15,
+        marginTop: 15,
     },
     timeRangeContainer: {
         flexDirection: 'row',

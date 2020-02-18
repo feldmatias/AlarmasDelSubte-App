@@ -11,6 +11,7 @@ import {AlarmsListQuery} from '../../../src/alarms/alarmsList/AlarmsListQuery';
 import {Alarm} from '../../../src/alarms/model/Alarm';
 import {AlarmFixture} from '../AlarmFixture';
 import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
+import {DaysTranslator} from '../../../src/utils/DaysTranslator';
 
 describe('Alarms List Screen', () => {
 
@@ -143,6 +144,31 @@ describe('Alarms List Screen', () => {
 
             const component = renderApi.getByTestId('alarmTimeRange');
             expect(component.props.children.includes(alarmEnd)).toBeTruthy();
+        });
+
+        it('should show alarm day', async () => {
+            const day = 'day';
+            const alarm = new AlarmFixture().withDays([day]).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const component = renderApi.getByTestId('alarmDays');
+            expect(component.props.children.includes(day)).toBeTruthy();
+        });
+
+        it('should show all alarm days translated', async () => {
+            const days = DaysTranslator.days.keys();
+            const alarm = new AlarmFixture().withDays([...days]).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const component = renderApi.getByTestId('alarmDays');
+
+            for (let day of DaysTranslator.days.values()) {
+                expect(component.props.children.includes(day)).toBeTruthy();
+            }
         });
 
     });
