@@ -123,6 +123,28 @@ describe('Alarms List Screen', () => {
             }
         });
 
+        it('should show alarm start', async () => {
+            const alarmStart = '12:34';
+            const alarm = new AlarmFixture().withStart(alarmStart).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const component = renderApi.getByTestId('alarmTimeRange');
+            expect(component.props.children.includes(alarmStart)).toBeTruthy();
+        });
+
+        it('should show alarm end', async () => {
+            const alarmEnd = '21:45';
+            const alarm = new AlarmFixture().withEnd(alarmEnd).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const component = renderApi.getByTestId('alarmTimeRange');
+            expect(component.props.children.includes(alarmEnd)).toBeTruthy();
+        });
+
     });
 
     describe('Loading', () => {

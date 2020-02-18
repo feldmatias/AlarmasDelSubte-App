@@ -10,6 +10,8 @@ export class AlarmFixture {
         this.alarm = new Alarm();
         this.alarm.id = 1;
         this.alarm.name = 'alarm';
+        this.alarm.start = '10:01';
+        this.alarm.end = '20:02';
         this.alarm.subways = [new AlarmSubwayFixture().get()];
     }
 
@@ -25,6 +27,16 @@ export class AlarmFixture {
 
     public withSubways(subways: AlarmSubway[]): AlarmFixture {
         this.alarm.subways = subways;
+        return this;
+    }
+
+    public withStart(start: string): AlarmFixture {
+        this.alarm.start = start;
+        return this;
+    }
+
+    public withEnd(end: string): AlarmFixture {
+        this.alarm.end = end;
         return this;
     }
 
