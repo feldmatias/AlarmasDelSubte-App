@@ -12,6 +12,7 @@ interface Props extends ScreenProps {
 
 interface State extends ScreenState {
     alarms: Alarm[]
+    refreshing: boolean
 }
 
 const strings = {
@@ -28,6 +29,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         loading: false,
         error: '',
         alarms: [],
+        refreshing: false,
     };
 
     private alarmsRepository = DiContainer.get<AlarmsRepository>(AlarmsRepository);
@@ -53,6 +55,16 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         this.setLoading(false);
     }
 
+    private refreshAlarms = async (): Promise<void> => {
+        this.setRefreshing(true);
+        await this.getAlarms();
+        this.setRefreshing(false);
+    };
+
+    private setRefreshing(refreshing: boolean): void {
+        this.setState({refreshing});
+    }
+
     public render() {
         if (this.state.loading) {
             return (
@@ -64,6 +76,8 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
             <AlarmsListScreenView
                 alarms={this.state.alarms}
                 error={this.state.error}
+                refreshing={this.state.refreshing}
+                refresh={this.refreshAlarms}
             />
         );
     }

@@ -10,8 +10,8 @@ import {AlarmItem} from './AlarmItem';
 interface Props {
     alarms: Alarm[]
     error: string
-    /*refreshing: boolean
-    refresh: () => Promise<void>*/
+    refreshing: boolean
+    refresh: () => Promise<void>
 }
 
 interface State {
@@ -61,8 +61,8 @@ export class AlarmsListScreenView extends Component<Props, State> {
                     ItemSeparatorComponent={ListItemSeparator}
                     ListHeaderComponent={this.renderHeaderFooterComponent}
                     ListFooterComponent={this.renderHeaderFooterComponent}
-                    //refreshing={this.props.refreshing}
-                    //onRefresh={this.props.refresh}
+                    refreshing={this.props.refreshing}
+                    onRefresh={this.props.refresh}
                 />
             </SafeAreaView>
         );

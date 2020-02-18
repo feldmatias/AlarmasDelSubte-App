@@ -1,4 +1,4 @@
-import {RenderAPI} from 'react-native-testing-library';
+import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {MockNavigation} from '../../screens/MockNavigation';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
@@ -215,6 +215,100 @@ describe('Alarms List Screen', () => {
             await renderScreen();
 
             expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
+        });
+
+    });
+
+    describe('Pull to refresh', () => {
+
+        async function refreshAlarms(): Promise<void> {
+            await fireEvent(renderApi.getByTestId('alarmsList'), 'onRefresh');
+        }
+
+        it('should show refreshing when refresh', async () => {
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            await renderScreen();
+
+            MockGraphQLClient.mockLoading(alarmsQuery);
+
+            refreshAlarms();
+
+            const list = renderApi.getByTestId('alarmsList');
+            expect(list.props.refreshing).toBeTruthy();
+        });
+
+        it('should hide refreshing when refresh finishes', async () => {
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            await renderScreen();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+
+            await refreshAlarms();
+
+            const list = renderApi.getByTestId('alarmsList');
+            expect(list.props.refreshing).toBeFalsy();
+        });
+
+        it('should show alarm if 0 alarms and 1 after refresh', async () => {
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            await renderScreen();
+
+            const alarm = new AlarmFixture().get();
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+
+            await refreshAlarms();
+
+            const items = renderApi.getAllByTestId('alarmItem');
+            expect(items.length).toBe(1);
+        });
+
+        it('should add alarm if is new after refresh', async () => {
+            const alarm = new AlarmFixture().get();
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const newName = 'new';
+            const newAlarm = new AlarmFixture().withId(123).withName(newName).get();
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm, newAlarm]));
+
+            await refreshAlarms();
+
+            const item = renderApi.getByText(newName);
+            expect(item).toBeDefined();
+        });
+
+        it('should remove alarm if is removed after refresh', async () => {
+            const alarm = new AlarmFixture().get();
+            const oldName = 'old';
+            const oldAlarm = new AlarmFixture().withId(123).withName(oldName).get();
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([oldAlarm, alarm]));
+
+            await renderScreen();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+
+            await refreshAlarms();
+
+            const item = renderApi.queryByText(oldName);
+            expect(item).toBeNull();
+        });
+
+        it('should update alarm name if changed after refresh', async () => {
+            const oldName = 'old name for alarm';
+            const newName = 'new name for alarm';
+
+            const alarm = new AlarmFixture().withName(oldName).get();
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+
+            await renderScreen();
+
+            alarm.name = newName;
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+
+            await refreshAlarms();
+
+            expect(renderApi.getByText(newName)).toBeDefined();
+            expect(renderApi.queryByText(oldName)).toBeNull();
         });
 
     });
