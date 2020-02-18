@@ -10,6 +10,7 @@ import {AlarmsListScreen} from '../../../src/alarms/alarmsList/AlarmsListScreen'
 import {AlarmsListQuery} from '../../../src/alarms/alarmsList/AlarmsListQuery';
 import {Alarm} from '../../../src/alarms/model/Alarm';
 import {AlarmFixture} from '../AlarmFixture';
+import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
 
 describe('Alarms List Screen', () => {
 
@@ -85,6 +86,41 @@ describe('Alarms List Screen', () => {
 
             const component = renderApi.getByText(alarmName);
             expect(component).toBeDefined();
+        });
+
+        it('should show alarm subway icon', async () => {
+            const icon = 'subway.icon.url';
+            const subway = new AlarmSubwayFixture().withIcon(icon).get();
+            const alarm = new AlarmFixture().withSubways([subway]).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const component = renderApi.getByTestId('alarmSubwayIcon');
+            expect(component.props.source.uri).toBe(icon);
+        });
+
+        it('should show alarm subways icons', async () => {
+            const subwaysCount = 5;
+            const icon = 'subway.icon.url';
+
+            const subways = [];
+            for (let i = 0; i < subwaysCount; i++) {
+                const subway = new AlarmSubwayFixture().withLine(i.toString()).withIcon(icon + i).get();
+                subways.push(subway);
+            }
+            const alarm = new AlarmFixture().withSubways(subways).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const components = renderApi.getAllByTestId('alarmSubwayIcon');
+            for (let i = 0; i < subwaysCount; i++) {
+                const subwayComponent = components.find(component => {
+                    return component.props.source.uri === icon + i;
+                });
+                expect(subwayComponent).toBeDefined();
+            }
         });
 
     });

@@ -1,4 +1,6 @@
 import {Alarm} from '../../src/alarms/model/Alarm';
+import {AlarmSubwayFixture} from './AlarmSubwayFixture';
+import {AlarmSubway} from '../../src/alarms/model/AlarmSubway';
 
 export class AlarmFixture {
 
@@ -8,6 +10,7 @@ export class AlarmFixture {
         this.alarm = new Alarm();
         this.alarm.id = 1;
         this.alarm.name = 'alarm';
+        this.alarm.subways = [new AlarmSubwayFixture().get()];
     }
 
     public withId(id: number): AlarmFixture {
@@ -17,6 +20,11 @@ export class AlarmFixture {
 
     public withName(name: string): AlarmFixture {
         this.alarm.name = name;
+        return this;
+    }
+
+    public withSubways(subways: AlarmSubway[]): AlarmFixture {
+        this.alarm.subways = subways;
         return this;
     }
 

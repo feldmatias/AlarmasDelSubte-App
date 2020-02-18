@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Alarm} from '../model/Alarm';
+import {AlarmItemSubways} from './components/AlarmItemSubways';
 
 interface Props {
     alarm: Alarm
@@ -20,6 +21,8 @@ export class AlarmItem extends Component<Props, State> {
                     {this.props.alarm.name}
                 </Text>
 
+                <AlarmItemSubways subways={this.props.alarm.subways}/>
+
             </View>
         );
     }
@@ -33,7 +36,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     name: {
-        fontSize: 15,
+        fontSize: 20,
         textDecorationLine: 'underline',
+        marginBottom: 10,
     },
 });
