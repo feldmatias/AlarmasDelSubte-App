@@ -191,7 +191,7 @@ describe('Subways List Screen', () => {
             expect(renderApi.getByText(error)).toBeDefined();
         });
 
-        it('should show error when network errpr', async () => {
+        it('should show error when network error', async () => {
             MockGraphQLClient.mockNetworkError(subwaysQuery);
 
             await renderScreen();

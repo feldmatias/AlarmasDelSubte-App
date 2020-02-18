@@ -7,6 +7,7 @@ import {STORAGE_DI, StorageClient, StorageInstance} from '../storage/StorageClie
 import {Storage} from '../storage/Storage';
 import {AuthStorage} from '../auth/AuthStorage';
 import {SubwaysRepository} from '../subways/SubwaysRepository';
+import {AlarmsRepository} from '../alarms/AlarmsRepository';
 
 const DiContainer = new Container();
 
@@ -21,5 +22,7 @@ DiContainer.bind<GraphQLService>(GraphQLService).to(GraphQLService);
 DiContainer.bind<AuthRepository>(AuthRepository).to(AuthRepository);
 
 DiContainer.bind<SubwaysRepository>(SubwaysRepository).to(SubwaysRepository);
+
+DiContainer.bind<AlarmsRepository>(AlarmsRepository).to(AlarmsRepository);
 
 export default DiContainer;
