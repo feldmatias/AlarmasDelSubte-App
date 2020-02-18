@@ -8,20 +8,23 @@ import {Colors} from './styles/Colors';
 import {LoginScreen} from './auth/login/LoginScreen';
 import {SignUpScreen} from './auth/signup/SignUpScreen';
 import {SubwaysListScreen} from './subways/subwaysList/SubwaysListScreen';
+import {AlarmsListScreen} from './alarms/alarmsList/AlarmsListScreen';
 
-const AppNavigator = createStackNavigator({
-    Login: LoginScreen,
-    SignUp: SignUpScreen,
-    SubwaysList: SubwaysListScreen,
-}, {
-    initialRouteName: Routes.Login,
-    defaultNavigationOptions: {
-        headerStyle: {
-            backgroundColor: Colors.primary,
+const AppNavigator = createStackNavigator(
+    {
+        Login: LoginScreen,
+        SignUp: SignUpScreen,
+        SubwaysList: SubwaysListScreen,
+        AlarmsList: AlarmsListScreen,
+    }, {
+        initialRouteName: Routes.Login,
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: Colors.primary,
+            },
+            headerTintColor: Colors.white,
         },
-        headerTintColor: Colors.white,
-    },
-});
+    });
 
 const AppContainer = createAppContainer(AppNavigator);
 

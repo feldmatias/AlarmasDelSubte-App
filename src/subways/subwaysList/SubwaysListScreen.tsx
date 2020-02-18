@@ -1,11 +1,13 @@
 import React from 'react';
-import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
 import {SubwaysListScreenView} from './SubwaysListScreenView';
 import {Subway} from '../model/Subway';
 import DiContainer from '../../di/Container';
 import {SubwaysRepository} from '../SubwaysRepository';
 import {Loading} from '../../components/Loading';
+import {AlarmsHeaderButton} from '../../alarms/alarmsList/components/AlarmsHeaderButton';
+import {Routes} from '../../screens/Routes';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 interface Props extends ScreenProps {
 }
@@ -21,9 +23,10 @@ const strings = {
 
 export class SubwaysListScreen extends BaseScreen<Props, State> {
 
-    public static navigationOptions: StackNavigationOptions = {
+    public static navigationOptions = ({navigation}: { navigation: NavigationStackProp }) => ({
         title: strings.screenTitle,
-    };
+        headerRight: () => <AlarmsHeaderButton onPress={() => navigation.navigate(Routes.AlarmsList)}/>,
+    });
 
     public state: State = {
         loading: false,
@@ -68,7 +71,7 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
     public render() {
         if (this.state.loading) {
             return (
-                <Loading />
+                <Loading/>
             );
         }
 

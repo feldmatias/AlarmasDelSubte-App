@@ -14,6 +14,7 @@ import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {SubwayStatus} from '../../../src/subways/model/SubwayStatus';
 import {Colors} from '../../../src/styles/Colors';
 import moment, {Moment} from 'moment';
+import {Routes} from '../../../src/screens/Routes';
 
 describe('Subways List Screen', () => {
 
@@ -345,6 +346,22 @@ describe('Subways List Screen', () => {
 
             expect(renderApi.getByText(newStatus)).toBeDefined();
             expect(renderApi.queryByText(oldStatus)).toBeNull();
+        });
+
+    });
+
+    describe('Alarms', () => {
+
+        it('should navigate to alarms when click on alarms header button', async () => {
+            navigation = new MockNavigation();
+            const navigationOptions = SubwaysListScreen.navigationOptions({navigation: navigation.instance()});
+            const headerComponent = navigationOptions.headerRight();
+
+            const header = await ScreenTestUtils.render(headerComponent);
+
+            fireEvent.press(header.getByTestId('alarmsHeaderButton'));
+
+            navigation.assertNavigatedTo(Routes.AlarmsList);
         });
 
     });
