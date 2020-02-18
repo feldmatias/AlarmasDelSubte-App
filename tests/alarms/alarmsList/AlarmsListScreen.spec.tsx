@@ -74,6 +74,21 @@ describe('Alarms List Screen', () => {
 
     });
 
+    describe('Alarm item', () => {
+
+        it('should show alarm name', async () => {
+            const alarmName = 'best alarm ever';
+            const alarm = new AlarmFixture().withName(alarmName).get();
+
+            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            await renderScreen();
+
+            const component = renderApi.getByText(alarmName);
+            expect(component).toBeDefined();
+        });
+
+    });
+
     describe('Loading', () => {
 
         it('should show loading when loading alarms', async () => {
@@ -102,7 +117,7 @@ describe('Alarms List Screen', () => {
         });
 
         it('should show error when api fails', async () => {
-            const error = 'some api error';
+            const error = 'some alarms api error';
             MockGraphQLClient.mockError(alarmsQuery, error);
 
             await renderScreen();

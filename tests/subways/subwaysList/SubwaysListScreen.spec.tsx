@@ -183,7 +183,7 @@ describe('Subways List Screen', () => {
         });
 
         it('should show error when api fails', async () => {
-            const error = 'some api error';
+            const error = 'some subways api error';
             MockGraphQLClient.mockError(subwaysQuery, error);
 
             await renderScreen();

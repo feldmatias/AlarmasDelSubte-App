@@ -15,6 +15,11 @@ export class AlarmFixture {
         return this;
     }
 
+    public withName(name: string): AlarmFixture {
+        this.alarm.name = name;
+        return this;
+    }
+
     public get(): Alarm {
         return this.alarm;
     }
