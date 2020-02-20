@@ -4,6 +4,9 @@ import {Alarm} from '../model/Alarm';
 import {AlarmItemSubways} from './components/AlarmItemSubways';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {DaysTranslator} from '../../utils/DaysTranslator';
+import {Colors} from '../../styles/Colors';
+import {Button} from 'react-native-elements';
+import {ConfirmationDialog} from '../../components/ConfirmationDialog';
 
 interface Props {
     alarm: Alarm
@@ -13,7 +16,13 @@ interface State {
 
 }
 
+const strings = {
+    deleteConfirm: 'Seguro que desea eliminar la alarma?',
+};
+
 export class AlarmItem extends Component<Props, State> {
+
+    private deleteConfirmationDialog!: ConfirmationDialog;
 
     private getTimeRange(): string {
         return `${this.props.alarm.start}  -  ${this.props.alarm.end}`;
@@ -24,6 +33,10 @@ export class AlarmItem extends Component<Props, State> {
             return DaysTranslator.translate(day);
         }).join(' | ');
     }
+
+    private showConfirmDelete = (): void => {
+        this.deleteConfirmationDialog.show();
+    };
 
     public render() {
         return (
@@ -49,10 +62,27 @@ export class AlarmItem extends Component<Props, State> {
 
                 </View>
 
+                <Button
+                    testID="alarmDelete"
+                    onPress={this.showConfirmDelete}
+                    type="clear"
+                    icon={{
+                        name: 'delete-forever',
+                        color: Colors.red,
+                        size: 35,
+                    }}
+                />
+
+                <ConfirmationDialog
+                    message={strings.deleteConfirm}
+                    onConfirm={async () => {
+                    }}
+                    instance={dialog => {this.deleteConfirmationDialog = dialog;}}
+                />
+
             </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({

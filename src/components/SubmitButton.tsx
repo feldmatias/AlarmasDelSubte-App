@@ -33,7 +33,8 @@ export class SubmitButton extends Component<Props, State> {
                     titleStyle={buttonStyles.title}
                     loading={this.props.loading}
                     disabled={!this.props.enabled}
-                    onPress={this.onSubmit}/>
+                    onPress={this.onSubmit}
+            />
         );
     }
 }

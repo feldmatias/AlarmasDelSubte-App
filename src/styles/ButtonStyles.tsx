@@ -8,6 +8,12 @@ export const buttonStyles = StyleSheet.create({
         paddingVertical: 9,
         borderRadius: 10,
     },
+    buttonCancel: {
+        backgroundColor: Colors.red,
+        paddingHorizontal: 37,
+        paddingVertical: 9,
+        borderRadius: 10,
+    },
     title: {
         fontSize: 20,
     },
