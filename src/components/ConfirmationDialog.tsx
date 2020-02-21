@@ -8,7 +8,7 @@ import {buttonStyles} from '../styles/ButtonStyles';
 interface Props {
     message: string
     onConfirm: () => Promise<void>
-    instance: (dialog: ConfirmationDialog) => void
+    ref: (dialog: ConfirmationDialog) => void
 }
 
 interface State {
@@ -44,7 +44,7 @@ export class ConfirmationDialog extends Component<Props, State> {
     }
 
     public componentDidMount(): void {
-        this.props.instance(this);
+        this.props.ref(this);
     }
 
     public render() {
