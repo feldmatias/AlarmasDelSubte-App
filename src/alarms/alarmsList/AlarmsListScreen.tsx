@@ -65,6 +65,19 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         this.setState({refreshing});
     }
 
+    private deleteAlarm = async (alarm: Alarm): Promise<void> => {
+        this.setLoading(true);
+        const result = await this.alarmsRepository.deleteAlarm(alarm);
+        this.setLoading(false);
+
+        if (result.isSuccessful()) {
+            this.setAlarms(this.state.alarms.filter(filter => filter.id !== alarm.id));
+        } else {
+            this.setError(result.getError());
+            this.setAlarms([]);
+        }
+    };
+
     public render() {
         if (this.state.loading) {
             return (
@@ -78,6 +91,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
                 error={this.state.error}
                 refreshing={this.state.refreshing}
                 refresh={this.refreshAlarms}
+                deleteAlarm={this.deleteAlarm}
             />
         );
     }

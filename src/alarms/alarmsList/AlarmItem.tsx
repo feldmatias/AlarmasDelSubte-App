@@ -10,6 +10,7 @@ import {ConfirmationDialog} from '../../components/ConfirmationDialog';
 
 interface Props {
     alarm: Alarm
+    deleteAlarm: (alarm: Alarm) => Promise<void>
 }
 
 interface State {
@@ -36,6 +37,10 @@ export class AlarmItem extends Component<Props, State> {
 
     private showConfirmDelete = (): void => {
         this.deleteConfirmationDialog.show();
+    };
+
+    private deleteAlarm = async (): Promise<void> => {
+        await this.props.deleteAlarm(this.props.alarm);
     };
 
     public render() {
@@ -75,8 +80,7 @@ export class AlarmItem extends Component<Props, State> {
 
                 <ConfirmationDialog
                     message={strings.deleteConfirm}
-                    onConfirm={async () => {
-                    }}
+                    onConfirm={this.deleteAlarm}
                     instance={dialog => {this.deleteConfirmationDialog = dialog;}}
                 />
 

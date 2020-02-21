@@ -12,11 +12,13 @@ import {Alarm} from '../../../src/alarms/model/Alarm';
 import {AlarmFixture} from '../AlarmFixture';
 import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
 import {DaysTranslator} from '../../../src/utils/DaysTranslator';
+import {AlarmDeleteMutation} from '../../../src/alarms/alarmsList/AlarmDeleteMutation';
 
 describe('Alarms List Screen', () => {
 
     let renderApi: RenderAPI;
     let alarmsQuery: GraphQLOperation;
+    let deleteAlarmMutation: GraphQLOperation;
     let navigation: MockNavigation;
 
     async function renderScreen(): Promise<void> {
@@ -28,6 +30,7 @@ describe('Alarms List Screen', () => {
         MockGraphQLClient.mock();
         MockStorage.mockWithAuthorizationToken();
         alarmsQuery = new AlarmsListQuery().getQuery();
+        deleteAlarmMutation = new AlarmDeleteMutation(new Alarm()).getMutation();
     });
 
     afterEach(() => {
@@ -35,16 +38,26 @@ describe('Alarms List Screen', () => {
         MockStorage.reset();
     });
 
-    function alarmsResponse(alarms: Alarm[]) {
-        return {
-            getAlarms: alarms,
-        };
+    function setAlarmsSuccessResponse(alarms: Alarm[]) {
+        const response =
+            {
+                getAlarms: alarms,
+            };
+        MockGraphQLClient.mockSuccess(alarmsQuery, response);
+    }
+
+    function setDeleteAlarmSuccessResponse(alarm: Alarm) {
+        const response =
+            {
+                deleteAlarm: alarm.id,
+            };
+        MockGraphQLClient.mockSuccess(deleteAlarmMutation, response);
     }
 
     describe('Alarms list', () => {
 
         it('should show alarm if query returns 1 alarm', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([new AlarmFixture().get()]));
+            setAlarmsSuccessResponse([new AlarmFixture().get()]);
             await renderScreen();
 
             const items = renderApi.getAllByTestId('alarmItem');
@@ -59,7 +72,7 @@ describe('Alarms List Screen', () => {
                 alarms.push(alarm);
             }
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse(alarms));
+            setAlarmsSuccessResponse(alarms);
             await renderScreen();
 
             const items = renderApi.getAllByTestId('alarmItem');
@@ -67,7 +80,7 @@ describe('Alarms List Screen', () => {
         });
 
         it('should not show alarm if query returns 0 alarms', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            setAlarmsSuccessResponse([]);
             await renderScreen();
 
             const items = renderApi.queryByTestId('alarmItem');
@@ -82,7 +95,7 @@ describe('Alarms List Screen', () => {
             const alarmName = 'best alarm ever';
             const alarm = new AlarmFixture().withName(alarmName).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const component = renderApi.getByText(alarmName);
@@ -94,7 +107,7 @@ describe('Alarms List Screen', () => {
             const subway = new AlarmSubwayFixture().withIcon(icon).get();
             const alarm = new AlarmFixture().withSubways([subway]).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmSubwayIcon');
@@ -112,7 +125,7 @@ describe('Alarms List Screen', () => {
             }
             const alarm = new AlarmFixture().withSubways(subways).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const components = renderApi.getAllByTestId('alarmSubwayIcon');
@@ -128,7 +141,7 @@ describe('Alarms List Screen', () => {
             const alarmStart = '12:34';
             const alarm = new AlarmFixture().withStart(alarmStart).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmTimeRange');
@@ -139,7 +152,7 @@ describe('Alarms List Screen', () => {
             const alarmEnd = '21:45';
             const alarm = new AlarmFixture().withEnd(alarmEnd).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmTimeRange');
@@ -150,7 +163,7 @@ describe('Alarms List Screen', () => {
             const day = 'day';
             const alarm = new AlarmFixture().withDays([day]).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmDays');
@@ -161,7 +174,7 @@ describe('Alarms List Screen', () => {
             const days = DaysTranslator.days.keys();
             const alarm = new AlarmFixture().withDays([...days]).get();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmDays');
@@ -182,7 +195,7 @@ describe('Alarms List Screen', () => {
         });
 
         it('should hide loading when alarms arrive', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([new AlarmFixture().get()]));
+            setAlarmsSuccessResponse([new AlarmFixture().get()]);
             await renderScreen();
             expect(renderApi.queryByTestId('loading')).toBeNull();
         });
@@ -192,7 +205,7 @@ describe('Alarms List Screen', () => {
     describe('Empty List', () => {
 
         it('should show empty message when 0 alarms', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            setAlarmsSuccessResponse([]);
 
             await renderScreen();
 
@@ -226,7 +239,7 @@ describe('Alarms List Screen', () => {
         }
 
         it('should show refreshing when refresh', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            setAlarmsSuccessResponse([]);
             await renderScreen();
 
             MockGraphQLClient.mockLoading(alarmsQuery);
@@ -238,10 +251,10 @@ describe('Alarms List Screen', () => {
         });
 
         it('should hide refreshing when refresh finishes', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            setAlarmsSuccessResponse([]);
             await renderScreen();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            setAlarmsSuccessResponse([]);
 
             await refreshAlarms();
 
@@ -250,11 +263,11 @@ describe('Alarms List Screen', () => {
         });
 
         it('should show alarm if 0 alarms and 1 after refresh', async () => {
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([]));
+            setAlarmsSuccessResponse([]);
             await renderScreen();
 
             const alarm = new AlarmFixture().get();
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
 
             await refreshAlarms();
 
@@ -264,12 +277,12 @@ describe('Alarms List Screen', () => {
 
         it('should add alarm if is new after refresh', async () => {
             const alarm = new AlarmFixture().get();
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
             await renderScreen();
 
             const newName = 'new';
             const newAlarm = new AlarmFixture().withId(123).withName(newName).get();
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm, newAlarm]));
+            setAlarmsSuccessResponse([alarm, newAlarm]);
 
             await refreshAlarms();
 
@@ -281,11 +294,11 @@ describe('Alarms List Screen', () => {
             const alarm = new AlarmFixture().get();
             const oldName = 'old';
             const oldAlarm = new AlarmFixture().withId(123).withName(oldName).get();
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([oldAlarm, alarm]));
+            setAlarmsSuccessResponse([oldAlarm, alarm]);
 
             await renderScreen();
 
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
 
             await refreshAlarms();
 
@@ -298,17 +311,168 @@ describe('Alarms List Screen', () => {
             const newName = 'new name for alarm';
 
             const alarm = new AlarmFixture().withName(oldName).get();
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
 
             await renderScreen();
 
             alarm.name = newName;
-            MockGraphQLClient.mockSuccess(alarmsQuery, alarmsResponse([alarm]));
+            setAlarmsSuccessResponse([alarm]);
 
             await refreshAlarms();
 
             expect(renderApi.getByText(newName)).toBeDefined();
             expect(renderApi.queryByText(oldName)).toBeNull();
+        });
+
+    });
+
+    describe('Delete alarm', () => {
+
+        function deleteAlarm(index = 0): void {
+            const alarms = renderApi.getAllByTestId('alarmDelete');
+            fireEvent.press(alarms[index]);
+        }
+
+        async function confirmDeleteAlarm(): Promise<void> {
+            await fireEvent.press(renderApi.getByTestId('dialogConfirm'));
+            await ScreenTestUtils.flushPromises();
+        }
+
+        function cancelDeleteAlarm(): void {
+            fireEvent.press(renderApi.getByTestId('dialogCancel'));
+        }
+
+        it('should show delete confirmation dialog', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            deleteAlarm();
+
+            expect(renderApi.getByTestId('confirmationDialog')).toBeDefined();
+            const dialogMessage = 'Seguro que desea eliminar la alarma?';
+            expect(renderApi.getByText(dialogMessage)).toBeDefined();
+        });
+
+        it('should hide confirmation dialog when cancel delete in dialog', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            deleteAlarm();
+            cancelDeleteAlarm();
+
+            expect(renderApi.queryByTestId('confirmationDialog')).toBeNull();
+        });
+
+        it('should not delete when cancel delete in dialog', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            deleteAlarm();
+            cancelDeleteAlarm();
+
+            await MockGraphQLClient.assertMutationCalled(deleteAlarmMutation, 0);
+        });
+
+        it('should delete alarm with id when confirm delete in dialog', async () => {
+            const alarmId = 364;
+            const alarm = new AlarmFixture().withId(alarmId).get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            deleteAlarm();
+            confirmDeleteAlarm();
+
+            await MockGraphQLClient.assertMutationCalledWith(deleteAlarmMutation, {id: alarmId});
+        });
+
+        it('should show loading when delete alarm', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            MockGraphQLClient.mockLoading(deleteAlarmMutation);
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            expect(renderApi.getByTestId('loading')).toBeDefined();
+        });
+
+        it('should hide loading when delete alarm finishes', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            setDeleteAlarmSuccessResponse(alarm);
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            expect(renderApi.queryByTestId('loading')).toBeNull();
+        });
+
+        it('should show error when delete alarm fails', async () => {
+            const error = 'delete alarm api error';
+
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            MockGraphQLClient.mockError(deleteAlarmMutation, error);
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            expect(renderApi.getByText(error)).toBeDefined();
+        });
+
+        it('should show error when delete alarm fails with network error', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            MockGraphQLClient.mockNetworkError(deleteAlarmMutation);
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
+        });
+
+        it('should remove alarm from list when delete alarm success', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            setDeleteAlarmSuccessResponse(alarm);
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            const items = renderApi.queryAllByTestId('alarmItem');
+            expect(items && items.length).toBe(0);
+        });
+
+        it('should remove correct alarm from list when delete alarm success', async () => {
+            const alarm1 = new AlarmFixture().withId(1).withName('1').get();
+            const alarm2 = new AlarmFixture().withId(2).withName('2').get();
+            const alarm3 = new AlarmFixture().withId(3).withName('3').get();
+            setAlarmsSuccessResponse([alarm1, alarm2, alarm3]);
+            await renderScreen();
+
+            setDeleteAlarmSuccessResponse(alarm2);
+
+            deleteAlarm(1);
+            await confirmDeleteAlarm();
+
+            const items = renderApi.getAllByTestId('alarmItem');
+            expect(items.length).toBe(2);
+            expect(renderApi.getByText('1')).toBeDefined();
+            expect(renderApi.queryByText('2')).toBeNull();
+            expect(renderApi.getByText('3')).toBeDefined();
         });
 
     });

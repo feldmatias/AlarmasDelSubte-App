@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {FlatList, ListRenderItem, SafeAreaView, StyleSheet} from 'react-native';
+import {FlatList, ListRenderItem, SafeAreaView, StyleSheet, View} from 'react-native';
 import {screenStyles} from '../../styles/ScreenStyles';
 import {ListEmpty} from '../../components/ListEmpty';
 import {ListItemSeparator} from '../../components/ListItemSeparator';
@@ -12,6 +12,7 @@ interface Props {
     error: string
     refreshing: boolean
     refresh: () => Promise<void>
+    deleteAlarm: (alarm: Alarm) => Promise<void>
 }
 
 interface State {
@@ -25,7 +26,10 @@ const strings = {
 export class AlarmsListScreenView extends Component<Props, State> {
 
     private renderItem: ListRenderItem<Alarm> = ({item}) => (
-        <AlarmItem alarm={item}/>
+        <AlarmItem
+            alarm={item}
+            deleteAlarm={this.props.deleteAlarm}
+        />
     );
 
     private renderEmptyListComponent = () => {
@@ -49,11 +53,12 @@ export class AlarmsListScreenView extends Component<Props, State> {
 
     public render() {
         return (
-            <SafeAreaView style={screenStyles.container}>
+            <View style={screenStyles.scroll}>
+            <SafeAreaView style={[screenStyles.container, styles.list]}>
                 <FlatList
                     testID="alarmsList"
                     contentContainerStyle={listStyles.contentContainer}
-                    style={[screenStyles.scroll, styles.list]}
+                    style={screenStyles.scroll}
                     data={this.props.alarms}
                     renderItem={this.renderItem}
                     keyExtractor={item => item.id.toString()}
@@ -65,6 +70,7 @@ export class AlarmsListScreenView extends Component<Props, State> {
                     onRefresh={this.props.refresh}
                 />
             </SafeAreaView>
+            </View>
         );
     }
 
@@ -72,6 +78,6 @@ export class AlarmsListScreenView extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     list: {
-        paddingTop: 25,
+        marginVertical: 25,
     },
 });

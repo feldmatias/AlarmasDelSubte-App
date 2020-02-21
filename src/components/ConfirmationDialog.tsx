@@ -34,7 +34,7 @@ export class ConfirmationDialog extends Component<Props, State> {
         this.setVisible(false);
     };
 
-    private confirm = (): void => {
+    private confirm = async (): Promise<void> => {
         this.hide();
         this.props.onConfirm();
     };
@@ -48,10 +48,14 @@ export class ConfirmationDialog extends Component<Props, State> {
     }
 
     public render() {
-        return (
-            <Modal testID="confirmationDialog" isVisible={this.state.visible}>
+        if (!this.state.visible) {
+            return null;
+        }
 
-                <View style={styles.container}>
+        return (
+            <Modal isVisible={true}>
+
+                <View testID="confirmationDialog" style={styles.container}>
 
                     <Text style={styles.title}>
                         {this.props.message}
