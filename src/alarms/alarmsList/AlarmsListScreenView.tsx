@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
-import {FlatList, ListRenderItem, SafeAreaView, StyleSheet} from 'react-native';
+import {FlatList, ListRenderItem, SafeAreaView, StyleSheet, View} from 'react-native';
 import {screenStyles} from '../../styles/ScreenStyles';
-import {Subway} from '../model/Subway';
-import {SubwayItem} from './SubwayItem';
 import {ListEmpty} from '../../components/ListEmpty';
 import {ListItemSeparator} from '../../components/ListItemSeparator';
-import {SubwaysListFooter} from './components/SubwaysListFooter';
 import {listStyles} from '../../styles/ListStyles';
+import {Alarm} from '../model/Alarm';
+import {AlarmItem} from './AlarmItem';
 
 interface Props {
-    subways: Subway[]
+    alarms: Alarm[]
     error: string
     refreshing: boolean
     refresh: () => Promise<void>
+    deleteAlarm: (alarm: Alarm) => Promise<void>
 }
 
 interface State {
@@ -20,13 +20,16 @@ interface State {
 }
 
 const strings = {
-    emptyMessage: 'No hay datos del subte en este momento',
+    emptyMessage: 'No tienes ninguna alarma creada',
 };
 
-export class SubwaysListScreenView extends Component<Props, State> {
+export class AlarmsListScreenView extends Component<Props, State> {
 
-    private renderItem: ListRenderItem<Subway> = ({item}) => (
-        <SubwayItem subway={item}/>
+    private renderItem: ListRenderItem<Alarm> = ({item}) => (
+        <AlarmItem
+            alarm={item}
+            deleteAlarm={this.props.deleteAlarm}
+        />
     );
 
     private renderEmptyListComponent = () => {
@@ -38,14 +41,8 @@ export class SubwaysListScreenView extends Component<Props, State> {
         );
     };
 
-    private renderFooterComponent = () => {
-        return (
-            <SubwaysListFooter subways={this.props.subways}/>
-        );
-    };
-
-    private renderHeaderComponent = () => {
-        if (this.props.subways.length === 0) {
+    private renderHeaderFooterComponent = () => {
+        if (this.props.alarms.length === 0) {
             return null;
         }
 
@@ -56,22 +53,24 @@ export class SubwaysListScreenView extends Component<Props, State> {
 
     public render() {
         return (
-            <SafeAreaView style={screenStyles.container}>
+            <View style={screenStyles.scroll}>
+            <SafeAreaView style={[screenStyles.container, styles.list]}>
                 <FlatList
-                    testID="subwaysList"
+                    testID="alarmsList"
                     contentContainerStyle={listStyles.contentContainer}
-                    style={[screenStyles.scroll, styles.list]}
-                    data={this.props.subways}
+                    style={screenStyles.scroll}
+                    data={this.props.alarms}
                     renderItem={this.renderItem}
-                    keyExtractor={item => item.line}
+                    keyExtractor={item => item.id.toString()}
                     ListEmptyComponent={this.renderEmptyListComponent}
                     ItemSeparatorComponent={ListItemSeparator}
-                    ListHeaderComponent={this.renderHeaderComponent}
-                    ListFooterComponent={this.renderFooterComponent}
+                    ListHeaderComponent={this.renderHeaderFooterComponent}
+                    ListFooterComponent={this.renderHeaderFooterComponent}
                     refreshing={this.props.refreshing}
                     onRefresh={this.props.refresh}
                 />
             </SafeAreaView>
+            </View>
         );
     }
 
@@ -79,6 +78,6 @@ export class SubwaysListScreenView extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     list: {
-        paddingTop: 25,
+        marginVertical: 25,
     },
 });
