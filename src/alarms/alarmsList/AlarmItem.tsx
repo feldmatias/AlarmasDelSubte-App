@@ -81,7 +81,7 @@ export class AlarmItem extends Component<Props, State> {
                 <ConfirmationDialog
                     message={strings.deleteConfirm}
                     onConfirm={this.deleteAlarm}
-                    ref={dialog => {this.deleteConfirmationDialog = dialog;}}
+                    reference={dialog => {this.deleteConfirmationDialog = dialog;}}
                 />
 
             </View>
