@@ -9,6 +9,7 @@ import {LoginScreen} from './auth/login/LoginScreen';
 import {SignUpScreen} from './auth/signup/SignUpScreen';
 import {SubwaysListScreen} from './subways/subwaysList/SubwaysListScreen';
 import {AlarmsListScreen} from './alarms/alarmsList/AlarmsListScreen';
+import {AlarmFormScreen} from './alarms/alarmForm/AlarmFormScreen';
 
 const AppNavigator = createStackNavigator(
     {
@@ -16,6 +17,7 @@ const AppNavigator = createStackNavigator(
         SignUp: SignUpScreen,
         SubwaysList: SubwaysListScreen,
         AlarmsList: AlarmsListScreen,
+        AlarmForm: AlarmFormScreen,
     }, {
         initialRouteName: Routes.Login,
         defaultNavigationOptions: {

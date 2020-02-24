@@ -6,6 +6,7 @@ import {Alarm} from '../model/Alarm';
 import DiContainer from '../../di/Container';
 import {AlarmsRepository} from '../AlarmsRepository';
 import {Loading} from '../../components/Loading';
+import {Routes} from '../../screens/Routes';
 
 interface Props extends ScreenProps {
 }
@@ -78,6 +79,10 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         }
     };
 
+    private createAlarm = (): void => {
+        this.navigation().navigate(Routes.AlarmForm);
+    };
+
     public render() {
         if (this.state.loading) {
             return (
@@ -92,6 +97,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
                 refreshing={this.state.refreshing}
                 refresh={this.refreshAlarms}
                 deleteAlarm={this.deleteAlarm}
+                createAlarm={this.createAlarm}
             />
         );
     }

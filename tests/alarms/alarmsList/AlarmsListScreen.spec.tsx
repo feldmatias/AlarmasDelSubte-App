@@ -13,6 +13,7 @@ import {AlarmFixture} from '../AlarmFixture';
 import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
 import {DaysTranslator} from '../../../src/utils/DaysTranslator';
 import {AlarmDeleteMutation} from '../../../src/alarms/alarmsList/AlarmDeleteMutation';
+import {Routes} from '../../../src/screens/Routes';
 
 describe('Alarms List Screen', () => {
 
@@ -473,6 +474,20 @@ describe('Alarms List Screen', () => {
             expect(renderApi.getByText('1')).toBeDefined();
             expect(renderApi.queryByText('2')).toBeNull();
             expect(renderApi.getByText('3')).toBeDefined();
+        });
+
+    });
+
+    describe('Create Alarm', () => {
+
+        it('should navigate to Alarm Form screen', async () => {
+            setAlarmsSuccessResponse([]);
+
+            await renderScreen();
+
+            fireEvent.press(renderApi.getByTestId('fab'));
+
+            navigation.assertNavigatedTo(Routes.AlarmForm);
         });
 
     });

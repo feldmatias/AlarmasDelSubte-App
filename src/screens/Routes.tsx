@@ -3,4 +3,5 @@ export const Routes = {
     SignUp: 'SignUp',
     SubwaysList: 'SubwaysList',
     AlarmsList: 'AlarmsList',
+    AlarmForm: 'AlarmForm',
 };

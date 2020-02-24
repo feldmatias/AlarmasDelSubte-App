@@ -6,6 +6,7 @@ import {ListItemSeparator} from '../../components/ListItemSeparator';
 import {listStyles} from '../../styles/ListStyles';
 import {Alarm} from '../model/Alarm';
 import {AlarmItem} from './AlarmItem';
+import {FloatingActionButton} from '../../components/FloatingActionButton';
 
 interface Props {
     alarms: Alarm[]
@@ -13,6 +14,7 @@ interface Props {
     refreshing: boolean
     refresh: () => Promise<void>
     deleteAlarm: (alarm: Alarm) => Promise<void>
+    createAlarm: () => void
 }
 
 interface State {
@@ -54,22 +56,30 @@ export class AlarmsListScreenView extends Component<Props, State> {
     public render() {
         return (
             <View style={screenStyles.scroll}>
-            <SafeAreaView style={[screenStyles.container, styles.list]}>
-                <FlatList
-                    testID="alarmsList"
-                    contentContainerStyle={listStyles.contentContainer}
-                    style={screenStyles.scroll}
-                    data={this.props.alarms}
-                    renderItem={this.renderItem}
-                    keyExtractor={item => item.id.toString()}
-                    ListEmptyComponent={this.renderEmptyListComponent}
-                    ItemSeparatorComponent={ListItemSeparator}
-                    ListHeaderComponent={this.renderHeaderFooterComponent}
-                    ListFooterComponent={this.renderHeaderFooterComponent}
-                    refreshing={this.props.refreshing}
-                    onRefresh={this.props.refresh}
+                <SafeAreaView style={[screenStyles.container, styles.list]}>
+
+                    <FlatList
+                        testID="alarmsList"
+                        contentContainerStyle={listStyles.contentContainer}
+                        style={screenStyles.scroll}
+                        data={this.props.alarms}
+                        renderItem={this.renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        ListEmptyComponent={this.renderEmptyListComponent}
+                        ItemSeparatorComponent={ListItemSeparator}
+                        ListHeaderComponent={this.renderHeaderFooterComponent}
+                        ListFooterComponent={this.renderHeaderFooterComponent}
+                        refreshing={this.props.refreshing}
+                        onRefresh={this.props.refresh}
+                    />
+
+                </SafeAreaView>
+
+                <FloatingActionButton
+                    icon="plus"
+                    onPress={this.props.createAlarm}
                 />
-            </SafeAreaView>
+
             </View>
         );
     }
