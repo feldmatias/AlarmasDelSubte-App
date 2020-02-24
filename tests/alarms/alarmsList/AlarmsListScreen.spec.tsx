@@ -14,6 +14,7 @@ import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
 import {DaysTranslator} from '../../../src/utils/DaysTranslator';
 import {AlarmDeleteMutation} from '../../../src/alarms/alarmsList/AlarmDeleteMutation';
 import {Routes} from '../../../src/screens/Routes';
+import MockToast from '../../screens/MockToast';
 
 describe('Alarms List Screen', () => {
 
@@ -474,6 +475,34 @@ describe('Alarms List Screen', () => {
             expect(renderApi.getByText('1')).toBeDefined();
             expect(renderApi.queryByText('2')).toBeNull();
             expect(renderApi.getByText('3')).toBeDefined();
+        });
+
+        it('should show toast when delete alarm succeeds', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            setDeleteAlarmSuccessResponse(alarm);
+            MockToast.mock();
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            MockToast.assertShown('Alarma eliminada correctamente');
+        });
+
+        it('should not show toast when delete alarm fails', async () => {
+            const alarm = new AlarmFixture().get();
+            setAlarmsSuccessResponse([alarm]);
+            await renderScreen();
+
+            MockGraphQLClient.mockError(deleteAlarmMutation, 'error');
+            MockToast.mock();
+
+            deleteAlarm();
+            await confirmDeleteAlarm();
+
+            MockToast.assertNotShown();
         });
 
     });

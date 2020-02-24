@@ -9,6 +9,7 @@ import {Loading} from '../../components/Loading';
 import {Routes} from '../../screens/Routes';
 import {View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
+import {Toast} from '../../screens/Toast';
 
 interface Props extends ScreenProps {
 }
@@ -20,6 +21,7 @@ interface State extends ScreenState {
 
 const strings = {
     screenTitle: 'Alarmas',
+    successDeleteAlarm: 'Alarma eliminada correctamente',
 };
 
 export class AlarmsListScreen extends BaseScreen<Props, State> {
@@ -75,6 +77,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
 
         if (result.isSuccessful()) {
             this.setAlarms(this.state.alarms.filter(filter => filter.id !== alarm.id));
+            Toast.show(strings.successDeleteAlarm);
         } else {
             this.setError(result.getError());
             this.setAlarms([]);
