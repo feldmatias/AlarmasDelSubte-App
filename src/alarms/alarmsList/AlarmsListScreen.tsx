@@ -7,6 +7,8 @@ import DiContainer from '../../di/Container';
 import {AlarmsRepository} from '../AlarmsRepository';
 import {Loading} from '../../components/Loading';
 import {Routes} from '../../screens/Routes';
+import {View} from 'react-native';
+import {NavigationEvents} from 'react-navigation';
 
 interface Props extends ScreenProps {
 }
@@ -50,11 +52,11 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         this.setState({alarms: alarms});
     }
 
-    public async componentDidMount(): Promise<void> {
+    private onFocus = async (): Promise<void> => {
         this.setLoading(true);
         await this.getAlarms();
         this.setLoading(false);
-    }
+    };
 
     private refreshAlarms = async (): Promise<void> => {
         this.setRefreshing(true);
@@ -91,14 +93,23 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         }
 
         return (
-            <AlarmsListScreenView
-                alarms={this.state.alarms}
-                error={this.state.error}
-                refreshing={this.state.refreshing}
-                refresh={this.refreshAlarms}
-                deleteAlarm={this.deleteAlarm}
-                createAlarm={this.createAlarm}
-            />
+            <View>
+
+                <NavigationEvents
+                    testID="navigationEvents"
+                    onWillFocus={this.onFocus}
+                />
+
+                <AlarmsListScreenView
+                    alarms={this.state.alarms}
+                    error={this.state.error}
+                    refreshing={this.state.refreshing}
+                    refresh={this.refreshAlarms}
+                    deleteAlarm={this.deleteAlarm}
+                    createAlarm={this.createAlarm}
+                />
+
+            </View>
         );
     }
 }

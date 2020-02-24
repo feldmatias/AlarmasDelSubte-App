@@ -24,7 +24,7 @@ describe('Alarms List Screen', () => {
 
     async function renderScreen(): Promise<void> {
         navigation = new MockNavigation();
-        renderApi = await ScreenTestUtils.render(<AlarmsListScreen navigation={navigation.instance()}/>);
+        renderApi = await ScreenTestUtils.renderWithFocus(<AlarmsListScreen navigation={navigation.instance()}/>);
     }
 
     beforeEach(async () => {
