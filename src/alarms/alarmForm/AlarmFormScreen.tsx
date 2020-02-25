@@ -48,7 +48,7 @@ export class AlarmFormScreen extends BaseScreen<Props, State> {
         this.setLoading(false);
 
         if (result.isSuccessful()) {
-
+            this.navigation().back();
         } else {
             this.setError(result.getError());
         }

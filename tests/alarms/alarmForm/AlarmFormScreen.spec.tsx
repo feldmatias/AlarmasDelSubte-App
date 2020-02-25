@@ -16,6 +16,7 @@ import {alarmStrings} from '../../../src/strings/AlarmStrings';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {AlarmCreateMutation} from '../../../src/alarms/alarmForm/AlarmCreateMutation';
 import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
+import {AlarmFixture} from '../AlarmFixture';
 
 describe('Alarm Form Screen', () => {
 
@@ -52,6 +53,13 @@ describe('Alarm Form Screen', () => {
         MockGraphQLClient.reset();
         MockStorage.reset();
     });
+
+    function createAlarmResponse() {
+        const alarm = new AlarmFixture().get();
+        return {
+            createAlarm: alarm,
+        };
+    }
 
     function writeName(name: string): void {
         fireEvent.changeText(renderApi.getByTestId('alarmName'), name);
@@ -486,6 +494,17 @@ describe('Alarm Form Screen', () => {
                 await assertCreateAlarmCalledWith({end: END});
             });
 
+        });
+
+        describe('Create alarm success', () => {
+
+            it('when submit succeeds then navigate to back', async () => {
+                MockGraphQLClient.mockSuccess(createAlarmMutation, createAlarmResponse());
+
+                await submitWithValidData();
+
+                navigation.assertNavigatedToBack();
+            });
         });
 
     });

@@ -28,4 +28,8 @@ export class MockNavigation {
         const navigateAction = resetAction.actions[0];
         expect(navigateAction.routeName).toBe(route);
     }
+
+    public assertNavigatedToBack(): void {
+        verify(this.navigation.pop()).called();
+    }
 }
