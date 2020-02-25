@@ -20,4 +20,13 @@ export class Storage {
 
         return plainToClass(returnType, JSON.parse(value));
     }
+
+    public async getList<T>(key: string, returnType: new() => T): Promise<T[]> {
+        const value = await this.storage.get(key);
+        if (!value) {
+            return [];
+        }
+
+        return plainToClass(returnType, JSON.parse(value) as Object[]);
+    }
 }

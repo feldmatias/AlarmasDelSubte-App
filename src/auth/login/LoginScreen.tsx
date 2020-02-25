@@ -6,7 +6,7 @@ import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {LoginScreenView} from './LoginScreenView';
 import {Routes} from '../../screens/Routes';
-import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
+import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
 import {authStrings} from '../../strings/AuthStrings';
 
 interface Props extends ScreenProps {

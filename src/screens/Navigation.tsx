@@ -23,4 +23,8 @@ export class Navigation {
                     ],
                 }));
     }
+
+    public back(): void {
+        this.navigation.pop();
+    }
 }

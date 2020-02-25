@@ -1,5 +1,5 @@
 import React from 'react';
-import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
+import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
 import {SubwaysListScreenView} from './SubwaysListScreenView';
 import {Subway} from '../model/Subway';
 import DiContainer from '../../di/Container';

@@ -5,7 +5,7 @@ import {screenContainerStyles} from '../styles/ScreenStyles';
 import {Colors} from '../styles/Colors';
 
 interface Props {
-    error: string
+    error?: string
     emptyMessage: string
 }
 

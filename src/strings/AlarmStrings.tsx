@@ -9,6 +9,15 @@ export const alarmStrings = {
 
     alarmFormScreen: {
         screenTitle: 'Crear Alarma',
+        successCreateAlarm: 'Alarma creada correctamnte',
+    },
+
+    form: {
+        name: 'Nombre de la Alarma',
+        start: 'Desde:',
+        end: 'Hasta:',
+        submit: 'Guardar Alarma',
+        invalidTimeRange: 'El rango de tiempo es inválido. "Hasta" debe ser posterior a "Desde"',
     },
 
 };

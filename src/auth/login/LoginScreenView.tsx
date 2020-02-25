@@ -62,7 +62,8 @@ export class LoginScreenView extends Component<Props, State> {
                         style={[inputStyles.text, styles.input]}
                         onChangeText={username => {
                             this.setUsername(username);
-                        }}/>
+                        }}
+                    />
 
                     <TextInput
                         testID="password"
@@ -71,14 +72,16 @@ export class LoginScreenView extends Component<Props, State> {
                         style={[inputStyles.text, styles.input]}
                         onChangeText={password => {
                             this.setPassword(password);
-                        }}/>
+                        }}
+                    />
 
                     <SubmitButton
                         title={authStrings.loginScreen.login}
                         style={styles.button}
                         loading={this.props.loading}
                         enabled={this.isLoginEnabled()}
-                        onSubmit={this.login}/>
+                        onSubmit={this.login}
+                    />
 
                     <SignUpLink signUp={this.props.signUp}/>
 
