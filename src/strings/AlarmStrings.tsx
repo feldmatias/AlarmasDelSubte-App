@@ -11,4 +11,8 @@ export const alarmStrings = {
         screenTitle: 'Crear Alarma',
     },
 
+    form: {
+        name: 'Nombre de la Alarma',
+    },
+
 };
