@@ -15,6 +15,7 @@ export const alarmStrings = {
         name: 'Nombre de la Alarma',
         start: 'Desde:',
         end: 'Hasta:',
+        submit: 'Guardar Alarma',
     },
 
 };

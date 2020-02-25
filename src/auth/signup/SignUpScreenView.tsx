@@ -61,7 +61,8 @@ export class SignUpScreenView extends Component<Props, State> {
                         style={[inputStyles.text, styles.input]}
                         onChangeText={username => {
                             this.setUsername(username);
-                        }}/>
+                        }}
+                    />
 
                     <TextInput
                         testID="password"
@@ -70,14 +71,16 @@ export class SignUpScreenView extends Component<Props, State> {
                         style={[inputStyles.text, styles.input]}
                         onChangeText={password => {
                             this.setPassword(password);
-                        }}/>
+                        }}
+                    />
 
                     <SubmitButton
                         title={authStrings.signUpScreen.signUp}
                         style={styles.button}
                         loading={this.props.loading}
                         enabled={this.isSignUpEnabled()}
-                        onSubmit={this.signUp}/>
+                        onSubmit={this.signUp}
+                    />
 
                 </View>
             </ScrollView>

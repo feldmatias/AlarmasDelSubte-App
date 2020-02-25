@@ -46,6 +46,11 @@ describe('Alarm Form Screen', () => {
         MockStorage.reset();
     });
 
+    function selectTimeOnPicker(time: string): void {
+        const date = DateTimeUtils.timeToDate(time);
+        fireEvent(renderApi.getByTestId('timePicker'), 'onChange', null, date);
+    }
+
     describe('Form Input', () => {
 
         describe('Alarm Subways', () => {
@@ -158,8 +163,7 @@ describe('Alarm Form Screen', () => {
 
             function selectStart(time: string): void {
                 fireEvent.press(renderApi.getByTestId('startOpenTimePicker'));
-                const date = DateTimeUtils.timeToDate(time);
-                fireEvent(renderApi.getByTestId('timePicker'), 'onChange', null, date);
+                selectTimeOnPicker(time);
             }
 
             function openDatePickerAndCancel(): void {
@@ -201,8 +205,7 @@ describe('Alarm Form Screen', () => {
 
             function selectEnd(time: string): void {
                 fireEvent.press(renderApi.getByTestId('endOpenTimePicker'));
-                const date = DateTimeUtils.timeToDate(time);
-                fireEvent(renderApi.getByTestId('timePicker'), 'onChange', null, date);
+                selectTimeOnPicker(time);
             }
 
             function openDatePickerAndCancel(): void {
@@ -258,6 +261,108 @@ describe('Alarm Form Screen', () => {
             await renderScreen();
 
             expect(renderApi.getByText(strings.defaultError)).toBeDefined();
+        });
+
+    });
+
+    describe('Submit', () => {
+
+        const NAME = 'alarm name';
+        const DEFAULT_DAY = 'friday';
+        const DEFAULT_SUBWAY_LINE = '1';
+        const START = '12:21';
+        const END = '20:02';
+
+        function inputValidData(): void {
+            writeName(NAME);
+            selectDay(DEFAULT_DAY);
+            selectSubway(DEFAULT_SUBWAY_LINE);
+            selectStart(START);
+            selectEnd(END);
+        }
+
+        function writeName(name: string): void {
+            fireEvent.changeText(renderApi.getByTestId('alarmName'), name);
+        }
+
+        function selectDay(day: string): void {
+            const dayText = renderApi.getByTestId('alarmFormDay' + day);
+            fireEvent.press(dayText);
+        }
+
+        function selectSubway(subwayLine: string): void {
+            const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subwayLine);
+            fireEvent.press(disabledSubway);
+        }
+
+        function selectStart(start: string): void {
+            fireEvent.press(renderApi.getByTestId('startOpenTimePicker'));
+            selectTimeOnPicker(start);
+        }
+
+        function selectEnd(end: string): void {
+            fireEvent.press(renderApi.getByTestId('endOpenTimePicker'));
+            selectTimeOnPicker(end);
+        }
+
+        beforeEach(async () => {
+           await renderScreenWithSubways();
+        });
+
+        describe('Enabled Submit button', () => {
+
+            function assertSubmitButtonEnabled(enabled: boolean): void {
+                const button = renderApi.getByTestId('submit');
+                expect(button.props.disabled).toBe(!enabled);
+            }
+
+            it('should be disabled when name is empty', async () => {
+                inputValidData();
+
+                writeName('');
+
+                assertSubmitButtonEnabled(false);
+            });
+
+            it('should be disabled when no subway selected', async () => {
+                inputValidData();
+
+                fireEvent.press(renderApi.getByTestId('alarmFormSubwayEnabled' + DEFAULT_SUBWAY_LINE));
+
+                assertSubmitButtonEnabled(false);
+            });
+
+            it('should be disabled when no day selected', async () => {
+                inputValidData();
+
+                selectDay(DEFAULT_DAY);
+
+                assertSubmitButtonEnabled(false);
+            });
+
+            it('should be disabled when start is after end', async () => {
+                inputValidData();
+
+                selectStart('15:00');
+                selectEnd('14:59');
+
+                assertSubmitButtonEnabled(false);
+            });
+
+            it('should be disabled when start equals end', async () => {
+                inputValidData();
+
+                selectStart('15:00');
+                selectEnd('15:00');
+
+                assertSubmitButtonEnabled(false);
+            });
+
+            it('should be enabled when input data is valid', async () => {
+                inputValidData();
+                assertSubmitButtonEnabled(true);
+            });
+
         });
 
     });

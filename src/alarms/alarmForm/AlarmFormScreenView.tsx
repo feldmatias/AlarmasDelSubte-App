@@ -10,6 +10,7 @@ import {Subway} from '../../subways/model/Subway';
 import {ListEmpty} from '../../components/ListEmpty';
 import {strings} from '../../strings/Strings';
 import {AlarmFormSubways} from './components/AlarmFormSubways';
+import {SubmitButton} from '../../components/SubmitButton';
 
 interface Props {
     subways: Subway[]
@@ -76,6 +77,15 @@ export class AlarmFormScreenView extends Component<Props, State> {
                         onChange={time => this.setAlarm(this.state.alarm.setEnd(time))}
                     />
 
+                    <SubmitButton
+                        title={alarmStrings.form.submit}
+                        style={styles.submit}
+                        loading={false}
+                        enabled={this.state.alarm.isValid()}
+                        onSubmit={() => {
+                        }}
+                    />
+
                 </View>
             </ScrollView>
         );
@@ -87,5 +97,8 @@ const styles = StyleSheet.create({
         width: '75%',
         marginTop: 30,
         marginBottom: 10,
+    },
+    submit: {
+        marginTop: 40,
     },
 });

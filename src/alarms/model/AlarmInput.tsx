@@ -47,4 +47,11 @@ export class AlarmInput {
         return this;
     }
 
+    public isValid(): boolean {
+        return this.name !== '' &&
+            this.days.length !== 0 &&
+            this.subwayLines.length !== 0 &&
+            this.start < this.end;
+    }
+
 }
