@@ -9,4 +9,5 @@ export const Colors = {
     orange: 'orange',
     red: 'red',
     black: 'black',
+    transparent: 'transparent',
 };

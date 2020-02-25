@@ -48,6 +48,62 @@ describe('Alarm Form Screen', () => {
 
     describe('Form Input', () => {
 
+        describe('Alarm Subways', () => {
+
+            function assertSubwayIsEnabled(subway: Subway) {
+                const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
+                expect(enabledSubway).toBeDefined();
+                const icon = enabledSubway.find(node => node.props.testID === 'subwayIcon');
+                expect(icon.props.source.uri).toBe(subway.icon);
+            }
+
+            function assertSubwayIsDisabled(subway: Subway) {
+                const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subway.line);
+                expect(disabledSubway).toBeDefined();
+            }
+
+            function selectSubway(subway: Subway) {
+                const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subway.line);
+                fireEvent.press(disabledSubway);
+            }
+
+            function deselectSubway(subway: Subway) {
+                const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
+                fireEvent.press(enabledSubway);
+            }
+
+            it('should show all subways disabled', async () => {
+                const subways = getDefaultSubways();
+                await renderScreenWithSubways(subways);
+
+                subways.forEach(subway => assertSubwayIsDisabled(subway));
+            });
+
+            it('should enable subway when clicked', async () => {
+                const subways = getDefaultSubways();
+                const subway = new SubwayFixture().withLine('4').withIcon('icon.url.com').get();
+                subways.push(subway);
+                await renderScreenWithSubways(subways);
+
+                selectSubway(subway);
+
+                assertSubwayIsEnabled(subway);
+            });
+
+            it('should disable subway when enabled and clicked', async () => {
+                const subways = getDefaultSubways();
+                await renderScreenWithSubways(subways);
+
+                const subway = subways[0];
+
+                selectSubway(subway);
+                deselectSubway(subway);
+
+                assertSubwayIsDisabled(subway);
+            });
+
+        });
+
         describe('Alarm Days', () => {
 
             function assertDayIsEnabled(day: string) {
@@ -83,7 +139,7 @@ describe('Alarm Form Screen', () => {
                 assertDayIsEnabled(day);
             });
 
-            it('should disable day when enabled andclicked', async () => {
+            it('should disable day when enabled and clicked', async () => {
                 await renderScreenWithSubways();
 
                 const day = 'wednesday';

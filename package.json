@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "pretest": "eslint --fix --max-warnings 0 src/**/*.tsx tests/**/*.tsx",
-    "test": "jest --coverage",
+    "test": "jest --coverage --silent",
     "coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {

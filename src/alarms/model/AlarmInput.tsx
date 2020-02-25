@@ -1,12 +1,16 @@
+import {Subway} from '../../subways/model/Subway';
+
 export class AlarmInput {
 
     public name: string = '';
 
     public days: string[] = [];
 
-    public start = '00:00';
+    public start: string =  '00:00';
 
-    public end = '23:59';
+    public end: string =  '23:59';
+
+    public subwayLines: string[] = [];
 
     public setName(name: string): AlarmInput {
         this.name = name;
@@ -30,6 +34,16 @@ export class AlarmInput {
 
     public setEnd(end: string): AlarmInput {
         this.end = end;
+        return this;
+    }
+
+    public addSubway(subway: Subway): AlarmInput {
+        this.subwayLines.push(subway.line);
+        return this;
+    }
+
+    public removeSubway(toRemove: Subway): AlarmInput {
+        this.subwayLines = this.subwayLines.filter(line => line !== toRemove.line);
         return this;
     }
 

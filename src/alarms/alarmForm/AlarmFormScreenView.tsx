@@ -9,6 +9,7 @@ import {AlarmFormTimePicker} from './components/AlarmFormTimePicker';
 import {Subway} from '../../subways/model/Subway';
 import {ListEmpty} from '../../components/ListEmpty';
 import {strings} from '../../strings/Strings';
+import {AlarmFormSubways} from './components/AlarmFormSubways';
 
 interface Props {
     subways: Subway[]
@@ -42,10 +43,17 @@ export class AlarmFormScreenView extends Component<Props, State> {
                     <TextInput
                         testID="alarmName"
                         placeholder={alarmStrings.form.name}
-                        style={[inputStyles.text, styles.input]}
+                        style={[inputStyles.text, styles.name]}
                         onChangeText={name => {
                             this.setAlarm(this.state.alarm.setName(name));
                         }}
+                    />
+
+                    <AlarmFormSubways
+                        subways={this.props.subways}
+                        selectedSubwayLines={this.state.alarm.subwayLines}
+                        selectSubway={subway => this.setAlarm(this.state.alarm.addSubway(subway))}
+                        deselectSubway={subway => this.setAlarm(this.state.alarm.removeSubway(subway))}
                     />
 
                     <AlarmFormDays
@@ -75,9 +83,9 @@ export class AlarmFormScreenView extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    input: {
+    name: {
         width: '75%',
         marginTop: 30,
-        marginBottom: 20,
+        marginBottom: 10,
     },
 });
