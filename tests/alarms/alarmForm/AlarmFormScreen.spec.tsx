@@ -17,6 +17,7 @@ import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {AlarmCreateMutation} from '../../../src/alarms/alarmForm/AlarmCreateMutation';
 import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
 import {AlarmFixture} from '../AlarmFixture';
+import MockToast from '../../screens/MockToast';
 
 describe('Alarm Form Screen', () => {
 
@@ -496,7 +497,7 @@ describe('Alarm Form Screen', () => {
 
         });
 
-        describe('Create alarm success', () => {
+        describe('Create alarm', () => {
 
             it('when submit succeeds then navigate to back', async () => {
                 MockGraphQLClient.mockSuccess(createAlarmMutation, createAlarmResponse());
@@ -505,6 +506,25 @@ describe('Alarm Form Screen', () => {
 
                 navigation.assertNavigatedToBack();
             });
+
+            it('should show toast when create alarm succeeds', async () => {
+                MockGraphQLClient.mockSuccess(createAlarmMutation, createAlarmResponse());
+                MockToast.mock();
+
+                await submitWithValidData();
+
+                MockToast.assertShown(alarmStrings.alarmFormScreen.successCreateAlarm);
+            });
+
+            it('should not show toast when create alarm fails', async () => {
+                MockGraphQLClient.mockError(createAlarmMutation, 'error');
+                MockToast.mock();
+
+                await submitWithValidData();
+
+                MockToast.assertNotShown();
+            });
+
         });
 
     });

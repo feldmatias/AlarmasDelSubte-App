@@ -9,6 +9,7 @@ import {SubwaysRepository} from '../../subways/SubwaysRepository';
 import {Loading} from '../../components/Loading';
 import {AlarmInput} from '../model/AlarmInput';
 import {AlarmsRepository} from '../AlarmsRepository';
+import {Toast} from '../../screens/Toast';
 
 interface Props extends ScreenProps {
 }
@@ -49,6 +50,7 @@ export class AlarmFormScreen extends BaseScreen<Props, State> {
 
         if (result.isSuccessful()) {
             this.navigation().back();
+            Toast.show(alarmStrings.alarmFormScreen.successCreateAlarm);
         } else {
             this.setError(result.getError());
         }
