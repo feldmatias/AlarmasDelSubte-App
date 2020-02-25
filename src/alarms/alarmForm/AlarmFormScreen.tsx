@@ -49,6 +49,7 @@ export class AlarmFormScreen extends BaseScreen<Props, State> {
         return (
             <AlarmFormScreenView
                 subways={this.state.subways}
+                error={this.state.error}
             />
         );
     }

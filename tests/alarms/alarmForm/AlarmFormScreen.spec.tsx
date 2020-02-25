@@ -12,6 +12,7 @@ import {Subway} from '../../../src/subways/model/Subway';
 import {SubwayFixture} from '../../subways/SubwayFixture';
 import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
 import {strings} from '../../../src/strings/Strings';
+import {alarmStrings} from '../../../src/strings/AlarmStrings';
 
 describe('Alarm Form Screen', () => {
 
@@ -39,12 +40,42 @@ describe('Alarm Form Screen', () => {
     beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mockWithAuthorizationToken();
+        await renderScreenWithSubways();
     });
 
     afterEach(() => {
         MockGraphQLClient.reset();
         MockStorage.reset();
     });
+
+    function writeName(name: string): void {
+        fireEvent.changeText(renderApi.getByTestId('alarmName'), name);
+    }
+
+    function selectDay(day: string): void {
+        const dayText = renderApi.getByTestId('alarmFormDay' + day);
+        fireEvent.press(dayText);
+    }
+
+    function selectSubway(subwayLine: string): void {
+        const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subwayLine);
+        fireEvent.press(disabledSubway);
+    }
+
+    function deselectSubway(subwayLine: string) {
+        const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subwayLine);
+        fireEvent.press(enabledSubway);
+    }
+
+    function selectStart(start: string): void {
+        fireEvent.press(renderApi.getByTestId('startOpenTimePicker'));
+        selectTimeOnPicker(start);
+    }
+
+    function selectEnd(end: string): void {
+        fireEvent.press(renderApi.getByTestId('endOpenTimePicker'));
+        selectTimeOnPicker(end);
+    }
 
     function selectTimeOnPicker(time: string): void {
         const date = DateTimeUtils.timeToDate(time);
@@ -67,16 +98,6 @@ describe('Alarm Form Screen', () => {
                 expect(disabledSubway).toBeDefined();
             }
 
-            function selectSubway(subway: Subway) {
-                const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subway.line);
-                fireEvent.press(disabledSubway);
-            }
-
-            function deselectSubway(subway: Subway) {
-                const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
-                fireEvent.press(enabledSubway);
-            }
-
             it('should show all subways disabled', async () => {
                 const subways = getDefaultSubways();
                 await renderScreenWithSubways(subways);
@@ -90,7 +111,7 @@ describe('Alarm Form Screen', () => {
                 subways.push(subway);
                 await renderScreenWithSubways(subways);
 
-                selectSubway(subway);
+                selectSubway(subway.line);
 
                 assertSubwayIsEnabled(subway);
             });
@@ -101,8 +122,8 @@ describe('Alarm Form Screen', () => {
 
                 const subway = subways[0];
 
-                selectSubway(subway);
-                deselectSubway(subway);
+                selectSubway(subway.line);
+                deselectSubway(subway.line);
 
                 assertSubwayIsDisabled(subway);
             });
@@ -121,36 +142,25 @@ describe('Alarm Form Screen', () => {
                 expect(dayText.props.style[0].color).toEqual(Colors.grey);
             }
 
-            function clickDay(day: string) {
-                const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                fireEvent.press(dayText);
-            }
-
             it('should show all days disabled', async () => {
-                await renderScreenWithSubways();
-
                 for (let day in DaysTranslator.days.keys()) {
                     assertDayIsDisabled(day);
                 }
             });
 
             it('should enable day when clicked', async () => {
-                await renderScreenWithSubways();
-
                 const day = 'wednesday';
 
-                clickDay(day);
+                selectDay(day);
 
                 assertDayIsEnabled(day);
             });
 
             it('should disable day when enabled and clicked', async () => {
-                await renderScreenWithSubways();
-
                 const day = 'wednesday';
 
-                clickDay(day); // Enable
-                clickDay(day); // Disable
+                selectDay(day); // Enable
+                selectDay(day); // Disable
 
                 assertDayIsDisabled(day);
             });
@@ -161,27 +171,18 @@ describe('Alarm Form Screen', () => {
 
             const DEFAULT_START_TIME = '00:00';
 
-            function selectStart(time: string): void {
-                fireEvent.press(renderApi.getByTestId('startOpenTimePicker'));
-                selectTimeOnPicker(time);
-            }
-
             function openDatePickerAndCancel(): void {
                 fireEvent.press(renderApi.getByTestId('startOpenTimePicker'));
                 fireEvent(renderApi.getByTestId('timePicker'), 'onChange', null, null);
             }
 
             it('default value should be 00:00', async () => {
-                await renderScreenWithSubways();
-
                 const start = renderApi.getByTestId('startTime');
                 expect(start.props.children).toEqual(DEFAULT_START_TIME);
             });
 
             it('should set start when selecting from timepicker', async () => {
                 const startTime = '12:34';
-                await renderScreenWithSubways();
-
                 selectStart(startTime);
 
                 const start = renderApi.getByTestId('startTime');
@@ -189,8 +190,6 @@ describe('Alarm Form Screen', () => {
             });
 
             it('should not set start when open timepicker but cancel', async () => {
-                await renderScreenWithSubways();
-
                 openDatePickerAndCancel();
 
                 const start = renderApi.getByTestId('startTime');
@@ -203,27 +202,18 @@ describe('Alarm Form Screen', () => {
 
             const DEFAULT_END_TIME = '23:59';
 
-            function selectEnd(time: string): void {
-                fireEvent.press(renderApi.getByTestId('endOpenTimePicker'));
-                selectTimeOnPicker(time);
-            }
-
             function openDatePickerAndCancel(): void {
                 fireEvent.press(renderApi.getByTestId('endOpenTimePicker'));
                 fireEvent(renderApi.getByTestId('timePicker'), 'onChange', null, null);
             }
 
             it('default value should be 23:59', async () => {
-                await renderScreenWithSubways();
-
                 const end = renderApi.getByTestId('endTime');
                 expect(end.props.children).toEqual(DEFAULT_END_TIME);
             });
 
             it('should set end when selecting from timepicker', async () => {
                 const endTime = '18:45';
-                await renderScreenWithSubways();
-
                 selectEnd(endTime);
 
                 const end = renderApi.getByTestId('endTime');
@@ -231,8 +221,6 @@ describe('Alarm Form Screen', () => {
             });
 
             it('should not set end when open timepicker but cancel', async () => {
-                await renderScreenWithSubways();
-
                 openDatePickerAndCancel();
 
                 const start = renderApi.getByTestId('endTime');
@@ -258,9 +246,36 @@ describe('Alarm Form Screen', () => {
         });
 
         it('should show error when subways list is not saved', async () => {
+            MockStorage.reset();
+            MockStorage.mock();
             await renderScreen();
 
             expect(renderApi.getByText(strings.defaultError)).toBeDefined();
+        });
+
+    });
+
+    describe('Validations', () => {
+
+        it('should show error when start is after end', async () => {
+            selectStart('16:00');
+            selectEnd('15:59');
+
+            expect(renderApi.getByText(alarmStrings.form.invalidTimeRange)).toBeDefined();
+        });
+
+        it('should show error when start equals end', async () => {
+            selectStart('15:00');
+            selectEnd('15:00');
+
+            expect(renderApi.getByText(alarmStrings.form.invalidTimeRange)).toBeDefined();
+        });
+
+        it('should not show error when start is before end', async () => {
+            selectStart('14:00');
+            selectEnd('14:01');
+
+            expect(renderApi.queryByText(alarmStrings.form.invalidTimeRange)).toBeNull();
         });
 
     });
@@ -280,34 +295,6 @@ describe('Alarm Form Screen', () => {
             selectStart(START);
             selectEnd(END);
         }
-
-        function writeName(name: string): void {
-            fireEvent.changeText(renderApi.getByTestId('alarmName'), name);
-        }
-
-        function selectDay(day: string): void {
-            const dayText = renderApi.getByTestId('alarmFormDay' + day);
-            fireEvent.press(dayText);
-        }
-
-        function selectSubway(subwayLine: string): void {
-            const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subwayLine);
-            fireEvent.press(disabledSubway);
-        }
-
-        function selectStart(start: string): void {
-            fireEvent.press(renderApi.getByTestId('startOpenTimePicker'));
-            selectTimeOnPicker(start);
-        }
-
-        function selectEnd(end: string): void {
-            fireEvent.press(renderApi.getByTestId('endOpenTimePicker'));
-            selectTimeOnPicker(end);
-        }
-
-        beforeEach(async () => {
-           await renderScreenWithSubways();
-        });
 
         describe('Enabled Submit button', () => {
 

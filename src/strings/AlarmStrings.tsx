@@ -16,6 +16,7 @@ export const alarmStrings = {
         start: 'Desde:',
         end: 'Hasta:',
         submit: 'Guardar Alarma',
+        invalidTimeRange: 'El rango de tiempo es inválido. "Hasta" debe ser posterior a "Desde"',
     },
 
 };

@@ -51,7 +51,11 @@ export class AlarmInput {
         return this.name !== '' &&
             this.days.length !== 0 &&
             this.subwayLines.length !== 0 &&
-            this.start < this.end;
+            this.isValidTimeRange();
+    }
+
+    public isValidTimeRange(): boolean {
+        return this.start < this.end;
     }
 
 }

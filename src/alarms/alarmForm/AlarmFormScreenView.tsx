@@ -11,9 +11,11 @@ import {ListEmpty} from '../../components/ListEmpty';
 import {strings} from '../../strings/Strings';
 import {AlarmFormSubways} from './components/AlarmFormSubways';
 import {SubmitButton} from '../../components/SubmitButton';
+import {ErrorMessage} from '../../components/ErrorMessage';
 
 interface Props {
     subways: Subway[]
+    error: string
 }
 
 interface State {
@@ -30,6 +32,14 @@ export class AlarmFormScreenView extends Component<Props, State> {
         this.setState({alarm});
     }
 
+    private getError = () : string => {
+        if (this.props.error) {
+            return this.props.error;
+        }
+
+        return this.state.alarm.isValidTimeRange() ? '' : alarmStrings.form.invalidTimeRange;
+    };
+
     public render() {
         if (this.props.subways.length === 0) {
             return (
@@ -40,6 +50,8 @@ export class AlarmFormScreenView extends Component<Props, State> {
         return (
             <ScrollView keyboardShouldPersistTaps="handled" style={screenStyles.scroll}>
                 <View style={screenStyles.container}>
+
+                    <ErrorMessage error={this.getError()} style={styles.error}/>
 
                     <TextInput
                         testID="alarmName"
@@ -100,5 +112,8 @@ const styles = StyleSheet.create({
     },
     submit: {
         marginTop: 40,
+    },
+    error: {
+        marginTop: 20,
     },
 });
