@@ -7,6 +7,7 @@ import {ListEmpty} from '../../components/ListEmpty';
 import {ListItemSeparator} from '../../components/ListItemSeparator';
 import {SubwaysListFooter} from './components/SubwaysListFooter';
 import {listStyles} from '../../styles/ListStyles';
+import {subwayStrings} from '../../strings/SubwayStrings';
 
 interface Props {
     subways: Subway[]
@@ -19,10 +20,6 @@ interface State {
 
 }
 
-const strings = {
-    emptyMessage: 'No hay datos del subte en este momento',
-};
-
 export class SubwaysListScreenView extends Component<Props, State> {
 
     private renderItem: ListRenderItem<Subway> = ({item}) => (
@@ -33,7 +30,7 @@ export class SubwaysListScreenView extends Component<Props, State> {
         return (
             <ListEmpty
                 error={this.props.error}
-                emptyMessage={strings.emptyMessage}
+                emptyMessage={subwayStrings.subwaysListScreen.noSubwaysMessage}
             />
         );
     };

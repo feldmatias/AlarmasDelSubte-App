@@ -5,14 +5,14 @@ import React from 'react';
 import {SignUpScreen} from '../../../src/auth/signup/SignUpScreen';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {SignUpMutation} from '../../../src/auth/signup/SignUpMutation';
-import {GraphQLService} from '../../../src/graphql/GraphQLService';
-import {PasswordValidator} from '../../../src/auth/signup/PasswordValidator';
 import {MockNavigation} from '../../screens/MockNavigation';
 import {AuthToken} from '../../../src/auth/AuthToken';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
 import {Routes} from '../../../src/screens/Routes';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
+import {authStrings} from '../../../src/strings/AuthStrings';
+import {strings} from '../../../src/strings/Strings';
 
 describe('SignUp Screen', () => {
 
@@ -142,7 +142,7 @@ describe('SignUp Screen', () => {
 
             await signUpWithCredentials();
 
-            assertErrorShown(GraphQLService.DEFAULT_ERROR);
+            assertErrorShown(strings.defaultError);
         });
 
         it('when api error then show error', async () => {
@@ -168,7 +168,7 @@ describe('SignUp Screen', () => {
 
             await signUp();
 
-            assertErrorShown(PasswordValidator.ERROR);
+            assertErrorShown(authStrings.signUpScreen.invalidPasswordError);
         });
 
         it('when signup with password 6 characters length then hide error', async () => {

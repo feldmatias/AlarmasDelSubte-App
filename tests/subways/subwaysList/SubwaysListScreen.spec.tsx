@@ -10,11 +10,12 @@ import {SubwaysListScreen} from '../../../src/subways/subwaysList/SubwaysListScr
 import {SubwaysListQuery} from '../../../src/subways/subwaysList/SubwaysListQuery';
 import {SubwayFixture} from '../SubwayFixture';
 import {Subway} from '../../../src/subways/model/Subway';
-import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {SubwayStatus} from '../../../src/subways/model/SubwayStatus';
 import {Colors} from '../../../src/styles/Colors';
 import moment, {Moment} from 'moment';
 import {Routes} from '../../../src/screens/Routes';
+import {subwayStrings} from '../../../src/strings/SubwayStrings';
+import {strings} from '../../../src/strings/Strings';
 
 describe('Subways List Screen', () => {
 
@@ -92,7 +93,7 @@ describe('Subways List Screen', () => {
             MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse([subway]));
             await renderScreen();
 
-            const subwayTitle = renderApi.getByText(`Subte ${subwayLine}`);
+            const subwayTitle = renderApi.getByText(`${subwayStrings.subwaysListScreen.subwayTitle} ${subwayLine}`);
             expect(subwayTitle).toBeDefined();
         });
 
@@ -178,7 +179,7 @@ describe('Subways List Screen', () => {
 
             await renderScreen();
 
-            const message = 'No hay datos del subte en este momento';
+            const message = subwayStrings.subwaysListScreen.noSubwaysMessage;
             expect(renderApi.getByText(message)).toBeDefined();
         });
 
@@ -196,7 +197,7 @@ describe('Subways List Screen', () => {
 
             await renderScreen();
 
-            expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
+            expect(renderApi.getByText(strings.defaultError)).toBeDefined();
         });
 
     });
@@ -205,7 +206,8 @@ describe('Subways List Screen', () => {
 
         function assertLastUpdateDate(date: Moment): void {
             const expectedDate = date.format('DD/MM HH:mm');
-            expect(renderApi.getByText('Actualizado: ' + expectedDate)).toBeDefined();
+            const expectedMessage = `${subwayStrings.subwaysListScreen.updatedAt} ${expectedDate}`;
+            expect(renderApi.getByText(expectedMessage)).toBeDefined();
         }
 
         it('should not show last update when 0 subways', async () => {
@@ -310,7 +312,7 @@ describe('Subways List Screen', () => {
 
             await refreshSubways();
 
-            const item = renderApi.getByText(`Subte ${newLine}`);
+            const item = renderApi.getByText(`${subwayStrings.subwaysListScreen.subwayTitle} ${newLine}`);
             expect(item).toBeDefined();
         });
 
@@ -326,7 +328,7 @@ describe('Subways List Screen', () => {
 
             await refreshSubways();
 
-            const item = renderApi.queryByText(`Subte ${oldLine}`);
+            const item = renderApi.queryByText(`${subwayStrings.subwaysListScreen.subwayTitle} ${oldLine}`);
             expect(item).toBeNull();
         });
 

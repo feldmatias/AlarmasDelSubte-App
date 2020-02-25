@@ -5,6 +5,7 @@ import {ErrorMessage} from '../../components/ErrorMessage';
 import {inputStyles} from '../../styles/InputStyles';
 import {Colors} from '../../styles/Colors';
 import {SubmitButton} from '../../components/SubmitButton';
+import {authStrings} from '../../strings/AuthStrings';
 
 interface Props {
     error: string
@@ -16,13 +17,6 @@ interface State {
     username: string
     password: string
 }
-
-const strings = {
-    message: 'Crea una cuenta para poder empezar a crear alarmas del subte y recibir notificaciones!',
-    username: 'Usuario',
-    password: 'Contraseña',
-    signUp: 'Crear cuenta',
-};
 
 export class SignUpScreenView extends Component<Props, State> {
 
@@ -56,14 +50,14 @@ export class SignUpScreenView extends Component<Props, State> {
                 <View style={screenStyles.container}>
 
                     <Text style={styles.message}>
-                        {strings.message}
+                        {authStrings.signUpScreen.message}
                     </Text>
 
                     <ErrorMessage error={this.props.error} style={styles.error}/>
 
                     <TextInput
                         testID="username"
-                        placeholder={strings.username}
+                        placeholder={authStrings.form.username}
                         style={[inputStyles.text, styles.input]}
                         onChangeText={username => {
                             this.setUsername(username);
@@ -71,7 +65,7 @@ export class SignUpScreenView extends Component<Props, State> {
 
                     <TextInput
                         testID="password"
-                        placeholder={strings.password}
+                        placeholder={authStrings.form.password}
                         secureTextEntry={true}
                         style={[inputStyles.text, styles.input]}
                         onChangeText={password => {
@@ -79,7 +73,7 @@ export class SignUpScreenView extends Component<Props, State> {
                         }}/>
 
                     <SubmitButton
-                        title={strings.signUp}
+                        title={authStrings.signUpScreen.signUp}
                         style={styles.button}
                         loading={this.props.loading}
                         enabled={this.isSignUpEnabled()}

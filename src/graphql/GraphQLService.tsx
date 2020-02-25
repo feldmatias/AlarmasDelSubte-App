@@ -7,6 +7,7 @@ import {GraphQLQuery} from './GraphQLQuery';
 import {ClassType} from 'class-transformer/ClassTransformer';
 import {ExecutionResult} from 'graphql';
 import {AuthStorage} from '../auth/AuthStorage';
+import {strings} from '../strings/Strings';
 
 @injectable()
 export class GraphQLService {
@@ -14,8 +15,6 @@ export class GraphQLService {
     @inject(GRAPHQL_DI) private client!: GraphQLClient;
 
     @inject(AuthStorage) private authStorage!: AuthStorage;
-
-    public static readonly DEFAULT_ERROR = 'Ocurrió un error. Intenta más tarde.';
 
     public async mutation<T>(mutation: GraphQLMutation, returnType: ClassType<T>): Promise<Result<T>> {
         try {
@@ -69,7 +68,7 @@ export class GraphQLService {
     }
 
     private getDefaultError<T>(): Result<T> {
-        return Result.Error(GraphQLService.DEFAULT_ERROR);
+        return Result.Error(strings.defaultError);
     }
 
     private async getHeaders(): Promise<any> {

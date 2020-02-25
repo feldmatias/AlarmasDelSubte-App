@@ -4,6 +4,7 @@ import {Colors} from '../../../styles/Colors';
 import {Subway} from '../../model/Subway';
 import {ListItemSeparator} from '../../../components/ListItemSeparator';
 import moment from 'moment';
+import {subwayStrings} from '../../../strings/SubwayStrings';
 
 interface Props {
     subways: Subway[]
@@ -13,16 +14,12 @@ interface State {
 
 }
 
-const strings = {
-    updated: 'Actualizado:',
-};
-
 export class SubwaysListFooter extends Component<Props, State> {
 
     private readonly dateFormat = 'DD/MM HH:mm';
 
     private getUpdatedMessage(): string {
-        return strings.updated + ' ' + this.getSubwaysUpdated();
+        return subwayStrings.subwaysListScreen.updatedAt + ' ' + this.getSubwaysUpdated();
     }
 
     private getSubwaysUpdated(): string {

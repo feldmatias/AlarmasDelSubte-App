@@ -8,6 +8,7 @@ import {Loading} from '../../components/Loading';
 import {AlarmsHeaderButton} from '../../alarms/alarmsList/components/AlarmsHeaderButton';
 import {Routes} from '../../screens/Routes';
 import {NavigationStackProp} from 'react-navigation-stack';
+import {subwayStrings} from '../../strings/SubwayStrings';
 
 interface Props extends ScreenProps {
 }
@@ -17,14 +18,10 @@ interface State extends ScreenState {
     refreshing: boolean
 }
 
-const strings = {
-    screenTitle: 'Estado del Subte',
-};
-
 export class SubwaysListScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions = ({navigation}: { navigation: NavigationStackProp }) => ({
-        title: strings.screenTitle,
+        title: subwayStrings.subwaysListScreen.screenTitle,
         headerRight: () => <AlarmsHeaderButton onPress={() => navigation.navigate(Routes.AlarmsList)}/>,
     });
 

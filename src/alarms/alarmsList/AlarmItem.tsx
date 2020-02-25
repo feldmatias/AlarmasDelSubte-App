@@ -7,6 +7,7 @@ import {DaysTranslator} from '../../utils/DaysTranslator';
 import {Colors} from '../../styles/Colors';
 import {Button} from 'react-native-elements';
 import {ConfirmationDialog} from '../../components/ConfirmationDialog';
+import {alarmStrings} from '../../strings/AlarmStrings';
 
 interface Props {
     alarm: Alarm
@@ -17,9 +18,6 @@ interface State {
 
 }
 
-const strings = {
-    deleteConfirm: 'Seguro que desea eliminar la alarma?',
-};
 
 export class AlarmItem extends Component<Props, State> {
 
@@ -79,7 +77,7 @@ export class AlarmItem extends Component<Props, State> {
                 />
 
                 <ConfirmationDialog
-                    message={strings.deleteConfirm}
+                    message={alarmStrings.alarmsListScreen.deleteAlarmConfirm}
                     onConfirm={this.deleteAlarm}
                     reference={dialog => {this.deleteConfirmationDialog = dialog;}}
                 />

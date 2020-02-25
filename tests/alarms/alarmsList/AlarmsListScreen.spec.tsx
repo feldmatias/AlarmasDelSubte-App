@@ -4,7 +4,6 @@ import {MockNavigation} from '../../screens/MockNavigation';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import MockGraphQLClient from '../../graphql/MockGraphQLClient';
 import MockStorage from '../../storage/MockStorage';
-import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import React from 'react';
 import {AlarmsListScreen} from '../../../src/alarms/alarmsList/AlarmsListScreen';
 import {AlarmsListQuery} from '../../../src/alarms/alarmsList/AlarmsListQuery';
@@ -15,6 +14,8 @@ import {DaysTranslator} from '../../../src/utils/DaysTranslator';
 import {AlarmDeleteMutation} from '../../../src/alarms/alarmsList/AlarmDeleteMutation';
 import {Routes} from '../../../src/screens/Routes';
 import MockToast from '../../screens/MockToast';
+import {alarmStrings} from '../../../src/strings/AlarmStrings';
+import {strings} from '../../../src/strings/Strings';
 
 describe('Alarms List Screen', () => {
 
@@ -211,7 +212,7 @@ describe('Alarms List Screen', () => {
 
             await renderScreen();
 
-            const message = 'No tienes ninguna alarma creada';
+            const message = alarmStrings.alarmsListScreen.noAlarmsMessage;
             expect(renderApi.getByText(message)).toBeDefined();
         });
 
@@ -229,7 +230,7 @@ describe('Alarms List Screen', () => {
 
             await renderScreen();
 
-            expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
+            expect(renderApi.getByText(strings.defaultError)).toBeDefined();
         });
 
     });
@@ -352,7 +353,7 @@ describe('Alarms List Screen', () => {
             deleteAlarm();
 
             expect(renderApi.getByTestId('confirmationDialog')).toBeDefined();
-            const dialogMessage = 'Seguro que desea eliminar la alarma?';
+            const dialogMessage = alarmStrings.alarmsListScreen.deleteAlarmConfirm;
             expect(renderApi.getByText(dialogMessage)).toBeDefined();
         });
 
@@ -441,7 +442,7 @@ describe('Alarms List Screen', () => {
             deleteAlarm();
             await confirmDeleteAlarm();
 
-            expect(renderApi.getByText(GraphQLService.DEFAULT_ERROR)).toBeDefined();
+            expect(renderApi.getByText(strings.defaultError)).toBeDefined();
         });
 
         it('should remove alarm from list when delete alarm success', async () => {
@@ -488,7 +489,7 @@ describe('Alarms List Screen', () => {
             deleteAlarm();
             await confirmDeleteAlarm();
 
-            MockToast.assertShown('Alarma eliminada correctamente');
+            MockToast.assertShown(alarmStrings.alarmsListScreen.successDeleteAlarm);
         });
 
         it('should not show toast when delete alarm fails', async () => {

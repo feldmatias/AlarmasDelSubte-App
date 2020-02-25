@@ -7,6 +7,7 @@ import {listStyles} from '../../styles/ListStyles';
 import {Alarm} from '../model/Alarm';
 import {AlarmItem} from './AlarmItem';
 import {FloatingActionButton} from '../../components/FloatingActionButton';
+import {alarmStrings} from '../../strings/AlarmStrings';
 
 interface Props {
     alarms: Alarm[]
@@ -21,10 +22,6 @@ interface State {
 
 }
 
-const strings = {
-    emptyMessage: 'No tienes ninguna alarma creada',
-};
-
 export class AlarmsListScreenView extends Component<Props, State> {
 
     private renderItem: ListRenderItem<Alarm> = ({item}) => (
@@ -38,7 +35,7 @@ export class AlarmsListScreenView extends Component<Props, State> {
         return (
             <ListEmpty
                 error={this.props.error}
-                emptyMessage={strings.emptyMessage}
+                emptyMessage={alarmStrings.alarmsListScreen.noAlarmsMessage}
             />
         );
     };

@@ -7,6 +7,7 @@ import {AuthToken} from '../AuthToken';
 import {LoginScreenView} from './LoginScreenView';
 import {Routes} from '../../screens/Routes';
 import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
+import {authStrings} from '../../strings/AuthStrings';
 
 interface Props extends ScreenProps {
 }
@@ -15,14 +16,10 @@ interface State extends ScreenState {
 
 }
 
-const strings = {
-    screenTitle: 'Alarmas del Subte',
-};
-
 export class LoginScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
-        title: strings.screenTitle,
+        title: authStrings.loginScreen.title,
     };
 
     public state: State = {

@@ -43,8 +43,9 @@ class MockGraphQLClient {
     }
 
     public mockNetworkError(request: GraphQLOperation): void {
-        when(this.apolloMock.query(objectContaining({query: request}))).thenReject(new Error('GraphQL Network Error'));
-        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenReject(new Error('GraphQL Network Error'));
+        const error = new Error('GraphQL Network Error');
+        when(this.apolloMock.query(objectContaining({query: request}))).thenReject(error);
+        when(this.apolloMock.mutate(objectContaining({mutation: request}))).thenReject(error);
     }
 
     public async assertMutationCalled(request: GraphQLOperation, times: number): Promise<void> {

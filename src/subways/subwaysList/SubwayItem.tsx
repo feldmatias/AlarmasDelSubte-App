@@ -3,6 +3,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {Subway} from '../model/Subway';
 import {SubwayStatus} from '../model/SubwayStatus';
 import {Colors} from '../../styles/Colors';
+import {subwayStrings} from '../../strings/SubwayStrings';
 
 interface Props {
     subway: Subway
@@ -12,14 +13,10 @@ interface State {
 
 }
 
-const strings = {
-    subwayTitle: 'Subte',
-};
-
 export class SubwayItem extends Component<Props, State> {
 
     private subwayTitle(): string {
-        return strings.subwayTitle + ' ' + this.props.subway.line;
+        return subwayStrings.subwaysListScreen.subwayTitle + ' ' + this.props.subway.line;
     }
 
     private getStatusColor(): string {

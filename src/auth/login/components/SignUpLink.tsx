@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {textStyles} from '../../../styles/TextStyles';
+import {authStrings} from '../../../strings/AuthStrings';
 
 interface Props {
     signUp: () => void
@@ -9,11 +10,6 @@ interface Props {
 interface State {
 
 }
-
-const strings = {
-    signUpMessage: 'No tienes cuenta? ',
-    signUp: 'Registrate!',
-};
 
 export class SignUpLink extends Component<Props, State> {
 
@@ -25,10 +21,10 @@ export class SignUpLink extends Component<Props, State> {
         return (
 
             <Text style={styles.signUp}>
-                {strings.signUpMessage}
+                {authStrings.loginScreen.signUpMessage}
 
                 <Text testID="signUp" style={textStyles.link} onPress={this.signUp}>
-                    {strings.signUp}
+                    {authStrings.loginScreen.signUp}
                 </Text>
 
             </Text>

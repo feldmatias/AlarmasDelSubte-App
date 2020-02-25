@@ -3,7 +3,6 @@ import MockGraphQLClient from '../../graphql/MockGraphQLClient';
 import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import {LoginScreen} from '../../../src/auth/login/LoginScreen';
 import React from 'react';
-import {GraphQLService} from '../../../src/graphql/GraphQLService';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {LoginMutation} from '../../../src/auth/login/LoginMutation';
 import {MockNavigation} from '../../screens/MockNavigation';
@@ -12,6 +11,7 @@ import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
 import {AuthToken} from '../../../src/auth/AuthToken';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
+import {strings} from '../../../src/strings/Strings';
 
 describe('Login Screen', () => {
 
@@ -141,7 +141,7 @@ describe('Login Screen', () => {
 
             await loginWithCredentials();
 
-            assertErrorShown(GraphQLService.DEFAULT_ERROR);
+            assertErrorShown(strings.defaultError);
         });
 
         it('when api error then show error', async () => {

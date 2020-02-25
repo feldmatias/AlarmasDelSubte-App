@@ -10,6 +10,7 @@ import {Routes} from '../../screens/Routes';
 import {View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
 import {Toast} from '../../screens/Toast';
+import {alarmStrings} from '../../strings/AlarmStrings';
 
 interface Props extends ScreenProps {
 }
@@ -19,15 +20,10 @@ interface State extends ScreenState {
     refreshing: boolean
 }
 
-const strings = {
-    screenTitle: 'Alarmas',
-    successDeleteAlarm: 'Alarma eliminada correctamente',
-};
-
 export class AlarmsListScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
-        title: strings.screenTitle,
+        title: alarmStrings.alarmsListScreen.screenTitle,
     };
 
     public state: State = {
@@ -77,7 +73,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
 
         if (result.isSuccessful()) {
             this.setAlarms(this.state.alarms.filter(filter => filter.id !== alarm.id));
-            Toast.show(strings.successDeleteAlarm);
+            Toast.show(alarmStrings.alarmsListScreen.successDeleteAlarm);
         } else {
             this.setError(result.getError());
             this.setAlarms([]);

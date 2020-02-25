@@ -8,6 +8,7 @@ import {AuthToken} from '../AuthToken';
 import {PasswordValidator} from './PasswordValidator';
 import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
 import {Routes} from '../../screens/Routes';
+import {authStrings} from '../../strings/AuthStrings';
 
 interface Props extends ScreenProps {
 
@@ -17,14 +18,10 @@ interface State extends ScreenState {
 
 }
 
-const strings = {
-    screenTitle: 'Nueva Cuenta',
-};
-
 export class SignUpScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions: StackNavigationOptions = {
-        title: strings.screenTitle,
+        title: authStrings.signUpScreen.screenTitle,
     };
 
     public state: State = {
