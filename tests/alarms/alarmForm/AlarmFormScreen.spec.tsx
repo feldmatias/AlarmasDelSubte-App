@@ -108,7 +108,7 @@ describe('Alarm Form Screen', () => {
 
             function assertDayIsEnabled(day: string) {
                 const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.black);
+                expect(dayText.props.style[0].color).toEqual(Colors.primary);
             }
 
             function assertDayIsDisabled(day: string) {

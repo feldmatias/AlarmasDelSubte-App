@@ -69,7 +69,7 @@ export class AlarmFormTimePicker extends Component<Props, State> {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        marginTop: 20,
+        marginTop: 30,
     },
     timeContainer: {
         flexDirection: 'row',

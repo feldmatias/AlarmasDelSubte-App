@@ -20,7 +20,7 @@ export class AlarmFormDays extends Component<Props, State> {
     }
 
     private getItemColor(day: string): string {
-        return this.props.selectedDays.includes(day) ? Colors.black : Colors.grey;
+        return this.props.selectedDays.includes(day) ? Colors.primary : Colors.grey;
     }
 
     private onDayPressed = (day: string): void => {

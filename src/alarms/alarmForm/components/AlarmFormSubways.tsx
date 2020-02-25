@@ -72,7 +72,7 @@ export class AlarmFormSubways extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     list: {
-      marginVertical: 20,
+      marginVertical: 30,
     },
     icon: {
         width: 37,
