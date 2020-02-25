@@ -13,11 +13,15 @@ import {SubwayFixture} from '../../subways/SubwayFixture';
 import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
 import {strings} from '../../../src/strings/Strings';
 import {alarmStrings} from '../../../src/strings/AlarmStrings';
+import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
+import {AlarmCreateMutation} from '../../../src/alarms/alarmForm/AlarmCreateMutation';
+import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
 
 describe('Alarm Form Screen', () => {
 
     let renderApi: RenderAPI;
     let navigation: MockNavigation;
+    let createAlarmMutation: GraphQLOperation;
 
     function getDefaultSubways(): Subway[] {
         return [
@@ -41,6 +45,7 @@ describe('Alarm Form Screen', () => {
         MockGraphQLClient.mock();
         MockStorage.mockWithAuthorizationToken();
         await renderScreenWithSubways();
+        createAlarmMutation = new AlarmCreateMutation(new AlarmInput()).getMutation();
     });
 
     afterEach(() => {
@@ -234,9 +239,9 @@ describe('Alarm Form Screen', () => {
     describe('Initial Subways Load', () => {
 
         it('should show error when subways list is empty', async () => {
-           await renderScreenWithSubways([]);
+            await renderScreenWithSubways([]);
 
-           expect(renderApi.getByText(strings.defaultError)).toBeDefined();
+            expect(renderApi.getByText(strings.defaultError)).toBeDefined();
         });
 
         it('should not show error when subways list is not empty', async () => {
@@ -296,6 +301,15 @@ describe('Alarm Form Screen', () => {
             selectEnd(END);
         }
 
+        async function submit(): Promise<void> {
+            await fireEvent.press(renderApi.getByTestId('submit'));
+        }
+
+        async function submitWithValidData(): Promise<void> {
+            inputValidData();
+            await submit();
+        }
+
         describe('Enabled Submit button', () => {
 
             function assertSubmitButtonEnabled(enabled: boolean): void {
@@ -348,6 +362,128 @@ describe('Alarm Form Screen', () => {
             it('should be enabled when input data is valid', async () => {
                 inputValidData();
                 assertSubmitButtonEnabled(true);
+            });
+
+        });
+
+        describe('Loading', () => {
+
+            function assertIsLoading(loading: boolean): void {
+                const button = renderApi.getByTestId('submit');
+                expect(button.props.loading).toBe(loading);
+            }
+
+            it('when submit then should be loading', async () => {
+                MockGraphQLClient.mockLoading(createAlarmMutation);
+
+                submitWithValidData();
+
+                assertIsLoading(true);
+            });
+
+            it('when submit response then should not be loading', async () => {
+                MockGraphQLClient.mockNetworkError(createAlarmMutation);
+
+                await submitWithValidData();
+
+                assertIsLoading(false);
+            });
+
+            it('when loading then should not submit twice', async () => {
+                MockGraphQLClient.mockLoading(createAlarmMutation);
+
+                submitWithValidData();
+                submit();
+
+                assertIsLoading(true);
+                await MockGraphQLClient.assertMutationCalled(createAlarmMutation, 1);
+            });
+        });
+
+        describe('Errors', () => {
+
+            function assertErrorShown(error: string): void {
+                expect(renderApi.getByText(error)).toBeDefined();
+            }
+
+            it('when network error then show error', async () => {
+                MockGraphQLClient.mockNetworkError(createAlarmMutation);
+
+                await submitWithValidData();
+
+                assertErrorShown(strings.defaultError);
+            });
+
+            it('when api error then show error', async () => {
+                const error = 'create alarm api error';
+                MockGraphQLClient.mockError(createAlarmMutation, error);
+
+                await submitWithValidData();
+
+                assertErrorShown(error);
+            });
+
+        });
+
+        describe('Submit Parameters', () => {
+
+            beforeEach(() => {
+                MockGraphQLClient.mockNetworkError(createAlarmMutation);
+            });
+
+            async function assertCreateAlarmCalledWith<T>(params: T): Promise<void> {
+                const expected = {input: expect.objectContaining(params)};
+                await MockGraphQLClient.assertMutationCalledWith(createAlarmMutation, expected);
+            }
+
+            it('should call submit with correct name', async () => {
+                await submitWithValidData();
+
+                await assertCreateAlarmCalledWith({name: NAME});
+            });
+
+            it('should call submit with correct subway when one selected', async () => {
+                await submitWithValidData();
+
+                await assertCreateAlarmCalledWith({subwayLines: [DEFAULT_SUBWAY_LINE]});
+            });
+
+            it('should call submit with correct subways when multiple selected', async () => {
+                const otherSubway = '3';
+                inputValidData();
+                selectSubway(otherSubway);
+
+                await submit();
+
+                await assertCreateAlarmCalledWith({subwayLines: [DEFAULT_SUBWAY_LINE, otherSubway]});
+            });
+
+            it('should call submit with correct day when one selected', async () => {
+                await submitWithValidData();
+
+                await assertCreateAlarmCalledWith({days: [DEFAULT_DAY]});
+            });
+
+            it('should call submit with correct days when multiple selected', async () => {
+                const otherDay = 'sunday';
+                inputValidData();
+                selectDay(otherDay);
+
+                await submit();
+
+                await assertCreateAlarmCalledWith({days: [DEFAULT_DAY, otherDay]});
+            });
+
+            it('should call submit with correct start', async () => {
+                await submitWithValidData();
+
+                await assertCreateAlarmCalledWith({start: START});
+            });
+
+            it('should call submit with correct end', async () => {
+                await submitWithValidData();
+
+                await assertCreateAlarmCalledWith({end: END});
             });
 
         });

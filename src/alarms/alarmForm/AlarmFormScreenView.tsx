@@ -15,7 +15,9 @@ import {ErrorMessage} from '../../components/ErrorMessage';
 
 interface Props {
     subways: Subway[]
+    loading: boolean
     error: string
+    submit: (alarm: AlarmInput) => Promise<void>
 }
 
 interface State {
@@ -33,11 +35,15 @@ export class AlarmFormScreenView extends Component<Props, State> {
     }
 
     private getError = () : string => {
-        if (this.props.error) {
-            return this.props.error;
+        if (!this.state.alarm.isValidTimeRange()) {
+            return alarmStrings.form.invalidTimeRange;
         }
 
-        return this.state.alarm.isValidTimeRange() ? '' : alarmStrings.form.invalidTimeRange;
+        return this.props.error;
+    };
+
+    private submit = async (): Promise<void> => {
+        await this.props.submit(this.state.alarm);
     };
 
     public render() {
@@ -92,10 +98,9 @@ export class AlarmFormScreenView extends Component<Props, State> {
                     <SubmitButton
                         title={alarmStrings.form.submit}
                         style={styles.submit}
-                        loading={false}
+                        loading={this.props.loading}
                         enabled={this.state.alarm.isValid()}
-                        onSubmit={() => {
-                        }}
+                        onSubmit={this.submit}
                     />
 
                 </View>

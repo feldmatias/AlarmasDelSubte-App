@@ -7,6 +7,8 @@ import {Subway} from '../../subways/model/Subway';
 import DiContainer from '../../di/Container';
 import {SubwaysRepository} from '../../subways/SubwaysRepository';
 import {Loading} from '../../components/Loading';
+import {AlarmInput} from '../model/AlarmInput';
+import {AlarmsRepository} from '../AlarmsRepository';
 
 interface Props extends ScreenProps {
 }
@@ -27,6 +29,7 @@ export class AlarmFormScreen extends BaseScreen<Props, State> {
         subways: [],
     };
 
+    private alarmsRepository = DiContainer.get<AlarmsRepository>(AlarmsRepository);
     private subwaysRepository = DiContainer.get<SubwaysRepository>(SubwaysRepository);
 
     public async componentDidMount() {
@@ -39,8 +42,20 @@ export class AlarmFormScreen extends BaseScreen<Props, State> {
         this.setState({subways});
     }
 
+    private submit = async (alarm: AlarmInput): Promise<void> => {
+        this.setLoading(true);
+        const result = await this.alarmsRepository.createAlarm(alarm);
+        this.setLoading(false);
+
+        if (result.isSuccessful()) {
+
+        } else {
+            this.setError(result.getError());
+        }
+    };
+
     public render() {
-        if (this.state.loading) {
+        if (this.state.loading && this.state.subways.length === 0) {
             return (
                 <Loading/>
             );
@@ -49,7 +64,9 @@ export class AlarmFormScreen extends BaseScreen<Props, State> {
         return (
             <AlarmFormScreenView
                 subways={this.state.subways}
+                loading={this.state.loading}
                 error={this.state.error}
+                submit={this.submit}
             />
         );
     }

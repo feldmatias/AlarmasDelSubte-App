@@ -4,6 +4,8 @@ import {Result} from '../utils/Result';
 import {Alarm} from './model/Alarm';
 import {AlarmsListQuery} from './alarmsList/AlarmsListQuery';
 import {AlarmDeleteMutation} from './alarmsList/AlarmDeleteMutation';
+import {AlarmInput} from './model/AlarmInput';
+import {AlarmCreateMutation} from './alarmForm/AlarmCreateMutation';
 
 @injectable()
 export class AlarmsRepository {
@@ -18,6 +20,11 @@ export class AlarmsRepository {
     public async deleteAlarm(alarm: Alarm): Promise<Result<Number>> {
         const mutation = new AlarmDeleteMutation(alarm);
         return await this.graphql.mutation(mutation, Number);
+    }
+
+    public async createAlarm(alarmInput: AlarmInput): Promise<Result<Alarm>> {
+        const mutation = new AlarmCreateMutation(alarmInput);
+        return await this.graphql.mutation(mutation, Alarm);
     }
 }
 
