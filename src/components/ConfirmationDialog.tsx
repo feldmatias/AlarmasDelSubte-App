@@ -4,7 +4,7 @@ import Modal from 'react-native-modal';
 import {Colors} from '../styles/Colors';
 import {Button} from 'react-native-elements';
 import {buttonStyles} from '../styles/ButtonStyles';
-import {confirmationDialogStrings} from '../strings/ConfirmationDialogStrings';
+import {strings} from '../strings/Strings';
 
 interface Props {
     message: string
@@ -60,14 +60,14 @@ export class ConfirmationDialog extends Component<Props, State> {
                     <View style={styles.buttonContainer}>
 
                         <Button testID="dialogCancel"
-                                title={confirmationDialogStrings.cancel}
+                                title={strings.confirmation.cancel}
                                 buttonStyle={[buttonStyles.buttonCancel]}
                                 titleStyle={buttonStyles.title}
                                 onPress={this.hide}
                         />
 
                         <Button testID="dialogConfirm"
-                                title={confirmationDialogStrings.confirm}
+                                title={strings.confirmation.confirm}
                                 buttonStyle={[buttonStyles.button, styles.confirmButton]}
                                 titleStyle={buttonStyles.title}
                                 onPress={this.confirm}
