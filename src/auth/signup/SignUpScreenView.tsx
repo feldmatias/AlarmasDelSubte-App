@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         marginHorizontal: 25,
         textAlign: 'center',
-        color: Colors.lightGrey,
+        color: Colors.grey,
     },
     input: {
         width: '75%',

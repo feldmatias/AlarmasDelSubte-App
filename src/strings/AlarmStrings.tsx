@@ -13,6 +13,8 @@ export const alarmStrings = {
 
     form: {
         name: 'Nombre de la Alarma',
+        start: 'Desde:',
+        end: 'Hasta:',
     },
 
 };

@@ -6,7 +6,7 @@ import {AuthRepository} from '../AuthRepository';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {PasswordValidator} from './PasswordValidator';
-import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
+import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
 import {Routes} from '../../screens/Routes';
 import {authStrings} from '../../strings/AuthStrings';
 

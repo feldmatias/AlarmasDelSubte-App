@@ -1,6 +1,6 @@
 import React from 'react';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import {BaseScreen, ScreenProps, ScreenState} from '../../components/BaseScreen';
+import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
 import {AlarmsListScreenView} from './AlarmsListScreenView';
 import {Alarm} from '../model/Alarm';
 import DiContainer from '../../di/Container';

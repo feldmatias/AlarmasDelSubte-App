@@ -1,6 +1,6 @@
 import {NavigationStackProp} from 'react-navigation-stack';
 import {Component} from 'react';
-import {Navigation} from '../screens/Navigation';
+import {Navigation} from './Navigation';
 
 export interface ScreenProps {
     navigation: NavigationStackProp

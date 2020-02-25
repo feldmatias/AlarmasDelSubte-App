@@ -5,6 +5,7 @@ import {screenStyles} from '../../styles/ScreenStyles';
 import {inputStyles} from '../../styles/InputStyles';
 import {alarmStrings} from '../../strings/AlarmStrings';
 import {AlarmFormDays} from './components/AlarmFormDays';
+import {AlarmFormTimePicker} from './components/AlarmFormTimePicker';
 
 interface Props {
 }
@@ -41,6 +42,20 @@ export class AlarmFormScreenView extends Component<Props, State> {
                         selectedDays={this.state.alarm.days}
                         selectDay={day => this.setAlarm(this.state.alarm.addDay(day))}
                         deselectDay={day => this.setAlarm(this.state.alarm.removeDay(day))}
+                    />
+
+                    <AlarmFormTimePicker
+                        testID="start"
+                        label={alarmStrings.form.start}
+                        time={this.state.alarm.start}
+                        onChange={time => this.setAlarm(this.state.alarm.setStart(time))}
+                    />
+
+                    <AlarmFormTimePicker
+                        testID="end"
+                        label={alarmStrings.form.end}
+                        time={this.state.alarm.end}
+                        onChange={time => this.setAlarm(this.state.alarm.setEnd(time))}
                     />
 
                 </View>
