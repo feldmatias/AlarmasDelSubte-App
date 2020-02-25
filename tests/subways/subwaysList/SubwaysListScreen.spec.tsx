@@ -16,6 +16,7 @@ import moment, {Moment} from 'moment';
 import {Routes} from '../../../src/screens/Routes';
 import {subwayStrings} from '../../../src/strings/SubwayStrings';
 import {strings} from '../../../src/strings/Strings';
+import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
 
 describe('Subways List Screen', () => {
 
@@ -364,6 +365,28 @@ describe('Subways List Screen', () => {
             fireEvent.press(header.getByTestId('alarmsHeaderButton'));
 
             navigation.assertNavigatedTo(Routes.AlarmsList);
+        });
+
+    });
+
+    describe('Storage', () => {
+
+        it('should store subways when success response', async () => {
+            const subway1 = new SubwayFixture().withLine('1').get();
+            const subway2 = new SubwayFixture().withLine('2').get();
+            const subways = [subway1, subway2];
+
+            MockGraphQLClient.mockSuccess(subwaysQuery, subwaysResponse(subways));
+            await renderScreen();
+
+            MockStorage.assertSaved(SubwaysStorage.SUBWAYS_KEY, subways);
+        });
+
+        it('should store empty subways list when failed response', async () => {
+            MockGraphQLClient.mockError(subwaysQuery, 'error');
+            await renderScreen();
+
+            MockStorage.assertSaved(SubwaysStorage.SUBWAYS_KEY, []);
         });
 
     });

@@ -6,8 +6,12 @@ import {inputStyles} from '../../styles/InputStyles';
 import {alarmStrings} from '../../strings/AlarmStrings';
 import {AlarmFormDays} from './components/AlarmFormDays';
 import {AlarmFormTimePicker} from './components/AlarmFormTimePicker';
+import {Subway} from '../../subways/model/Subway';
+import {ListEmpty} from '../../components/ListEmpty';
+import {strings} from '../../strings/Strings';
 
 interface Props {
+    subways: Subway[]
 }
 
 interface State {
@@ -25,6 +29,12 @@ export class AlarmFormScreenView extends Component<Props, State> {
     }
 
     public render() {
+        if (this.props.subways.length === 0) {
+            return (
+                <ListEmpty emptyMessage={strings.defaultError}/>
+            );
+        }
+
         return (
             <ScrollView keyboardShouldPersistTaps="handled" style={screenStyles.scroll}>
                 <View style={screenStyles.container}>

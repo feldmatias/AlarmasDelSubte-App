@@ -8,15 +8,32 @@ import {DaysTranslator} from '../../../src/utils/DaysTranslator';
 import {AlarmFormScreen} from '../../../src/alarms/alarmForm/AlarmFormScreen';
 import {Colors} from '../../../src/styles/Colors';
 import {DateTimeUtils} from '../../../src/utils/DateTimeUtils';
+import {Subway} from '../../../src/subways/model/Subway';
+import {SubwayFixture} from '../../subways/SubwayFixture';
+import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
+import {strings} from '../../../src/strings/Strings';
 
 describe('Alarm Form Screen', () => {
 
     let renderApi: RenderAPI;
     let navigation: MockNavigation;
 
+    function getDefaultSubways(): Subway[] {
+        return [
+            new SubwayFixture().withLine('1').get(),
+            new SubwayFixture().withLine('2').get(),
+            new SubwayFixture().withLine('3').get(),
+        ];
+    }
+
     async function renderScreen(): Promise<void> {
         navigation = new MockNavigation();
         renderApi = await ScreenTestUtils.render(<AlarmFormScreen navigation={navigation.instance()}/>);
+    }
+
+    async function renderScreenWithSubways(subways: Subway[] = getDefaultSubways()): Promise<void> {
+        MockStorage.mockSavedValue(SubwaysStorage.SUBWAYS_KEY, subways);
+        await renderScreen();
     }
 
     beforeEach(async () => {
@@ -49,7 +66,7 @@ describe('Alarm Form Screen', () => {
             }
 
             it('should show all days disabled', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 for (let day in DaysTranslator.days.keys()) {
                     assertDayIsDisabled(day);
@@ -57,7 +74,7 @@ describe('Alarm Form Screen', () => {
             });
 
             it('should enable day when clicked', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 const day = 'wednesday';
 
@@ -67,7 +84,7 @@ describe('Alarm Form Screen', () => {
             });
 
             it('should disable day when enabled andclicked', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 const day = 'wednesday';
 
@@ -95,7 +112,7 @@ describe('Alarm Form Screen', () => {
             }
 
             it('default value should be 00:00', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 const start = renderApi.getByTestId('startTime');
                 expect(start.props.children).toEqual(DEFAULT_START_TIME);
@@ -103,7 +120,7 @@ describe('Alarm Form Screen', () => {
 
             it('should set start when selecting from timepicker', async () => {
                 const startTime = '12:34';
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 selectStart(startTime);
 
@@ -112,7 +129,7 @@ describe('Alarm Form Screen', () => {
             });
 
             it('should not set start when open timepicker but cancel', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 openDatePickerAndCancel();
 
@@ -138,7 +155,7 @@ describe('Alarm Form Screen', () => {
             }
 
             it('default value should be 23:59', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 const end = renderApi.getByTestId('endTime');
                 expect(end.props.children).toEqual(DEFAULT_END_TIME);
@@ -146,7 +163,7 @@ describe('Alarm Form Screen', () => {
 
             it('should set end when selecting from timepicker', async () => {
                 const endTime = '18:45';
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 selectEnd(endTime);
 
@@ -155,7 +172,7 @@ describe('Alarm Form Screen', () => {
             });
 
             it('should not set end when open timepicker but cancel', async () => {
-                await renderScreen();
+                await renderScreenWithSubways();
 
                 openDatePickerAndCancel();
 
@@ -163,6 +180,28 @@ describe('Alarm Form Screen', () => {
                 expect(start.props.children).toEqual(DEFAULT_END_TIME);
             });
 
+        });
+
+    });
+
+    describe('Initial Subways Load', () => {
+
+        it('should show error when subways list is empty', async () => {
+           await renderScreenWithSubways([]);
+
+           expect(renderApi.getByText(strings.defaultError)).toBeDefined();
+        });
+
+        it('should not show error when subways list is not empty', async () => {
+            await renderScreenWithSubways([new SubwayFixture().get()]);
+
+            expect(renderApi.queryByText(strings.defaultError)).toBeNull();
+        });
+
+        it('should show error when subways list is not saved', async () => {
+            await renderScreen();
+
+            expect(renderApi.getByText(strings.defaultError)).toBeDefined();
         });
 
     });

@@ -8,21 +8,35 @@ import {Storage} from '../storage/Storage';
 import {AuthStorage} from '../auth/AuthStorage';
 import {SubwaysRepository} from '../subways/SubwaysRepository';
 import {AlarmsRepository} from '../alarms/AlarmsRepository';
+import {SubwaysStorage} from '../subways/SubwaysStorage';
 
 const DiContainer = new Container();
+
+
+// Storages
 
 DiContainer.bind<StorageClient>(STORAGE_DI).toConstantValue(StorageInstance);
 DiContainer.bind<Storage>(Storage).to(Storage);
 
 DiContainer.bind<AuthStorage>(AuthStorage).to(AuthStorage);
 
+DiContainer.bind<SubwaysStorage>(SubwaysStorage).to(SubwaysStorage);
+
+
+// GraphQL
+
 DiContainer.bind<GraphQLClient>(GRAPHQL_DI).toConstantValue(GraphQLClientInstance);
 DiContainer.bind<GraphQLService>(GraphQLService).to(GraphQLService);
+
+
+// Repositories
 
 DiContainer.bind<AuthRepository>(AuthRepository).to(AuthRepository);
 
 DiContainer.bind<SubwaysRepository>(SubwaysRepository).to(SubwaysRepository);
 
 DiContainer.bind<AlarmsRepository>(AlarmsRepository).to(AlarmsRepository);
+
+
 
 export default DiContainer;
