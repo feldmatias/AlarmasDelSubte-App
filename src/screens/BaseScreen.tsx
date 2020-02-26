@@ -29,7 +29,7 @@ export abstract class BaseScreen<State extends ScreenState, Params extends Navig
         this.setState({error});
     }
 
-    protected navigation(): Navigation {
+    protected navigation(): Navigation<Params> {
         return new Navigation(this.props.navigation);
     }
 }

@@ -1,9 +1,10 @@
 import {NavigationStackProp} from 'react-navigation-stack';
-import { NavigationActions, StackActions } from 'react-navigation';
+import {NavigationActions, NavigationRoute, StackActions} from 'react-navigation';
+import {NavigationParams} from './BaseScreen';
 
-export class Navigation {
+export class Navigation<Params extends NavigationParams> {
 
-    public constructor(private navigation: NavigationStackProp) {
+    public constructor(private navigation: NavigationStackProp<NavigationRoute, Params>) {
 
     }
 
@@ -30,5 +31,12 @@ export class Navigation {
 
     public back(): void {
         this.navigation.pop();
+    }
+
+    public getParam<T>(paramName: string): T | undefined {
+        if (this.navigation.state.params) {
+            return this.navigation.state.params[paramName];
+        }
+        return undefined;
     }
 }

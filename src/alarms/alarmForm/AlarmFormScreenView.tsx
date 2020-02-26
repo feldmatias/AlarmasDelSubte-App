@@ -12,12 +12,14 @@ import {strings} from '../../strings/Strings';
 import {AlarmFormSubways} from './components/AlarmFormSubways';
 import {SubmitButton} from '../../components/SubmitButton';
 import {ErrorMessage} from '../../components/ErrorMessage';
+import {Alarm} from '../model/Alarm';
 
 interface Props {
     subways: Subway[]
     loading: boolean
     error: string
     submit: (alarm: AlarmInput) => Promise<void>
+    alarm?: Alarm
 }
 
 interface State {
@@ -25,6 +27,11 @@ interface State {
 }
 
 export class AlarmFormScreenView extends Component<Props, State> {
+
+    public constructor(props: Props) {
+        super(props);
+        this.state.alarm = new AlarmInput(props.alarm);
+    }
 
     public state: State = {
         alarm: new AlarmInput(),
@@ -63,6 +70,7 @@ export class AlarmFormScreenView extends Component<Props, State> {
                         testID="alarmName"
                         placeholder={alarmStrings.form.name}
                         style={[inputStyles.text, styles.name]}
+                        value={this.state.alarm.name}
                         onChangeText={name => {
                             this.setAlarm(this.state.alarm.setName(name));
                         }}

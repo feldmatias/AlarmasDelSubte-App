@@ -1,4 +1,5 @@
 import {Subway} from '../../subways/model/Subway';
+import {Alarm} from './Alarm';
 
 export class AlarmInput {
 
@@ -6,11 +7,21 @@ export class AlarmInput {
 
     public days: string[] = [];
 
-    public start: string =  '00:00';
+    public start: string = '00:00';
 
-    public end: string =  '23:59';
+    public end: string = '23:59';
 
     public subwayLines: string[] = [];
+
+    public constructor(alarm?: Alarm) {
+        if (alarm) {
+            this.setName(alarm.name);
+            this.setStart(alarm.start);
+            this.setEnd(alarm.end);
+            this.days = alarm.days.slice();
+            this.subwayLines = alarm.subways.map(subway => subway.line);
+        }
+    }
 
     public setName(name: string): AlarmInput {
         this.name = name;

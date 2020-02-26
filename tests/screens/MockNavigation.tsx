@@ -1,6 +1,6 @@
 import {NavigationStackProp} from 'react-navigation-stack';
-import {capture, deepEqual, instance, mock, verify} from 'ts-mockito';
-import {NavigationResetAction} from 'react-navigation';
+import {capture, deepEqual, instance, mock, verify, when} from 'ts-mockito';
+import {NavigationParams, NavigationResetAction, NavigationRoute} from 'react-navigation';
 
 export class MockNavigation {
 
@@ -12,6 +12,15 @@ export class MockNavigation {
 
     public instance(): NavigationStackProp {
         return instance(this.navigation);
+    }
+
+    public setParam<T>(paramName: string, param: T): void {
+        const state = mock<NavigationRoute>();
+        const params = mock<NavigationParams>();
+
+        when(params[paramName]).thenReturn(param);
+        when(state.params).thenReturn(instance(params));
+        when(this.navigation.state).thenReturn(instance(state));
     }
 
     public assertNavigatedTo(route: string): void {

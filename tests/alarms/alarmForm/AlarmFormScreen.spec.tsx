@@ -18,6 +18,7 @@ import {AlarmCreateMutation} from '../../../src/alarms/alarmForm/AlarmCreateMuta
 import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
 import {AlarmFixture} from '../AlarmFixture';
 import MockToast from '../../screens/MockToast';
+import {Alarm} from '../../../src/alarms/model/Alarm';
 
 describe('Alarm Form Screen', () => {
 
@@ -34,7 +35,6 @@ describe('Alarm Form Screen', () => {
     }
 
     async function renderScreen(): Promise<void> {
-        navigation = new MockNavigation();
         renderApi = await ScreenTestUtils.render(<AlarmFormScreen navigation={navigation.instance()}/>);
     }
 
@@ -43,9 +43,15 @@ describe('Alarm Form Screen', () => {
         await renderScreen();
     }
 
+    async function renderScreenWithAlarm(alarm: Alarm): Promise<void> {
+        navigation.setParam('alarm', alarm);
+        await renderScreenWithSubways();
+    }
+
     beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mockWithAuthorizationToken();
+        navigation = new MockNavigation();
         await renderScreenWithSubways();
         createAlarmMutation = new AlarmCreateMutation(new AlarmInput()).getMutation();
     });
@@ -96,21 +102,31 @@ describe('Alarm Form Screen', () => {
         fireEvent(renderApi.getByTestId('timePicker'), 'onChange', null, date);
     }
 
+    function assertSubwayIsEnabled(subway: Subway) {
+        const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
+        expect(enabledSubway).toBeDefined();
+        const icon = enabledSubway.find(node => node.props.testID === 'subwayIcon');
+        expect(icon.props.source.uri).toBe(subway.icon);
+    }
+
+    function assertSubwayIsDisabled(subway: Subway) {
+        const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subway.line);
+        expect(disabledSubway).toBeDefined();
+    }
+
+    function assertDayIsEnabled(day: string) {
+        const dayText = renderApi.getByTestId('alarmFormDay' + day);
+        expect(dayText.props.style[0].color).toEqual(Colors.primary);
+    }
+
+    function assertDayIsDisabled(day: string) {
+        const dayText = renderApi.getByTestId('alarmFormDay' + day);
+        expect(dayText.props.style[0].color).toEqual(Colors.grey);
+    }
+
     describe('Form Input', () => {
 
         describe('Alarm Subways', () => {
-
-            function assertSubwayIsEnabled(subway: Subway) {
-                const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
-                expect(enabledSubway).toBeDefined();
-                const icon = enabledSubway.find(node => node.props.testID === 'subwayIcon');
-                expect(icon.props.source.uri).toBe(subway.icon);
-            }
-
-            function assertSubwayIsDisabled(subway: Subway) {
-                const disabledSubway = renderApi.getByTestId('alarmFormSubwayDisabled' + subway.line);
-                expect(disabledSubway).toBeDefined();
-            }
 
             it('should show all subways disabled', async () => {
                 const subways = getDefaultSubways();
@@ -145,16 +161,6 @@ describe('Alarm Form Screen', () => {
         });
 
         describe('Alarm Days', () => {
-
-            function assertDayIsEnabled(day: string) {
-                const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.primary);
-            }
-
-            function assertDayIsDisabled(day: string) {
-                const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.grey);
-            }
 
             it('should show all days disabled', async () => {
                 for (let day in DaysTranslator.days.keys()) {
@@ -523,6 +529,75 @@ describe('Alarm Form Screen', () => {
                 await submitWithValidData();
 
                 MockToast.assertNotShown();
+            });
+
+        });
+
+        describe('Edit alarm', () => {
+
+            describe('Form initialization', () => {
+
+                it('should initialize with alarm name', async () => {
+                    const name = 'alarm to edit';
+                    const alarm = new AlarmFixture().withName(name).get();
+
+                    await renderScreenWithAlarm(alarm);
+
+                    const nameInput = renderApi.getByTestId('alarmName');
+                    expect(nameInput.props.value).toEqual(name);
+                });
+
+                it('should initialize with alarm start', async () => {
+                    const start = '15:51';
+                    const alarm = new AlarmFixture().withStart(start).get();
+
+                    await renderScreenWithAlarm(alarm);
+
+                    const startInput = renderApi.getByTestId('startTime');
+                    expect(startInput.props.children).toEqual(start);
+                });
+
+                it('should initialize with alarm end', async () => {
+                    const end = '14:41';
+                    const alarm = new AlarmFixture().withEnd(end).get();
+
+                    await renderScreenWithAlarm(alarm);
+
+                    const endInput = renderApi.getByTestId('endTime');
+                    expect(endInput.props.children).toEqual(end);
+                });
+
+                it('should initialize with selected subways', async () => {
+                    const subways = getDefaultSubways();
+                    const selectedSubways = subways.slice(0, 1);
+                    const alarm = new AlarmFixture().withSubways(selectedSubways).get();
+
+                    await renderScreenWithAlarm(alarm);
+
+                    subways.forEach(subway => {
+                        if (selectedSubways.includes(subway)) {
+                            assertSubwayIsEnabled(subway);
+                        } else {
+                            assertSubwayIsDisabled(subway);
+                        }
+                    });
+                });
+
+                it('should initialize with selected days', async () => {
+                    const selectedDays = ['monday', 'friday', 'wednesday'];
+                    const alarm = new AlarmFixture().withDays(selectedDays).get();
+
+                    await renderScreenWithAlarm(alarm);
+
+                    for (let day in DaysTranslator.days.keys()) {
+                        if (selectedDays.includes(day)) {
+                            assertDayIsEnabled(day);
+                        } else {
+                            assertDayIsDisabled(day);
+                        }
+                    }
+                });
+
             });
 
         });

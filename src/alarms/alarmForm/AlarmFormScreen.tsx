@@ -35,6 +35,10 @@ export class AlarmFormScreen extends BaseScreen<State, Params> {
     private alarmsRepository = DiContainer.get<AlarmsRepository>(AlarmsRepository);
     private subwaysRepository = DiContainer.get<SubwaysRepository>(SubwaysRepository);
 
+    private getAlarm(): Alarm|undefined {
+        return this.navigation().getParam('alarm');
+    }
+
     public async componentDidMount() {
         this.setLoading(true);
         this.setSubways(await this.subwaysRepository.getStoredSubways());
@@ -71,6 +75,7 @@ export class AlarmFormScreen extends BaseScreen<State, Params> {
                 loading={this.state.loading}
                 error={this.state.error}
                 submit={this.submit}
+                alarm={this.getAlarm()}
             />
         );
     }
