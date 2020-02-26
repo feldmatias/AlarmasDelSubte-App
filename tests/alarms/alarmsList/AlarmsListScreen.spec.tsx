@@ -12,7 +12,7 @@ import {AlarmFixture} from '../AlarmFixture';
 import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
 import {DaysTranslator} from '../../../src/utils/DaysTranslator';
 import {AlarmDeleteMutation} from '../../../src/alarms/alarmsList/AlarmDeleteMutation';
-import {Routes} from '../../../src/screens/Routes';
+import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import MockToast from '../../screens/MockToast';
 import {alarmStrings} from '../../../src/strings/AlarmStrings';
 import {strings} from '../../../src/strings/Strings';
@@ -517,7 +517,7 @@ describe('Alarms List Screen', () => {
 
             fireEvent.press(renderApi.getByTestId('fab'));
 
-            navigation.assertNavigatedTo(Routes.AlarmForm);
+            navigation.assertNavigatedTo(NavigationRoutes.AlarmForm);
         });
 
     });

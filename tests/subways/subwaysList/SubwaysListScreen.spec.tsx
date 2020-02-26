@@ -13,7 +13,7 @@ import {Subway} from '../../../src/subways/model/Subway';
 import {SubwayStatus} from '../../../src/subways/model/SubwayStatus';
 import {Colors} from '../../../src/styles/Colors';
 import moment, {Moment} from 'moment';
-import {Routes} from '../../../src/screens/Routes';
+import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import {subwayStrings} from '../../../src/strings/SubwayStrings';
 import {strings} from '../../../src/strings/Strings';
 import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
@@ -364,7 +364,7 @@ describe('Subways List Screen', () => {
 
             fireEvent.press(header.getByTestId('alarmsHeaderButton'));
 
-            navigation.assertNavigatedTo(Routes.AlarmsList);
+            navigation.assertNavigatedTo(NavigationRoutes.AlarmsList);
         });
 
     });

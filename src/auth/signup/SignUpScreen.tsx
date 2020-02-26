@@ -7,7 +7,7 @@ import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {PasswordValidator} from './PasswordValidator';
 import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
-import {Routes} from '../../screens/Routes';
+import {NavigationRoutes} from '../../screens/NavigationRoutes';
 import {authStrings} from '../../strings/AuthStrings';
 
 interface Props extends ScreenProps {
@@ -54,7 +54,7 @@ export class SignUpScreen extends BaseScreen<Props, State> {
             return;
         }
 
-        this.navigation().navigateToMainScreen(Routes.SubwaysList);
+        this.navigation().navigateToMainScreen(NavigationRoutes.SubwaysList);
     }
 
     public render() {

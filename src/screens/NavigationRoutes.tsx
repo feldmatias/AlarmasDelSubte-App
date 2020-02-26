@@ -1,4 +1,4 @@
-export const Routes = {
+export const NavigationRoutes = {
     Login: 'Login',
     SignUp: 'SignUp',
     SubwaysList: 'SubwaysList',

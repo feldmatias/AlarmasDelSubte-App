@@ -6,7 +6,7 @@ import DiContainer from '../../di/Container';
 import {SubwaysRepository} from '../SubwaysRepository';
 import {Loading} from '../../components/Loading';
 import {AlarmsHeaderButton} from '../../alarms/alarmsList/components/AlarmsHeaderButton';
-import {Routes} from '../../screens/Routes';
+import {NavigationRoutes} from '../../screens/NavigationRoutes';
 import {NavigationStackProp} from 'react-navigation-stack';
 import {subwayStrings} from '../../strings/SubwayStrings';
 
@@ -22,7 +22,7 @@ export class SubwaysListScreen extends BaseScreen<Props, State> {
 
     public static navigationOptions = ({navigation}: { navigation: NavigationStackProp }) => ({
         title: subwayStrings.subwaysListScreen.screenTitle,
-        headerRight: () => <AlarmsHeaderButton onPress={() => navigation.navigate(Routes.AlarmsList)}/>,
+        headerRight: () => <AlarmsHeaderButton onPress={() => navigation.navigate(NavigationRoutes.AlarmsList)}/>,
     });
 
     public state: State = {

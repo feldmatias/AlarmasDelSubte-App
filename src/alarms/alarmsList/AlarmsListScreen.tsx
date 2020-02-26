@@ -6,7 +6,7 @@ import {Alarm} from '../model/Alarm';
 import DiContainer from '../../di/Container';
 import {AlarmsRepository} from '../AlarmsRepository';
 import {Loading} from '../../components/Loading';
-import {Routes} from '../../screens/Routes';
+import {NavigationRoutes} from '../../screens/NavigationRoutes';
 import {View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
 import {Toast} from '../../screens/Toast';
@@ -81,7 +81,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
     };
 
     private createAlarm = (): void => {
-        this.navigation().navigate(Routes.AlarmForm);
+        this.navigation().navigate(NavigationRoutes.AlarmForm);
     };
 
     public render() {

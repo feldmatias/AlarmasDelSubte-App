@@ -5,7 +5,7 @@ import DiContainer from '../../di/Container';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {LoginScreenView} from './LoginScreenView';
-import {Routes} from '../../screens/Routes';
+import {NavigationRoutes} from '../../screens/NavigationRoutes';
 import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
 import {authStrings} from '../../strings/AuthStrings';
 
@@ -42,17 +42,17 @@ export class LoginScreen extends BaseScreen<Props, State> {
             return;
         }
 
-        this.navigation().navigateToMainScreen(Routes.SubwaysList);
+        this.navigation().navigateToMainScreen(NavigationRoutes.SubwaysList);
     }
 
     private signUp = (): void => {
-        this.navigation().navigate(Routes.SignUp);
+        this.navigation().navigate(NavigationRoutes.SignUp);
     };
 
     public async componentDidMount(): Promise<void> {
         const isLoggedIn = await this.authRepository.isLoggedIn();
         if (isLoggedIn) {
-            this.navigation().navigateToMainScreen(Routes.SubwaysList);
+            this.navigation().navigateToMainScreen(NavigationRoutes.SubwaysList);
         }
     }
 

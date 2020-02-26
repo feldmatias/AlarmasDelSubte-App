@@ -9,7 +9,7 @@ import {MockNavigation} from '../../screens/MockNavigation';
 import {AuthToken} from '../../../src/auth/AuthToken';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
-import {Routes} from '../../../src/screens/Routes';
+import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import {authStrings} from '../../../src/strings/AuthStrings';
 import {strings} from '../../../src/strings/Strings';
@@ -205,7 +205,7 @@ describe('SignUp Screen', () => {
 
             await signUpWithCredentials();
 
-            navigation.assertNavigatedToMain(Routes.SubwaysList);
+            navigation.assertNavigatedToMain(NavigationRoutes.SubwaysList);
         });
 
     });

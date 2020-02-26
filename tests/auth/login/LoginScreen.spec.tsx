@@ -6,7 +6,7 @@ import React from 'react';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
 import {LoginMutation} from '../../../src/auth/login/LoginMutation';
 import {MockNavigation} from '../../screens/MockNavigation';
-import {Routes} from '../../../src/screens/Routes';
+import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import MockStorage from '../../storage/MockStorage';
 import {AuthStorage} from '../../../src/auth/AuthStorage';
 import {AuthToken} from '../../../src/auth/AuthToken';
@@ -171,7 +171,7 @@ describe('Login Screen', () => {
 
         it('should navigate to sign up screen when click sign up', async () => {
             signUp();
-            navigation.assertNavigatedTo(Routes.SignUp);
+            navigation.assertNavigatedTo(NavigationRoutes.SignUp);
         });
 
     });
@@ -197,7 +197,7 @@ describe('Login Screen', () => {
 
             await loginWithCredentials();
 
-            navigation.assertNavigatedToMain(Routes.SubwaysList);
+            navigation.assertNavigatedToMain(NavigationRoutes.SubwaysList);
         });
 
         it('should navigate to subways list if already logged in', async () => {
@@ -207,7 +207,7 @@ describe('Login Screen', () => {
 
             await renderScreen(); //Render to trigger componentDidMountEvent
 
-            navigation.assertNavigatedToMain(Routes.SubwaysList);
+            navigation.assertNavigatedToMain(NavigationRoutes.SubwaysList);
         });
 
     });
