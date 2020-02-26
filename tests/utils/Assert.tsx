@@ -23,4 +23,20 @@ export class Assert {
         expect(node.props.children.includes(text)).toBeTruthy();
     }
 
+    public static assertTextInput(node: ReactTestInstance, text: string): void {
+        expect(node.props.value).toEqual(text);
+    }
+
+    public static assertListRefreshing(node: ReactTestInstance, refreshing: boolean): void {
+        expect(node.props.refreshing).toEqual(refreshing);
+    }
+
+    public static assertButtonEnabled(node: ReactTestInstance, enabled: boolean): void {
+        expect(node.props.disabled).toEqual(!enabled);
+    }
+
+    public static assertButtonLoading(node: ReactTestInstance, loading: boolean): void {
+        expect(node.props.loading).toEqual(loading);
+    }
+
 }

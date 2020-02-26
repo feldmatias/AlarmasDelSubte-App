@@ -96,7 +96,7 @@ describe('Alarm Form Screen', () => {
                 await renderScreenWithAlarm(alarm);
 
                 const nameInput = renderApi.getByTestId('alarmName');
-                expect(nameInput.props.value).toEqual(name);
+                Assert.assertTextInput(nameInput, name);
             });
 
             it('should initialize with alarm start', async () => {
@@ -189,7 +189,7 @@ describe('Alarm Form Screen', () => {
 
                 function assertIsLoading(loading: boolean): void {
                     const button = renderApi.getByTestId('submit');
-                    expect(button.props.loading).toBe(loading);
+                    Assert.assertButtonLoading(button, loading);
                 }
 
                 it('when edit then should be loading', async () => {

@@ -248,7 +248,7 @@ describe('Alarms List Screen', () => {
             refreshAlarms();
 
             const list = renderApi.getByTestId('alarmsList');
-            expect(list.props.refreshing).toBeTruthy();
+            Assert.assertListRefreshing(list, true);
         });
 
         it('should hide refreshing when refresh finishes', async () => {
@@ -260,7 +260,7 @@ describe('Alarms List Screen', () => {
             await refreshAlarms();
 
             const list = renderApi.getByTestId('alarmsList');
-            expect(list.props.refreshing).toBeFalsy();
+            Assert.assertListRefreshing(list, false);
         });
 
         it('should show alarm if 0 alarms and 1 after refresh', async () => {

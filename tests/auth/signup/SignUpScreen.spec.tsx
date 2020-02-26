@@ -13,6 +13,7 @@ import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import {authStrings} from '../../../src/strings/AuthStrings';
 import {strings} from '../../../src/strings/Strings';
+import {Assert} from '../../utils/Assert';
 
 describe('SignUp Screen', () => {
 
@@ -66,7 +67,7 @@ describe('SignUp Screen', () => {
 
         function assertSignUpButtonEnabled(enabled: boolean): void {
             const signUpButton = renderApi.getByTestId('submit');
-            expect(signUpButton.props.disabled).toBe(!enabled);
+            Assert.assertButtonEnabled(signUpButton, enabled);
         }
 
         it('signup should be disabled when no username and no password', () => {
@@ -97,7 +98,7 @@ describe('SignUp Screen', () => {
 
         function assertIsLoading(loading: boolean): void {
             const signUpButton = renderApi.getByTestId('submit');
-            expect(signUpButton.props.loading).toBe(loading);
+            Assert.assertButtonLoading(signUpButton, loading);
         }
 
         it('when signup then should be loading', async () => {

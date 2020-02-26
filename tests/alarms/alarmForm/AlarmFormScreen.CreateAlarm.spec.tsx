@@ -324,7 +324,7 @@ describe('Alarm Form Screen', () => {
 
             function assertSubmitButtonEnabled(enabled: boolean): void {
                 const button = renderApi.getByTestId('submit');
-                expect(button.props.disabled).toBe(!enabled);
+                Assert.assertButtonEnabled(button, enabled);
             }
 
             it('should be disabled when name is empty', async () => {
@@ -380,7 +380,7 @@ describe('Alarm Form Screen', () => {
 
             function assertIsLoading(loading: boolean): void {
                 const button = renderApi.getByTestId('submit');
-                expect(button.props.loading).toBe(loading);
+                Assert.assertButtonLoading(button, loading);
             }
 
             it('when submit then should be loading', async () => {

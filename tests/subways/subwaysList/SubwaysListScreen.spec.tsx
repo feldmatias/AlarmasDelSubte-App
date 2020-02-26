@@ -275,7 +275,7 @@ describe('Subways List Screen', () => {
             refreshSubways();
 
             const list = renderApi.getByTestId('subwaysList');
-            expect(list.props.refreshing).toBeTruthy();
+            Assert.assertListRefreshing(list, true);
         });
 
         it('should hide refreshing when refresh finishes', async () => {
@@ -287,7 +287,7 @@ describe('Subways List Screen', () => {
             await refreshSubways();
 
             const list = renderApi.getByTestId('subwaysList');
-            expect(list.props.refreshing).toBeFalsy();
+            Assert.assertListRefreshing(list, false);
         });
 
         it('should show subway if 0 subways and 1 after refresh', async () => {

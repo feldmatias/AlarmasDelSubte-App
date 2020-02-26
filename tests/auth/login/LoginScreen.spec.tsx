@@ -12,6 +12,7 @@ import {AuthStorage} from '../../../src/auth/AuthStorage';
 import {AuthToken} from '../../../src/auth/AuthToken';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import {strings} from '../../../src/strings/Strings';
+import {Assert} from '../../utils/Assert';
 
 describe('Login Screen', () => {
 
@@ -65,7 +66,7 @@ describe('Login Screen', () => {
 
         function assertLoginButtonEnabled(enabled: boolean): void {
             const loginButton = renderApi.getByTestId('submit');
-            expect(loginButton.props.disabled).toBe(!enabled);
+            Assert.assertButtonEnabled(loginButton, enabled);
         }
 
         it('login should be disabled when no username and no password', () => {
@@ -96,7 +97,7 @@ describe('Login Screen', () => {
 
         function assertIsLoading(loading: boolean): void {
             const loginButton = renderApi.getByTestId('submit');
-            expect(loginButton.props.loading).toBe(loading);
+            Assert.assertButtonLoading(loginButton, loading);
         }
 
         it('when login then should be loading', async () => {
