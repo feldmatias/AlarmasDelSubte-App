@@ -155,7 +155,7 @@ describe('SignUp Screen', () => {
         });
 
         it('when api success then hide error', async () => {
-            MockGraphQLClient.mockSuccess(signUpMutation, {registerUser: {token: 'token'}});
+            MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
 
             await signUpWithCredentials();
 

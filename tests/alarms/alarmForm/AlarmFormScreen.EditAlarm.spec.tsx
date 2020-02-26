@@ -18,6 +18,7 @@ import MockToast from '../../screens/MockToast';
 import {Alarm} from '../../../src/alarms/model/Alarm';
 import {AlarmEditMutation} from '../../../src/alarms/graphql/AlarmEditMutation';
 import {strings} from '../../../src/strings/Strings';
+import {Assert} from '../../utils/Assert';
 
 describe('Alarm Form Screen', () => {
 
@@ -70,7 +71,7 @@ describe('Alarm Form Screen', () => {
                 const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
                 expect(enabledSubway).toBeDefined();
                 const icon = enabledSubway.find(node => node.props.testID === 'subwayIcon');
-                expect(icon.props.source.uri).toBe(subway.icon);
+                Assert.assertImageUrl(icon, subway.icon);
             }
 
             function assertSubwayIsDisabled(subway: Subway) {
@@ -80,12 +81,12 @@ describe('Alarm Form Screen', () => {
 
             function assertDayIsEnabled(day: string) {
                 const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.primary);
+                Assert.assertColor(dayText, Colors.primary);
             }
 
             function assertDayIsDisabled(day: string) {
                 const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.grey);
+                Assert.assertColor(dayText, Colors.grey);
             }
 
             it('should initialize with alarm name', async () => {
@@ -105,7 +106,7 @@ describe('Alarm Form Screen', () => {
                 await renderScreenWithAlarm(alarm);
 
                 const startInput = renderApi.getByTestId('startTime');
-                expect(startInput.props.children).toEqual(start);
+                Assert.assertText(startInput, start);
             });
 
             it('should initialize with alarm end', async () => {
@@ -115,7 +116,7 @@ describe('Alarm Form Screen', () => {
                 await renderScreenWithAlarm(alarm);
 
                 const endInput = renderApi.getByTestId('endTime');
-                expect(endInput.props.children).toEqual(end);
+                Assert.assertText(endInput, end);
             });
 
             it('should initialize with selected subways', async () => {

@@ -16,6 +16,7 @@ import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import MockToast from '../../screens/MockToast';
 import {alarmStrings} from '../../../src/strings/AlarmStrings';
 import {strings} from '../../../src/strings/Strings';
+import {Assert} from '../../utils/Assert';
 
 describe('Alarms List Screen', () => {
 
@@ -114,7 +115,7 @@ describe('Alarms List Screen', () => {
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmSubwayIcon');
-            expect(component.props.source.uri).toBe(icon);
+            Assert.assertImageUrl(component, icon);
         });
 
         it('should show alarm subways icons', async () => {
@@ -133,10 +134,7 @@ describe('Alarms List Screen', () => {
 
             const components = renderApi.getAllByTestId('alarmSubwayIcon');
             for (let i = 0; i < subwaysCount; i++) {
-                const subwayComponent = components.find(component => {
-                    return component.props.source.uri === icon + i;
-                });
-                expect(subwayComponent).toBeDefined();
+                Assert.assertImageUrl(components[i], icon + i);
             }
         });
 
@@ -148,7 +146,7 @@ describe('Alarms List Screen', () => {
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmTimeRange');
-            expect(component.props.children.includes(alarmStart)).toBeTruthy();
+            Assert.assertTextContains(component, alarmStart);
         });
 
         it('should show alarm end', async () => {
@@ -159,7 +157,7 @@ describe('Alarms List Screen', () => {
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmTimeRange');
-            expect(component.props.children.includes(alarmEnd)).toBeTruthy();
+            Assert.assertTextContains(component, alarmEnd);
         });
 
         it('should show alarm day', async () => {
@@ -170,7 +168,7 @@ describe('Alarms List Screen', () => {
             await renderScreen();
 
             const component = renderApi.getByTestId('alarmDays');
-            expect(component.props.children.includes(day)).toBeTruthy();
+            Assert.assertTextContains(component, day);
         });
 
         it('should show all alarm days translated', async () => {
@@ -183,7 +181,7 @@ describe('Alarms List Screen', () => {
             const component = renderApi.getByTestId('alarmDays');
 
             for (let day of DaysTranslator.days.values()) {
-                expect(component.props.children.includes(day)).toBeTruthy();
+                Assert.assertTextContains(component, day);
             }
         });
 

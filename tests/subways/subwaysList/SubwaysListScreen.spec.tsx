@@ -17,6 +17,7 @@ import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import {subwayStrings} from '../../../src/strings/SubwayStrings';
 import {strings} from '../../../src/strings/Strings';
 import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
+import {Assert} from '../../utils/Assert';
 
 describe('Subways List Screen', () => {
 
@@ -106,7 +107,7 @@ describe('Subways List Screen', () => {
             await renderScreen();
 
             const subwayImage = renderApi.getByTestId('subwayIcon');
-            expect(subwayImage.props.source.uri).toBe(subwayIcon);
+            Assert.assertImageUrl(subwayImage, subwayIcon);
         });
 
         it('should show subway status', async () => {
@@ -124,7 +125,7 @@ describe('Subways List Screen', () => {
 
             function assertStatusColor(color: string): void {
                 const subwayStatus = renderApi.getByTestId('subwayStatus');
-                expect(subwayStatus.props.style[0].color).toEqual(color);
+                Assert.assertColor(subwayStatus, color);
             }
 
             it('should show subway status in green if it is normal', async () => {

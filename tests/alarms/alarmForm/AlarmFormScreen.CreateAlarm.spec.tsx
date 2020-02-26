@@ -18,6 +18,7 @@ import {AlarmCreateMutation} from '../../../src/alarms/graphql/AlarmCreateMutati
 import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
 import {AlarmFixture} from '../AlarmFixture';
 import MockToast from '../../screens/MockToast';
+import {Assert} from '../../utils/Assert';
 
 describe('Alarm Form Screen', () => {
 
@@ -104,7 +105,7 @@ describe('Alarm Form Screen', () => {
                 const enabledSubway = renderApi.getByTestId('alarmFormSubwayEnabled' + subway.line);
                 expect(enabledSubway).toBeDefined();
                 const icon = enabledSubway.find(node => node.props.testID === 'subwayIcon');
-                expect(icon.props.source.uri).toBe(subway.icon);
+                Assert.assertImageUrl(icon, subway.icon);
             }
 
             function assertSubwayIsDisabled(subway: Subway) {
@@ -148,12 +149,12 @@ describe('Alarm Form Screen', () => {
 
             function assertDayIsEnabled(day: string) {
                 const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.primary);
+                Assert.assertColor(dayText, Colors.primary);
             }
 
             function assertDayIsDisabled(day: string) {
                 const dayText = renderApi.getByTestId('alarmFormDay' + day);
-                expect(dayText.props.style[0].color).toEqual(Colors.grey);
+                Assert.assertColor(dayText, Colors.grey);
             }
 
             it('should show all days disabled', async () => {
@@ -192,7 +193,7 @@ describe('Alarm Form Screen', () => {
 
             it('default value should be 00:00', async () => {
                 const start = renderApi.getByTestId('startTime');
-                expect(start.props.children).toEqual(DEFAULT_START_TIME);
+                Assert.assertText(start, DEFAULT_START_TIME);
             });
 
             it('should set start when selecting from timepicker', async () => {
@@ -200,14 +201,14 @@ describe('Alarm Form Screen', () => {
                 selectStart(startTime);
 
                 const start = renderApi.getByTestId('startTime');
-                expect(start.props.children).toEqual(startTime);
+                Assert.assertText(start, startTime);
             });
 
             it('should not set start when open timepicker but cancel', async () => {
                 openDatePickerAndCancel();
 
                 const start = renderApi.getByTestId('startTime');
-                expect(start.props.children).toEqual(DEFAULT_START_TIME);
+                Assert.assertText(start, DEFAULT_START_TIME);
             });
 
         });
@@ -223,7 +224,7 @@ describe('Alarm Form Screen', () => {
 
             it('default value should be 23:59', async () => {
                 const end = renderApi.getByTestId('endTime');
-                expect(end.props.children).toEqual(DEFAULT_END_TIME);
+                Assert.assertText(end, DEFAULT_END_TIME);
             });
 
             it('should set end when selecting from timepicker', async () => {
@@ -231,14 +232,14 @@ describe('Alarm Form Screen', () => {
                 selectEnd(endTime);
 
                 const end = renderApi.getByTestId('endTime');
-                expect(end.props.children).toEqual(endTime);
+                Assert.assertText(end, endTime);
             });
 
             it('should not set end when open timepicker but cancel', async () => {
                 openDatePickerAndCancel();
 
-                const start = renderApi.getByTestId('endTime');
-                expect(start.props.children).toEqual(DEFAULT_END_TIME);
+                const end = renderApi.getByTestId('endTime');
+                Assert.assertText(end, DEFAULT_END_TIME);
             });
 
         });
