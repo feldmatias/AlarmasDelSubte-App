@@ -9,7 +9,8 @@ export const alarmStrings = {
 
     alarmFormScreen: {
         screenTitle: 'Crear Alarma',
-        successCreateAlarm: 'Alarma creada correctamnte',
+        successCreateAlarm: 'Alarma creada correctamente',
+        successEditAlarm: 'Alarma editada correctamente',
     },
 
     form: {

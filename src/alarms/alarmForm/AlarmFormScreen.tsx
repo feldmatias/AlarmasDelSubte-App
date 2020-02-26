@@ -11,6 +11,7 @@ import {AlarmInput} from '../model/AlarmInput';
 import {AlarmsRepository} from '../AlarmsRepository';
 import {Toast} from '../../screens/Toast';
 import {Alarm} from '../model/Alarm';
+import {Result} from '../../utils/Result';
 
 interface Params extends NavigationParams {
     alarm?: Alarm
@@ -49,18 +50,31 @@ export class AlarmFormScreen extends BaseScreen<State, Params> {
         this.setState({subways});
     }
 
-    private submit = async (alarm: AlarmInput): Promise<void> => {
+    private submit = async (alarmInput: AlarmInput): Promise<void> => {
+        const alarm = this.getAlarm();
+        if (alarm) {
+            const operation = this.alarmsRepository.editAlarm(alarmInput, alarm);
+            const successMessage = alarmStrings.alarmFormScreen.successEditAlarm;
+            await this.saveAlarm(operation, successMessage);
+        } else {
+            const operation = this.alarmsRepository.createAlarm(alarmInput);
+            const successMessage = alarmStrings.alarmFormScreen.successCreateAlarm;
+            await this.saveAlarm(operation, successMessage);
+        }
+    };
+
+    private async saveAlarm(operation: Promise<Result<Alarm>>, successMessage: string):Promise<void> {
         this.setLoading(true);
-        const result = await this.alarmsRepository.createAlarm(alarm);
+        const result = await operation;
         this.setLoading(false);
 
         if (result.isSuccessful()) {
             this.navigation().back();
-            Toast.show(alarmStrings.alarmFormScreen.successCreateAlarm);
+            Toast.show(successMessage);
         } else {
             this.setError(result.getError());
         }
-    };
+    }
 
     public render() {
         if (this.state.loading && this.state.subways.length === 0) {
