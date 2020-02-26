@@ -7,7 +7,7 @@ import {MockNavigation} from '../../screens/MockNavigation';
 import MockStorage from '../../storage/MockStorage';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import {SubwaysListScreen} from '../../../src/subways/subwaysList/SubwaysListScreen';
-import {SubwaysListQuery} from '../../../src/subways/subwaysList/SubwaysListQuery';
+import {SubwaysListQuery} from '../../../src/subways/graphql/SubwaysListQuery';
 import {SubwayFixture} from '../SubwayFixture';
 import {Subway} from '../../../src/subways/model/Subway';
 import {SubwayStatus} from '../../../src/subways/model/SubwayStatus';

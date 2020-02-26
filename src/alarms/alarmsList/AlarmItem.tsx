@@ -116,13 +116,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     name: {
-        fontSize: 20,
+        fontSize: 23,
         textDecorationLine: 'underline',
         marginBottom: 10,
     },
     days: {
         fontSize: 15,
         marginTop: 15,
+        paddingHorizontal: 20,
+        textAlign: 'center',
     },
     timeRangeContainer: {
         flexDirection: 'row',

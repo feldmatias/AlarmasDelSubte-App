@@ -16,7 +16,7 @@ import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
 import {AlarmFixture} from '../AlarmFixture';
 import MockToast from '../../screens/MockToast';
 import {Alarm} from '../../../src/alarms/model/Alarm';
-import {AlarmEditMutation} from '../../../src/alarms/alarmForm/AlarmEditMutation';
+import {AlarmEditMutation} from '../../../src/alarms/graphql/AlarmEditMutation';
 import {strings} from '../../../src/strings/Strings';
 
 describe('Alarm Form Screen', () => {

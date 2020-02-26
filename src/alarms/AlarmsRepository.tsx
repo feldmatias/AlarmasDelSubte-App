@@ -2,11 +2,11 @@ import {inject, injectable} from 'inversify';
 import {GraphQLService} from '../graphql/GraphQLService';
 import {Result} from '../utils/Result';
 import {Alarm} from './model/Alarm';
-import {AlarmsListQuery} from './alarmsList/AlarmsListQuery';
-import {AlarmDeleteMutation} from './alarmsList/AlarmDeleteMutation';
+import {AlarmsListQuery} from './graphql/AlarmsListQuery';
+import {AlarmDeleteMutation} from './graphql/AlarmDeleteMutation';
 import {AlarmInput} from './model/AlarmInput';
-import {AlarmCreateMutation} from './alarmForm/AlarmCreateMutation';
-import {AlarmEditMutation} from './alarmForm/AlarmEditMutation';
+import {AlarmCreateMutation} from './graphql/AlarmCreateMutation';
+import {AlarmEditMutation} from './graphql/AlarmEditMutation';
 
 @injectable()
 export class AlarmsRepository {

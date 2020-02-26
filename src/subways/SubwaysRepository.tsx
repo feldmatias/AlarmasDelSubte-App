@@ -2,7 +2,7 @@ import {inject, injectable} from 'inversify';
 import {GraphQLService} from '../graphql/GraphQLService';
 import {Result} from '../utils/Result';
 import {Subway} from './model/Subway';
-import {SubwaysListQuery} from './subwaysList/SubwaysListQuery';
+import {SubwaysListQuery} from './graphql/SubwaysListQuery';
 import {SubwaysStorage} from './SubwaysStorage';
 
 @injectable()
