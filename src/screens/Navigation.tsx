@@ -11,6 +11,10 @@ export class Navigation {
         this.navigation.navigate(screen);
     }
 
+    public navigateWithParams<T>(screen: string, params: T): void {
+        this.navigation.navigate(screen, params);
+    }
+
     public navigateToMainScreen(screen: string): void {
         const navigateAction = NavigationActions.navigate({routeName: screen});
 

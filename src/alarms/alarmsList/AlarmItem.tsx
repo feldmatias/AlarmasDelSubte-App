@@ -12,6 +12,7 @@ import {alarmStrings} from '../../strings/AlarmStrings';
 interface Props {
     alarm: Alarm
     deleteAlarm: (alarm: Alarm) => Promise<void>
+    editAlarm: (alarm: Alarm) => void
 }
 
 interface State {
@@ -41,6 +42,10 @@ export class AlarmItem extends Component<Props, State> {
         await this.props.deleteAlarm(this.props.alarm);
     };
 
+    private editAlarm = (): void => {
+        this.props.editAlarm(this.props.alarm);
+    };
+
     public render() {
         return (
             <View style={styles.container} testID="alarmItem">
@@ -65,21 +70,38 @@ export class AlarmItem extends Component<Props, State> {
 
                 </View>
 
-                <Button
-                    testID="alarmDelete"
-                    onPress={this.showConfirmDelete}
-                    type="clear"
-                    icon={{
-                        name: 'delete-forever',
-                        color: Colors.red,
-                        size: 35,
-                    }}
-                />
+                <View style={styles.iconsContainer}>
+
+                    <Button
+                        testID="alarmEdit"
+                        onPress={this.editAlarm}
+                        type="clear"
+                        icon={{
+                            name: 'edit',
+                            color: Colors.orange,
+                            size: 35,
+                        }}
+                    />
+
+                    <Button
+                        testID="alarmDelete"
+                        onPress={this.showConfirmDelete}
+                        type="clear"
+                        icon={{
+                            name: 'delete-forever',
+                            color: Colors.red,
+                            size: 35,
+                        }}
+                    />
+
+                </View>
 
                 <ConfirmationDialog
                     message={alarmStrings.alarmsListScreen.deleteAlarmConfirm}
                     onConfirm={this.deleteAlarm}
-                    reference={dialog => {this.deleteConfirmationDialog = dialog;}}
+                    reference={dialog => {
+                        this.deleteConfirmationDialog = dialog;
+                    }}
                 />
 
             </View>
@@ -110,5 +132,8 @@ const styles = StyleSheet.create({
     timeRange: {
         marginLeft: 10,
         fontSize: 24,
+    },
+    iconsContainer: {
+        flexDirection: 'row',
     },
 });

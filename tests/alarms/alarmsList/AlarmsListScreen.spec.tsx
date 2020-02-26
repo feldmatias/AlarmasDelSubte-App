@@ -522,4 +522,38 @@ describe('Alarms List Screen', () => {
 
     });
 
+    describe('Edit Alarm', () => {
+
+        it('should navigate to Alarm Form screen with alarm', async () => {
+            const alarm = new AlarmFixture().withId(8456).get();
+            setAlarmsSuccessResponse([alarm]);
+
+            await renderScreen();
+
+            fireEvent.press(renderApi.getByTestId('alarmEdit'));
+
+            navigation.assertNavigatedWithParams(NavigationRoutes.AlarmForm, {alarm});
+        });
+
+        it('should navigate to Alarm Form screen with correct alarm', async () => {
+            const alarmCount = 3;
+            const alarms: Alarm[] = [];
+
+            for (let i = 0; i < alarmCount; i++) {
+                const alarm = new AlarmFixture().withId(i).get();
+                alarms.push(alarm);
+            }
+
+            setAlarmsSuccessResponse(alarms);
+
+            await renderScreen();
+
+            for (let i = 0; i < alarmCount; i++) {
+                fireEvent.press(renderApi.getAllByTestId('alarmEdit')[i]);
+                navigation.assertNavigatedWithParams(NavigationRoutes.AlarmForm, {alarm: alarms[i]});
+            }
+        });
+
+    });
+
 });

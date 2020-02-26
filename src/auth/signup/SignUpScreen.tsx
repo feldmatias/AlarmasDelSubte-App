@@ -6,11 +6,11 @@ import {AuthRepository} from '../AuthRepository';
 import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {PasswordValidator} from './PasswordValidator';
-import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
+import {BaseScreen, NavigationParams, ScreenState} from '../../screens/BaseScreen';
 import {NavigationRoutes} from '../../screens/NavigationRoutes';
 import {authStrings} from '../../strings/AuthStrings';
 
-interface Props extends ScreenProps {
+interface Params extends NavigationParams {
 
 }
 
@@ -18,7 +18,7 @@ interface State extends ScreenState {
 
 }
 
-export class SignUpScreen extends BaseScreen<Props, State> {
+export class SignUpScreen extends BaseScreen<State, Params> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: authStrings.signUpScreen.screenTitle,

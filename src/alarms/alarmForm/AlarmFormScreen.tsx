@@ -1,6 +1,6 @@
 import React from 'react';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
+import {BaseScreen, NavigationParams, ScreenState} from '../../screens/BaseScreen';
 import {alarmStrings} from '../../strings/AlarmStrings';
 import {AlarmFormScreenView} from './AlarmFormScreenView';
 import {Subway} from '../../subways/model/Subway';
@@ -10,15 +10,17 @@ import {Loading} from '../../components/Loading';
 import {AlarmInput} from '../model/AlarmInput';
 import {AlarmsRepository} from '../AlarmsRepository';
 import {Toast} from '../../screens/Toast';
+import {Alarm} from '../model/Alarm';
 
-interface Props extends ScreenProps {
+interface Params extends NavigationParams {
+    alarm?: Alarm
 }
 
 interface State extends ScreenState {
     subways: Subway[]
 }
 
-export class AlarmFormScreen extends BaseScreen<Props, State> {
+export class AlarmFormScreen extends BaseScreen<State, Params> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: alarmStrings.alarmFormScreen.screenTitle,
