@@ -6,17 +6,18 @@ import {Result} from '../../utils/Result';
 import {AuthToken} from '../AuthToken';
 import {LoginScreenView} from './LoginScreenView';
 import {NavigationRoutes} from '../../screens/NavigationRoutes';
-import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
+import {BaseScreen, NavigationParams, ScreenState} from '../../screens/BaseScreen';
 import {authStrings} from '../../strings/AuthStrings';
 
-interface Props extends ScreenProps {
+interface Params extends NavigationParams {
+
 }
 
 interface State extends ScreenState {
 
 }
 
-export class LoginScreen extends BaseScreen<Props, State> {
+export class LoginScreen extends BaseScreen<State, Params> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: authStrings.loginScreen.title,

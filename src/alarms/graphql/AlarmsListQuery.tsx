@@ -1,6 +1,7 @@
 import {GraphQLQuery} from '../../graphql/GraphQLQuery';
 import {GraphQLOperation} from '../../graphql/GraphQLClient';
 import {gql} from 'apollo-boost';
+import {alarmResponseData} from './AlarmResponseFragment';
 
 export class AlarmsListQuery implements GraphQLQuery {
 
@@ -12,17 +13,10 @@ export class AlarmsListQuery implements GraphQLQuery {
         return gql`
             query {
                 getAlarms {
-                    id
-                    name
-                    days
-                    start
-                    end
-                    subways {
-                        line
-                        icon
-                    }
+                    ...AlarmResponseData
                 }
             }
+            ${alarmResponseData}
         `;
     }
 

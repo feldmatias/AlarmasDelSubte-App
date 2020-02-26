@@ -1,5 +1,5 @@
 import React from 'react';
-import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
+import {BaseScreen, NavigationParams, ScreenState} from '../../screens/BaseScreen';
 import {SubwaysListScreenView} from './SubwaysListScreenView';
 import {Subway} from '../model/Subway';
 import DiContainer from '../../di/Container';
@@ -10,7 +10,8 @@ import {NavigationRoutes} from '../../screens/NavigationRoutes';
 import {NavigationStackProp} from 'react-navigation-stack';
 import {subwayStrings} from '../../strings/SubwayStrings';
 
-interface Props extends ScreenProps {
+interface Params extends NavigationParams {
+
 }
 
 interface State extends ScreenState {
@@ -18,7 +19,7 @@ interface State extends ScreenState {
     refreshing: boolean
 }
 
-export class SubwaysListScreen extends BaseScreen<Props, State> {
+export class SubwaysListScreen extends BaseScreen<State, Params> {
 
     public static navigationOptions = ({navigation}: { navigation: NavigationStackProp }) => ({
         title: subwayStrings.subwaysListScreen.screenTitle,

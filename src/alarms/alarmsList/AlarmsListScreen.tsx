@@ -1,6 +1,6 @@
 import React from 'react';
 import {StackNavigationOptions} from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import {BaseScreen, ScreenProps, ScreenState} from '../../screens/BaseScreen';
+import {BaseScreen, NavigationParams, ScreenState} from '../../screens/BaseScreen';
 import {AlarmsListScreenView} from './AlarmsListScreenView';
 import {Alarm} from '../model/Alarm';
 import DiContainer from '../../di/Container';
@@ -12,7 +12,8 @@ import {NavigationEvents} from 'react-navigation';
 import {Toast} from '../../screens/Toast';
 import {alarmStrings} from '../../strings/AlarmStrings';
 
-interface Props extends ScreenProps {
+interface Params extends NavigationParams {
+
 }
 
 interface State extends ScreenState {
@@ -20,7 +21,7 @@ interface State extends ScreenState {
     refreshing: boolean
 }
 
-export class AlarmsListScreen extends BaseScreen<Props, State> {
+export class AlarmsListScreen extends BaseScreen<State, Params> {
 
     public static navigationOptions: StackNavigationOptions = {
         title: alarmStrings.alarmsListScreen.screenTitle,
@@ -84,6 +85,10 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
         this.navigation().navigate(NavigationRoutes.AlarmForm);
     };
 
+    private editAlarm = (alarm: Alarm): void => {
+        this.navigation().navigateWithParams(NavigationRoutes.AlarmForm, {alarm});
+    };
+
     public render() {
         if (this.state.loading) {
             return (
@@ -106,6 +111,7 @@ export class AlarmsListScreen extends BaseScreen<Props, State> {
                     refresh={this.refreshAlarms}
                     deleteAlarm={this.deleteAlarm}
                     createAlarm={this.createAlarm}
+                    editAlarm={this.editAlarm}
                 />
 
             </View>

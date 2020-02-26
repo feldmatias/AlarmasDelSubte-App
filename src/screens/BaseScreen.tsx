@@ -1,9 +1,14 @@
 import {NavigationStackProp} from 'react-navigation-stack';
 import {Component} from 'react';
 import {Navigation} from './Navigation';
+import {NavigationRoute} from 'react-navigation';
 
-export interface ScreenProps {
-    navigation: NavigationStackProp
+export interface NavigationParams {
+
+}
+
+interface ScreenProps<T extends NavigationParams> {
+    navigation: NavigationStackProp<NavigationRoute, T>
 }
 
 export interface ScreenState {
@@ -11,7 +16,7 @@ export interface ScreenState {
     error: string
 }
 
-export abstract class BaseScreen<Props extends ScreenProps, State extends ScreenState> extends Component<Props, State> {
+export abstract class BaseScreen<State extends ScreenState, Params extends NavigationParams> extends Component<ScreenProps<Params>, State> {
 
     protected setLoading(loading: boolean): void {
         this.setState({loading});
@@ -24,7 +29,7 @@ export abstract class BaseScreen<Props extends ScreenProps, State extends Screen
         this.setState({error});
     }
 
-    protected navigation(): Navigation {
+    protected navigation(): Navigation<Params> {
         return new Navigation(this.props.navigation);
     }
 }

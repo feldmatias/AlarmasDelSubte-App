@@ -6,12 +6,12 @@ import MockGraphQLClient from '../../graphql/MockGraphQLClient';
 import MockStorage from '../../storage/MockStorage';
 import React from 'react';
 import {AlarmsListScreen} from '../../../src/alarms/alarmsList/AlarmsListScreen';
-import {AlarmsListQuery} from '../../../src/alarms/alarmsList/AlarmsListQuery';
+import {AlarmsListQuery} from '../../../src/alarms/graphql/AlarmsListQuery';
 import {Alarm} from '../../../src/alarms/model/Alarm';
 import {AlarmFixture} from '../AlarmFixture';
 import {AlarmSubwayFixture} from '../AlarmSubwayFixture';
 import {DaysTranslator} from '../../../src/utils/DaysTranslator';
-import {AlarmDeleteMutation} from '../../../src/alarms/alarmsList/AlarmDeleteMutation';
+import {AlarmDeleteMutation} from '../../../src/alarms/graphql/AlarmDeleteMutation';
 import {NavigationRoutes} from '../../../src/screens/NavigationRoutes';
 import MockToast from '../../screens/MockToast';
 import {alarmStrings} from '../../../src/strings/AlarmStrings';
@@ -518,6 +518,40 @@ describe('Alarms List Screen', () => {
             fireEvent.press(renderApi.getByTestId('fab'));
 
             navigation.assertNavigatedTo(NavigationRoutes.AlarmForm);
+        });
+
+    });
+
+    describe('Edit Alarm', () => {
+
+        it('should navigate to Alarm Form screen with alarm', async () => {
+            const alarm = new AlarmFixture().withId(8456).get();
+            setAlarmsSuccessResponse([alarm]);
+
+            await renderScreen();
+
+            fireEvent.press(renderApi.getByTestId('alarmEdit'));
+
+            navigation.assertNavigatedWithParams(NavigationRoutes.AlarmForm, {alarm});
+        });
+
+        it('should navigate to Alarm Form screen with correct alarm', async () => {
+            const alarmCount = 3;
+            const alarms: Alarm[] = [];
+
+            for (let i = 0; i < alarmCount; i++) {
+                const alarm = new AlarmFixture().withId(i).get();
+                alarms.push(alarm);
+            }
+
+            setAlarmsSuccessResponse(alarms);
+
+            await renderScreen();
+
+            for (let i = 0; i < alarmCount; i++) {
+                fireEvent.press(renderApi.getAllByTestId('alarmEdit')[i]);
+                navigation.assertNavigatedWithParams(NavigationRoutes.AlarmForm, {alarm: alarms[i]});
+            }
         });
 
     });

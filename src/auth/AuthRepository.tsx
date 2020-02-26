@@ -2,8 +2,8 @@ import {inject, injectable} from 'inversify';
 import {GraphQLService} from '../graphql/GraphQLService';
 import {Result} from '../utils/Result';
 import {AuthToken} from './AuthToken';
-import {LoginMutation} from './login/LoginMutation';
-import {SignUpMutation} from './signup/SignUpMutation';
+import {LoginMutation} from './graphql/LoginMutation';
+import {SignUpMutation} from './graphql/SignUpMutation';
 import {AuthStorage} from './AuthStorage';
 import {GraphQLMutation} from '../graphql/GraphQLMutation';
 

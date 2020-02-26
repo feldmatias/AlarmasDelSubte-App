@@ -16,6 +16,7 @@ interface Props {
     refresh: () => Promise<void>
     deleteAlarm: (alarm: Alarm) => Promise<void>
     createAlarm: () => void
+    editAlarm: (alarm: Alarm) => void
 }
 
 interface State {
@@ -28,6 +29,7 @@ export class AlarmsListScreenView extends Component<Props, State> {
         <AlarmItem
             alarm={item}
             deleteAlarm={this.props.deleteAlarm}
+            editAlarm={this.props.editAlarm}
         />
     );
 

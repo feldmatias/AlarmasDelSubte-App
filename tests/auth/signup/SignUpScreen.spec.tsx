@@ -4,7 +4,7 @@ import {fireEvent, RenderAPI} from 'react-native-testing-library';
 import React from 'react';
 import {SignUpScreen} from '../../../src/auth/signup/SignUpScreen';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
-import {SignUpMutation} from '../../../src/auth/signup/SignUpMutation';
+import {SignUpMutation} from '../../../src/auth/graphql/SignUpMutation';
 import {MockNavigation} from '../../screens/MockNavigation';
 import {AuthToken} from '../../../src/auth/AuthToken';
 import MockStorage from '../../storage/MockStorage';

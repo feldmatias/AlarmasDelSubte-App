@@ -14,7 +14,7 @@ import {SubwaysStorage} from '../../../src/subways/SubwaysStorage';
 import {strings} from '../../../src/strings/Strings';
 import {alarmStrings} from '../../../src/strings/AlarmStrings';
 import {GraphQLOperation} from '../../../src/graphql/GraphQLClient';
-import {AlarmCreateMutation} from '../../../src/alarms/alarmForm/AlarmCreateMutation';
+import {AlarmCreateMutation} from '../../../src/alarms/graphql/AlarmCreateMutation';
 import {AlarmInput} from '../../../src/alarms/model/AlarmInput';
 import {AlarmFixture} from '../AlarmFixture';
 import MockToast from '../../screens/MockToast';
