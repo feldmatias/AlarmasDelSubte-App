@@ -37,6 +37,7 @@ export default class App extends React.Component {
         this.removeNotificationListener = firebase.notifications().onNotification((notification: Notification) => {
             // Process your notification as required
             notification.android.setChannelId(this.NOTIFICATIONS_CHANNEL_ID);
+            notification.android.setAutoCancel(true);
             firebase.notifications().displayNotification(notification);
         });
     }
