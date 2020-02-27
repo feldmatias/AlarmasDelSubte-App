@@ -38,6 +38,7 @@ export default class App extends React.Component {
             // Process your notification as required
             notification.android.setChannelId(this.NOTIFICATIONS_CHANNEL_ID);
             notification.android.setAutoCancel(true);
+            notification.android.setSmallIcon('ic_notification');
             firebase.notifications().displayNotification(notification);
         });
     }
