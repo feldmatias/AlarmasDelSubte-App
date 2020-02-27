@@ -65,3 +65,4 @@ buck-out/
 /coverage/
 /.env
 /.env.production
+/android/app/google-services.json
