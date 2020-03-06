@@ -269,6 +269,20 @@ describe('Login Screen', () => {
             await MockGraphQLClient.assertMutationCalled(notificationsTokenMutation, 0);
         });
 
+        it('should send notifications token when autologin', async () => {
+            const authToken = new AuthToken();
+            authToken.token = 'existing auth token';
+            MockStorage.mockSavedValue(AuthStorage.AUTH_TOKEN_KEY, authToken);
+
+            const token = 'notifications token';
+            MockMessaging.mockToken(token);
+            MockGraphQLClient.mockSuccess(notificationsTokenMutation, notificationsTokenResponse());
+
+            await renderScreen(); //Render to trigger componentDidMountEvent
+
+            await MockGraphQLClient.assertMutationCalledWith(notificationsTokenMutation, {token});
+        });
+
     });
 
 });

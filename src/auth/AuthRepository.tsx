@@ -36,8 +36,12 @@ export class AuthRepository {
         return result;
     }
 
-    public async isLoggedIn(): Promise<boolean> {
-        return await this.storage.hasToken();
+    public async autoLogin(): Promise<boolean> {
+        const isLoggedIn = await this.storage.hasToken();
+        if (isLoggedIn) {
+            this.notifications.sendNotificationsToken();
+        }
+        return isLoggedIn;
     }
 }
 
