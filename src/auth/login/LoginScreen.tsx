@@ -51,7 +51,7 @@ export class LoginScreen extends BaseScreen<State, Params> {
     };
 
     public async componentDidMount(): Promise<void> {
-        const isLoggedIn = await this.authRepository.isLoggedIn();
+        const isLoggedIn = await this.authRepository.autoLogin();
         if (isLoggedIn) {
             this.navigation().navigateToMainScreen(NavigationRoutes.SubwaysList);
         }

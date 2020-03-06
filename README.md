@@ -21,6 +21,8 @@ Check `.env.example`
 
 - Generate a `.env.production` file for release
 
+Download `google-services.json` from firebase and place it in `android/app/google-services.json`
+
 ### Git hooks
 Copy all files in `/hooks` to `.git/hooks/`
 

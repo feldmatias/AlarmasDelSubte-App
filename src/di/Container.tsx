@@ -9,9 +9,11 @@ import {AuthStorage} from '../auth/AuthStorage';
 import {SubwaysRepository} from '../subways/SubwaysRepository';
 import {AlarmsRepository} from '../alarms/AlarmsRepository';
 import {SubwaysStorage} from '../subways/SubwaysStorage';
+import {PushNotificationsRepository} from '../notifications/PushNotificationsRepository';
+import {PushNotificationsService} from '../notifications/PushNotificationsService';
+import {PushNotifications, PUSH_NOTIFICATIONS_DI, PushNotificationsInstance} from '../notifications/Firebase';
 
 const DiContainer = new Container();
-
 
 // Storages
 
@@ -29,6 +31,14 @@ DiContainer.bind<GraphQLClient>(GRAPHQL_DI).toConstantValue(GraphQLClientInstanc
 DiContainer.bind<GraphQLService>(GraphQLService).to(GraphQLService);
 
 
+// Notifications
+
+DiContainer.bind<PushNotifications>(PUSH_NOTIFICATIONS_DI).toConstantValue(PushNotificationsInstance);
+
+DiContainer.bind<PushNotificationsRepository>(PushNotificationsRepository).to(PushNotificationsRepository);
+DiContainer.bind<PushNotificationsService>(PushNotificationsService).to(PushNotificationsService);
+
+
 // Repositories
 
 DiContainer.bind<AuthRepository>(AuthRepository).to(AuthRepository);
@@ -36,7 +46,6 @@ DiContainer.bind<AuthRepository>(AuthRepository).to(AuthRepository);
 DiContainer.bind<SubwaysRepository>(SubwaysRepository).to(SubwaysRepository);
 
 DiContainer.bind<AlarmsRepository>(AlarmsRepository).to(AlarmsRepository);
-
 
 
 export default DiContainer;
