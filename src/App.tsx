@@ -3,11 +3,12 @@ import 'reflect-metadata';
 import React from 'react';
 import AppContainer from './screens/AppNavigator';
 import {PushNotificationsService} from './notifications/PushNotificationsService';
+import DiContainer from './di/Container';
 
 
 export default class App extends React.Component {
 
-    private pushNotificationsService = new PushNotificationsService();
+    private pushNotificationsService = DiContainer.get<PushNotificationsService>(PushNotificationsService);
 
     public async componentDidMount() {
         await this.pushNotificationsService.start();

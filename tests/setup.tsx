@@ -1,4 +1,5 @@
 import 'react-native';
+import 'reflect-metadata';
 import {NativeModules} from 'react-native';
 
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -11,6 +12,7 @@ jest.mock('react-native-firebase', () => ({
     messaging: jest.fn(),
     notifications: jest.fn(),
 }));
+
 
 jest.mock('react-navigation', () => ({
     NavigationEvents: 'mockNavigationEvents',
