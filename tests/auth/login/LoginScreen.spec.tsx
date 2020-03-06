@@ -14,7 +14,7 @@ import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import {strings} from '../../../src/strings/Strings';
 import {Assert} from '../../utils/Assert';
 import {FirebaseTokenMutation} from '../../../src/notifications/graphql/FirebaseTokenMutation';
-import MockMessaging from '../../notifications/MockMessaging';
+import MockPushNotifications from '../../notifications/MockPushNotifications';
 
 describe('Login Screen', () => {
 
@@ -30,7 +30,7 @@ describe('Login Screen', () => {
     beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mock();
-        MockMessaging.mock();
+        MockPushNotifications.mock();
         loginMutation = new LoginMutation('', '').getMutation();
         await renderScreen();
     });
@@ -38,7 +38,7 @@ describe('Login Screen', () => {
     afterEach(() => {
         MockGraphQLClient.reset();
         MockStorage.reset();
-        MockMessaging.reset();
+        MockPushNotifications.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -251,7 +251,7 @@ describe('Login Screen', () => {
 
         it('should send notifications token when successful login', async () => {
             const token = 'notifications token';
-            MockMessaging.mockToken(token);
+            MockPushNotifications.messaging.mockToken(token);
 
             MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
             MockGraphQLClient.mockSuccess(notificationsTokenMutation, notificationsTokenResponse());
@@ -275,7 +275,7 @@ describe('Login Screen', () => {
             MockStorage.mockSavedValue(AuthStorage.AUTH_TOKEN_KEY, authToken);
 
             const token = 'notifications token';
-            MockMessaging.mockToken(token);
+            MockPushNotifications.messaging.mockToken(token);
             MockGraphQLClient.mockSuccess(notificationsTokenMutation, notificationsTokenResponse());
 
             await renderScreen(); //Render to trigger componentDidMountEvent

@@ -1,12 +1,12 @@
 import {inject, injectable} from 'inversify';
 import {GraphQLService} from '../graphql/GraphQLService';
-import {MESSAGING_DI, MessagingClient} from './Firebase';
 import {FirebaseTokenMutation} from './graphql/FirebaseTokenMutation';
+import {PUSH_NOTIFICATIONS_DI, PushNotifications} from './Firebase';
 
 @injectable()
 export class PushNotificationsRepository {
 
-    @inject(MESSAGING_DI) private messaging!: MessagingClient;
+    @inject(PUSH_NOTIFICATIONS_DI) private pushNotifications!: PushNotifications;
 
     @inject(GraphQLService) private graphql!: GraphQLService;
 
@@ -17,6 +17,6 @@ export class PushNotificationsRepository {
     }
 
     private async getNotificationsToken(): Promise<string> {
-        return await this.messaging.getToken();
+        return await this.pushNotifications.messaging().getToken();
     }
 }

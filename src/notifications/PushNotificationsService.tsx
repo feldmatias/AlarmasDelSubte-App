@@ -1,14 +1,8 @@
 import {strings} from '../strings/Strings';
 import {Notification} from 'react-native-firebase/notifications';
 import {inject, injectable} from 'inversify';
-import {
-    MESSAGING_DI,
-    MessagingClient,
-    NOTIFICATIONS_ANDROID_DI,
-    NOTIFICATIONS_DI,
-    NotificationsAndroidModule,
-    NotificationsClient,
-} from './Firebase';
+import {PushNotifications, PUSH_NOTIFICATIONS_DI} from './Firebase';
+import firebase from 'react-native-firebase';
 
 @injectable()
 export class PushNotificationsService {
@@ -16,19 +10,15 @@ export class PushNotificationsService {
     private readonly NOTIFICATIONS_CHANNEL_ID = 'notifications';
     private readonly NOTIFICATIONS_ICON = 'ic_notification';
 
-    @inject(MESSAGING_DI) private messaging!: MessagingClient;
-
-    @inject(NOTIFICATIONS_DI) private notifications!: NotificationsClient;
-
-    @inject(NOTIFICATIONS_ANDROID_DI) private androidNotifications!: NotificationsAndroidModule;
+    @inject(PUSH_NOTIFICATIONS_DI) private pushNotifications!: PushNotifications;
 
     private removeNotificationListener?: () => any;
 
     private async checkNotificationPermissions(): Promise<void> {
-        const notificationsEnabled = await this.messaging.hasPermission();
+        const notificationsEnabled = await this.pushNotifications.messaging().hasPermission();
         if (!notificationsEnabled) {
             try {
-                await this.messaging.requestPermission();
+                await this.pushNotifications.messaging().requestPermission();
                 // User has authorised
             } catch (error) {
                 // User has rejected permissions
@@ -38,19 +28,22 @@ export class PushNotificationsService {
     }
 
     private async createNotificationsChannel(): Promise<void> {
-        const channel = new this.androidNotifications.Channel(this.NOTIFICATIONS_CHANNEL_ID, strings.appName, this.androidNotifications.Importance.Max)
+        const channel = new firebase.notifications.Android.Channel(
+            this.NOTIFICATIONS_CHANNEL_ID,
+            strings.appName,
+            firebase.notifications.Android.Importance.Max)
             .setDescription(strings.notificationsChannelDescription);
 
-        await this.notifications.android.createChannel(channel);
+        await this.pushNotifications.notifications().android.createChannel(channel);
     }
 
     private handleForegroundNotifications(): void {
-        this.removeNotificationListener = this.notifications.onNotification((notification: Notification) => {
+        this.removeNotificationListener = this.pushNotifications.notifications().onNotification((notification: Notification) => {
             // Process your notification as required
             notification.android.setChannelId(this.NOTIFICATIONS_CHANNEL_ID);
             notification.android.setAutoCancel(true);
             notification.android.setSmallIcon(this.NOTIFICATIONS_ICON);
-            this.notifications.displayNotification(notification);
+            this.pushNotifications.notifications().displayNotification(notification);
         });
     }
 

@@ -15,7 +15,7 @@ import {authStrings} from '../../../src/strings/AuthStrings';
 import {strings} from '../../../src/strings/Strings';
 import {Assert} from '../../utils/Assert';
 import {FirebaseTokenMutation} from '../../../src/notifications/graphql/FirebaseTokenMutation';
-import MockMessaging from '../../notifications/MockMessaging';
+import MockPushNotifications from '../../notifications/MockPushNotifications';
 
 describe('SignUp Screen', () => {
 
@@ -31,7 +31,7 @@ describe('SignUp Screen', () => {
     beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mock();
-        MockMessaging.mock();
+        MockPushNotifications.mock();
         signUpMutation = new SignUpMutation('', '').getMutation();
         await renderScreen();
     });
@@ -39,7 +39,7 @@ describe('SignUp Screen', () => {
     afterEach(() => {
         MockGraphQLClient.reset();
         MockStorage.reset();
-        MockMessaging.reset();
+        MockPushNotifications.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -249,7 +249,7 @@ describe('SignUp Screen', () => {
 
         it('should send notifications token when successful signup', async () => {
             const token = 'notifications token';
-            MockMessaging.mockToken(token);
+            MockPushNotifications.messaging.mockToken(token);
 
             MockGraphQLClient.mockSuccess(signUpMutation, signUpResponse());
             MockGraphQLClient.mockSuccess(notificationsTokenMutation, notificationsTokenResponse());

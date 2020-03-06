@@ -1,51 +1,48 @@
 import {PushNotificationsService} from '../../src/notifications/PushNotificationsService';
 import DiContainer from '../../src/di/Container';
-import MockMessaging from './MockMessaging';
-import MockNotifications from './MockNotifications';
 import {strings} from '../../src/strings/Strings';
 import {MockNotification} from './MockNotification';
+import MockPushNotifications from './MockPushNotifications';
 
 describe('Push Notifications Service', () => {
 
     let pushNotificationsService: PushNotificationsService;
 
     beforeEach(async () => {
-        MockMessaging.mock();
-        MockNotifications.mock();
+        MockPushNotifications.mock();
         pushNotificationsService = DiContainer.get<PushNotificationsService>(PushNotificationsService);
     });
 
     afterEach(() => {
-        MockMessaging.reset();
-        MockNotifications.reset();
+        MockPushNotifications.reset();
     });
 
     describe('Notification Permissions', () => {
 
         it('should not request permissions if already has permissions', async () => {
-            MockMessaging.mockHasPermissions(true);
+            MockPushNotifications.messaging.mockHasPermissions(true);
 
             await pushNotificationsService.start();
 
-            MockMessaging.assertRequestPermissionsCalled(false);
+            MockPushNotifications.messaging.assertRequestPermissionsCalled(false);
         });
 
         it('should request permissions if does not have permissions', async () => {
-            MockMessaging.mockHasPermissions(false);
-            MockMessaging.mockRequestPermissions(true);
+            MockPushNotifications.messaging.mockHasPermissions(false);
+            MockPushNotifications.messaging.mockRequestPermissions(true);
 
             await pushNotificationsService.start();
 
-            MockMessaging.assertRequestPermissionsCalled(true);
+            MockPushNotifications.messaging.assertRequestPermissionsCalled(true);
         });
 
         it('should not fail if request permissions fails', async () => {
-            MockMessaging.mockHasPermissions(false);
-            MockMessaging.mockRequestPermissions(false);
+            MockPushNotifications.messaging.mockHasPermissions(false);
+            MockPushNotifications.messaging.mockRequestPermissions(false);
 
             await pushNotificationsService.start();
 
-            MockMessaging.assertRequestPermissionsCalled(true);
+            MockPushNotifications.messaging.assertRequestPermissionsCalled(true);
         });
 
     });
@@ -55,7 +52,7 @@ describe('Push Notifications Service', () => {
         it('should create notifications channel', async () => {
             await pushNotificationsService.start();
 
-            const channel = MockNotifications.assertCreateChannelCalled();
+            const channel = MockPushNotifications.notifications.assertCreateChannelCalled();
 
             expect(channel.channelId).toEqual('notifications');
             expect(channel.name).toEqual(strings.appName);
@@ -69,7 +66,7 @@ describe('Push Notifications Service', () => {
         it('should set foreground notifications handler', async () => {
             await pushNotificationsService.start();
 
-            MockNotifications.assertOnNotificationCalled();
+            MockPushNotifications.notifications.assertOnNotificationCalled();
         });
 
         it('should set channel id to incoming notification', async () => {
@@ -77,7 +74,7 @@ describe('Push Notifications Service', () => {
 
             await pushNotificationsService.start();
 
-            const displayNotification = MockNotifications.assertOnNotificationCalled();
+            const displayNotification = MockPushNotifications.notifications.assertOnNotificationCalled();
             displayNotification(notification.instance());
 
             notification.assertChannelIdSet('notifications');
@@ -88,7 +85,7 @@ describe('Push Notifications Service', () => {
 
             await pushNotificationsService.start();
 
-            const displayNotification = MockNotifications.assertOnNotificationCalled();
+            const displayNotification = MockPushNotifications.notifications.assertOnNotificationCalled();
             displayNotification(notification.instance());
 
             notification.assertAutoCancelSet(true);
@@ -99,7 +96,7 @@ describe('Push Notifications Service', () => {
 
             await pushNotificationsService.start();
 
-            const displayNotification = MockNotifications.assertOnNotificationCalled();
+            const displayNotification = MockPushNotifications.notifications.assertOnNotificationCalled();
             displayNotification(notification.instance());
 
             notification.assertSmallIconSet('ic_notification');
@@ -110,10 +107,10 @@ describe('Push Notifications Service', () => {
 
             await pushNotificationsService.start();
 
-            const displayNotification = MockNotifications.assertOnNotificationCalled();
+            const displayNotification = MockPushNotifications.notifications.assertOnNotificationCalled();
             displayNotification(notification.instance());
 
-            MockNotifications.assertNotificationDisplayed(notification.instance());
+            MockPushNotifications.notifications.assertNotificationDisplayed(notification.instance());
         });
 
     });
@@ -128,7 +125,7 @@ describe('Push Notifications Service', () => {
             await pushNotificationsService.start();
             await pushNotificationsService.stop();
 
-            MockNotifications.assertRemoveNotificationListenerCalled();
+            MockPushNotifications.notifications.assertRemoveNotificationListenerCalled();
         });
 
     });
