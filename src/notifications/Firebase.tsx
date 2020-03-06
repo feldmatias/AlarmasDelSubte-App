@@ -1,4 +1,4 @@
-import firebase from "react-native-firebase";
+import firebase from 'react-native-firebase';
 
 const messaging = firebase.messaging();
 

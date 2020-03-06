@@ -9,8 +9,8 @@ import {AuthStorage} from '../auth/AuthStorage';
 import {SubwaysRepository} from '../subways/SubwaysRepository';
 import {AlarmsRepository} from '../alarms/AlarmsRepository';
 import {SubwaysStorage} from '../subways/SubwaysStorage';
-import {MESSAGING_DI, MessagingClient, MessagingInstance} from "../notifications/Firebase";
-import {PushNotificationsRepository} from "../notifications/PushNotificationsRepository";
+import {MESSAGING_DI, MessagingClient, MessagingInstance} from '../notifications/Firebase';
+import {PushNotificationsRepository} from '../notifications/PushNotificationsRepository';
 
 const DiContainer = new Container();
 

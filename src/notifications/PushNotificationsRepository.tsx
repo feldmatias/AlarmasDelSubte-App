@@ -1,7 +1,7 @@
 import {inject, injectable} from 'inversify';
 import {GraphQLService} from '../graphql/GraphQLService';
-import {MESSAGING_DI, MessagingClient} from "./Firebase";
-import {FirebaseTokenMutation} from "./graphql/FirebaseTokenMutation";
+import {MESSAGING_DI, MessagingClient} from './Firebase';
+import {FirebaseTokenMutation} from './graphql/FirebaseTokenMutation';
 
 @injectable()
 export class PushNotificationsRepository {

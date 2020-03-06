@@ -7,6 +7,11 @@ NativeModules.RNCAsyncStorage = {};
 
 jest.useFakeTimers();
 
+jest.mock('react-native-firebase', () => ({
+    messaging: jest.fn(),
+    notifications: jest.fn(),
+}));
+
 jest.mock('react-navigation', () => ({
     NavigationEvents: 'mockNavigationEvents',
     NavigationActions: {navigate: jest.fn().mockImplementation(x => x)},

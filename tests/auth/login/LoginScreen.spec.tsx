@@ -13,6 +13,8 @@ import {AuthToken} from '../../../src/auth/AuthToken';
 import {ScreenTestUtils} from '../../screens/ScreenTestUtils';
 import {strings} from '../../../src/strings/Strings';
 import {Assert} from '../../utils/Assert';
+import {FirebaseTokenMutation} from '../../../src/notifications/graphql/FirebaseTokenMutation';
+import MockMessaging from '../../notifications/MockMessaging';
 
 describe('Login Screen', () => {
 
@@ -28,6 +30,7 @@ describe('Login Screen', () => {
     beforeEach(async () => {
         MockGraphQLClient.mock();
         MockStorage.mock();
+        MockMessaging.mock();
         loginMutation = new LoginMutation('', '').getMutation();
         await renderScreen();
     });
@@ -35,6 +38,7 @@ describe('Login Screen', () => {
     afterEach(() => {
         MockGraphQLClient.reset();
         MockStorage.reset();
+        MockMessaging.reset();
     });
 
     function writeUsername(username = 'username'): void {
@@ -231,6 +235,38 @@ describe('Login Screen', () => {
             await loginWithCredentials();
 
             MockStorage.assertNotSaved(AuthStorage.AUTH_TOKEN_KEY);
+        });
+
+    });
+
+    describe('Notifications Token', () => {
+
+        let notificationsTokenMutation: GraphQLOperation = new FirebaseTokenMutation('').getMutation();
+
+        function notificationsTokenResponse() {
+            return {
+                setFirebaseToken: 'token',
+            };
+        }
+
+        it('should send notifications token when successful login', async () => {
+            const token = 'notifications token';
+            MockMessaging.mockToken(token);
+
+            MockGraphQLClient.mockSuccess(loginMutation, loginResponse());
+            MockGraphQLClient.mockSuccess(notificationsTokenMutation, notificationsTokenResponse());
+
+            await loginWithCredentials();
+
+            await MockGraphQLClient.assertMutationCalledWith(notificationsTokenMutation, {token});
+        });
+
+        it('should not send notifications token when error login', async () => {
+            MockGraphQLClient.mockError(loginMutation);
+
+            await loginWithCredentials();
+
+            await MockGraphQLClient.assertMutationCalled(notificationsTokenMutation, 0);
         });
 
     });
