@@ -1,6 +1,6 @@
-import firebase from "react-native-firebase";
-import {strings} from "../strings/Strings";
-import {Notification} from "react-native-firebase/notifications";
+import firebase from 'react-native-firebase';
+import {strings} from '../strings/Strings';
+import {Notification} from 'react-native-firebase/notifications';
 
 export class PushNotificationsService {
 

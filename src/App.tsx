@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import 'reflect-metadata';
 import React from 'react';
 import AppContainer from './screens/AppNavigator';
-import {PushNotificationsService} from "./notifications/PushNotificationsService";
+import {PushNotificationsService} from './notifications/PushNotificationsService';
 
 
 export default class App extends React.Component {
