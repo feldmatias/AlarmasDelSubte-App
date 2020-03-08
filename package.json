@@ -8,7 +8,8 @@
     "start": "react-native start",
     "pretest": "eslint --fix --max-warnings 0 src/**/*.tsx tests/**/*.tsx",
     "test": "jest --coverage --silent",
-    "coverage": "cat ./coverage/lcov.info | coveralls"
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "release": "cd android && gradlew assembleRelease"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
